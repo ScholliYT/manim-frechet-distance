@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "manim-frechet-distance"
+version = "0.1.0"
+description = "A Manim animated presentation of the Fréchet distance, it's use cases, variants and algorithms."
+authors = ["Tom Stein <dev@tomstein.me>"]
+readme = "README.md"
+packages = [{include = "manim_frechet_distance"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
