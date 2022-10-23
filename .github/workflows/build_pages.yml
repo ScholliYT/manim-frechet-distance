@@ -1,0 +1,99 @@
+name: build presentation
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      #----------------------------------------------
+      #       set-up python
+      #----------------------------------------------
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install and cache ffmpeg (all OS)
+        uses: FedericoCarboni/setup-ffmpeg@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: setup-ffmpeg
+
+      - uses: awalsh128/cache-apt-pkgs-action@v1
+        with:
+          packages: texlive-full tipa python-opengl libpango1.0-dev
+          version: 1.0
+
+      - name: Install system dependencies (Linux)
+        id: system-dependencies
+        run: |
+          sudo apt update
+          sudo apt -y install texlive-full tipa python-opengl libpango1.0-dev
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      #----------------------------------------------
+      #  -----  clone repo  -----
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install project
+        run: poetry install --no-interaction
+
+      #-----------------------------------------------
+      #  -----  Run Manim to render video files -----
+      #-----------------------------------------------
+      - name: Run Manim
+        run: | 
+          poetry run manim -qh -a --save_sections manim_frechet_distance/presentation.py
+
+      #------------------------------------------------------
+      #  -----  Run Manim-Editor to build presentation -----
+      #------------------------------------------------------
+      - name: Run the Manim Editor
+        run: |
+          mkdir pages
+          cd pages
+          poetry run manedit --project_name Frechet-Distance \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/MinimalPresentationExample.json \
+
+      - name: Create Redirect
+        run: echo "<head><meta http-equiv='refresh' content='0; URL=Frechet-Distance/index.html'></head>" > pages/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: pages
+          folder: pages
