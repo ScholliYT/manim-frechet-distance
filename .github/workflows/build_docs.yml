@@ -1,4 +1,4 @@
-name: build presentation
+name: build docs
 
 concurrency:
   group: ${{ github.ref }}
