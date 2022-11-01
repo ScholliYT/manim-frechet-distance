@@ -1,6 +1,10 @@
 # Manim Presentation on Fréchet Distance
 A [Manim](https://www.manim.community/) animated presentation of the [Fréchet distance](https://en.wikipedia.org/wiki/Fr%C3%A9chet_distance), it's use cases, variants and algorithms.
 
+## Docs
+
+Besides the presentaion there is also a written essay [here](https://nightly.link/ScholliYT/manim-frechet-distance/workflows/build_docs/main/PDF.zip).
+
 
 ## Installation
 
