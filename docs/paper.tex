@@ -184,9 +184,80 @@ fontsize=11pt
 
 \newgeometry{left=3cm, right=4.5cm, top=4cm, bottom=4cm}
 
-\section{Intro}
-\subsection{Conventions}
-Some Text \cite{DBLP:journals/ijcga/AltG95}
+\section*{Abstract}
+
+
+\section{Introduction}
+% motivation
+
+% two (polygonal) curves
+
+% Hausdorff distance
+The commonly known \textit{Hausdorff distance} can be understood 
+as the largest distance between any two points on the curves 
+and is calculated by \autoref{eq_hausdorff_distance} \cite{alt_computing_1995}.
+
+\begin{align}
+  \label{eq_hausdorff_distance}
+  \delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)
+\end{align}
+
+However, this metric does not take the course of the curves into account. 
+Two curves may be very dissimilar in the preception of a human 
+but still have a small Hausdorff-distance, see \autoref{fig_hausdorff_distance_bad_example}.
+
+\begin{figure}[ht]
+  % TODO: insert figure
+  \caption[Hausdorff distance of two dissimilar curves]{The two shown curves are dissimilar (in a common sense) depsite having a small Hausdorff distance.}
+  \label{fig_hausdorff_distance_bad_example}
+\end{figure}
+
+
+% Fréchet distance motivation
+
+% continuous Fréchet distance equation
+
+% Scope
+
+
+
+% Fréchet distance Variants 
+\section{Variants}
+Through the years many slightly differnt variants of the continuous Fréchet distance have evolved. 
+The continuous Fréchet distance takes into account every single point on the curves, 
+with interpolation in the case of polygonal curves, 
+without allowing to walk backwards 
+and without any obstacles in between the two curves.
+
+% TODO: Why allow it? Better algorithms?
+The \textit{weak Fréchet distance} slightly modified the continuous version by allowing 
+going backwards. 
+
+% TODO: Is that mapping bijective? Add sources
+The \textit{discrete Fréchet distance} 
+This gives an upper bound on the continuous Fréchet distance % Source?
+and is often used as a approximation. % Source?
+% discrete Fréchet distance and contrast to hausdorff distance
+
+% (Geodesic Fréchet distance)
+
+% (Homotopic Fréchet distance)
+
+
+
+\section{Algorithm}
+% Original algorithm for the continuous Fréchet distance
+
+% Free Space Diagram
+
+
+% Runtime analysis (?)
+% Correctness proof (?)
+
+
+\section{Conclusion}
+
+
 
 
 
