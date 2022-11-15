@@ -19,20 +19,23 @@ poetry install
 
 ## Building the presentation
 
-### Rendering video files with Manim
+### 1. Rendering video files with Manim
 ```sh
 poetry run manim -qm -a --save_sections manim_frechet_distance/presentation.py
 ```
 
-### Build presentation using Manim-Editor
+### 2. Build presentation using Manim-Editor
 ```sh
-poetry run manedit --project_name Frechet-Distance \
-    --quick_present_export ./media/videos/presentation/720p30/sections/MinimalPresentationExample.json
+poetry run manedit --project_name Fréchet-Distance/ \
+    --quick_present_export ./media/videos/presentation/720p30/sections/MinimalPresentationExample.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/BraceAnnotation.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/ArgMinExample.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceExample.json
 ```
 
-### Viewing the presentation
+### 3. Viewing the presentation
 ```sh
-cd ./Frechet-Distance
+cd ./Fréchet-Distance/
 poetry run python3 -m http.server
 ```
 
