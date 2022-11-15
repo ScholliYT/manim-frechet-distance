@@ -95,7 +95,7 @@ class ArgMinExample(Scene):
 class FrechetDistanceExample(Scene):
     def construct(self):
         ax = Axes(
-            x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False}
+            x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False, "include_numbers": True}
         )
         labels = ax.get_axis_labels(x_label="x", y_label="y")
 
@@ -109,7 +109,7 @@ class FrechetDistanceExample(Scene):
         def func1(x):
             return 2 * (x - 5) ** 2
         def func2(x):
-            return -1.5 * (x - 1) ** 2 + 61.5
+            return -1.5 * (x - 2) ** 2 + 81
         graph1 = ax.plot(func1, color=MAROON)
         graph2 = ax.plot(func2, color=BLUE)
 
@@ -138,7 +138,7 @@ class FrechetDistanceExample(Scene):
 
         def dist_text():
             d = np.sqrt((x1.get_value() - x2.get_value())**2 + (func1(x1.get_value()) - func2(x2.get_value()))**2)
-            return Text(f"{d:.2f}", font_size=0.5 * DEFAULT_FONT_SIZE).next_to(line.get_center(), LEFT)
+            return Text(f"{d:.2f}", font_size=0.5 * DEFAULT_FONT_SIZE).next_to(line.get_center(), RIGHT)
         dist = dist_text()
         dist.add_updater(lambda t: t.become(dist_text()))
         self.play(Create(dist))
@@ -156,6 +156,18 @@ class FrechetDistanceExample(Scene):
         self.wait(1)
 
         self.next_section("Together to 0", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(0), x2.animate.set_value(0), run_time=3, rate_func=linear)
+        self.play(x1.animate.set_value(0), x2.animate.set_value(0), run_time=3, rate_func=smooth)
         self.wait(1)
+
+        self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
+        self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7), run_time=2)
+        self.wait(1)
+        self.play(x1.animate.set_value(26/7+0.5), x2.animate.set_value(26/7+0.5))
+        self.wait(1)
+        self.play(x1.animate.set_value(26/7-0.5), x2.animate.set_value(26/7-0.5))
+        self.wait(1)
+        self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7))
+        self.wait(1)
+
+
 

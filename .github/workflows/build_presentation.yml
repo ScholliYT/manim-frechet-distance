@@ -91,6 +91,9 @@ jobs:
           cd pages
           poetry run manedit --project_name Frechet-Distance \
             --quick_present_export ../media/videos/presentation/1080p60/sections/MinimalPresentationExample.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/BraceAnnotation.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/ArgMinExample.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/FrechetDistanceExample.json \
 
       - name: Create Redirect
         run: echo "<head><meta http-equiv='refresh' content='0; URL=Frechet-Distance/index.html'></head>" > pages/index.html
