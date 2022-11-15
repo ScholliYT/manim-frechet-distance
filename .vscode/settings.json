@@ -15,4 +15,5 @@
             "env": {}
         }
     ],
+    "python.analysis.typeCheckingMode": "off",
 }
