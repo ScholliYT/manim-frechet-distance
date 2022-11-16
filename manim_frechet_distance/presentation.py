@@ -127,6 +127,8 @@ class FrechetDistanceExample(Scene):
         initial_point2 = [ax.coords_to_point(x2.get_value(), func2(x2.get_value()))]
         dot2 = Dot(point=initial_point2)
         dot2.add_updater(lambda x: x.move_to(ax.c2p(x2.get_value(), func2(x2.get_value()))))
+        dot1.set_z_index(1)
+        dot2.set_z_index(1)
 
         self.next_section("Points")
         self.play(Create(dot1), Create(dot2))
@@ -136,12 +138,13 @@ class FrechetDistanceExample(Scene):
         line.add_updater(lambda z: z.become(Line(dot1.get_center(), dot2.get_center(), color=ORANGE)))
         self.play(Create(line))
 
-        def dist_text():
+        def dist():
             d = np.sqrt((x1.get_value() - x2.get_value())**2 + (func1(x1.get_value()) - func2(x2.get_value()))**2)
-            return Text(f"{d:.2f}", font_size=0.5 * DEFAULT_FONT_SIZE).next_to(line.get_center(), RIGHT)
-        dist = dist_text()
-        dist.add_updater(lambda t: t.become(dist_text()))
-        self.play(Create(dist))
+            return d
+        distNumber = DecimalNumber(dist()).next_to(line.get_center(), RIGHT)
+        distNumber.add_updater(lambda t: t.set_value(dist()))
+        distNumber.add_updater(lambda t: t.next_to(line.get_center(), RIGHT))
+        self.play(Create(distNumber))
         self.wait(1)
 
         x_space = np.linspace(*ax.x_range[:2],200)
@@ -171,6 +174,10 @@ class FrechetDistanceExample(Scene):
         
         self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
         self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7))
+        self.wait(1)
+
+        self.next_section("Diagonal", PresentationSectionType.NORMAL)
+        self.play(x1.animate.set_value(26/7-0.1), x2.animate.set_value(26/7+0.1))
         self.wait(1)
 
 
