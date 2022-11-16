@@ -162,10 +162,14 @@ class FrechetDistanceExample(Scene):
         self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
         self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7), run_time=2)
         self.wait(1)
+
+        self.next_section("Max vertical dist right", PresentationSectionType.NORMAL)
         self.play(x1.animate.set_value(26/7+0.5), x2.animate.set_value(26/7+0.5))
-        self.wait(1)
+
+        self.next_section("Max vertical dist left", PresentationSectionType.NORMAL)
         self.play(x1.animate.set_value(26/7-0.5), x2.animate.set_value(26/7-0.5))
-        self.wait(1)
+        
+        self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
         self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7))
         self.wait(1)
 
