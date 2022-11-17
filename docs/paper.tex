@@ -189,8 +189,33 @@ fontsize=11pt
 
 \section{Introduction}
 % motivation
+At first it seems that measuring the similairty between two curves
+is a very theoretical problem
+but it has many, not that obvious, pratical applications.
+It is used in Geo-Information-Systems (GIS) to 
+quantify the similarity or quality of two maps, % cite
+find patterns in vehicle traffic or animal tracking data 
+by trajectory analysis, % cite
+gesture recognition on touch devices like smartphones, % cite
+and shape matching in the field of computer vision. 
+
+To quantify the similairty of two given curves (e.g. shapes, paths, or trajectories)
+a distance metric can be used. 
+We can't simply use a distance metric like eucledian distance 
+becuase we don't want to compare points to points 
+but instead compare curves to curves. 
 
 % two (polygonal) curves
+% TODO: replace continous funcitons with other name
+In the following we'll focus on polygonal curves (polygonal chains) 
+instead of continuous functions ofen used in pure mathematics 
+because most data we have for these problems is 
+captured by some none continuous mechanisms, e.g., GPS positions from a tracking device.
+Therefore we consider a polygonal curve $P$ to be definded as a 
+sequence of points $p_1, \dots, p_n \in R^d$ where $d$ is the dimensionality 
+of the space, e.g., $n=2$ or $n=3$, and linear interpolation between this points. 
+However, many concepts also apply to continuous functions.
+
 
 % Hausdorff distance
 The commonly known \textit{Hausdorff distance} can be understood 
@@ -203,8 +228,8 @@ and is calculated by \autoref{eq_hausdorff_distance} \cite{alt_computing_1995}.
 \end{align}
 
 However, this metric does not take the course of the curves into account. 
-Two curves may be very dissimilar in the preception of a human 
-but still have a small Hausdorff-distance, see \autoref{fig_hausdorff_distance_bad_example}.
+Two curves may have a small Hausdorff-distance but seem very dissimilar 
+when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 \begin{figure}[ht]
   % TODO: insert figure
@@ -245,14 +270,22 @@ and is often used as a approximation. % Source?
 
 
 
-\section{Algorithm}
-% Original algorithm for the continuous Fréchet distance
+\section{Algorithms}
+% Chapter summary and structure
 
+
+\subsection{Original algorithm for the continuous Fréchet distance}
 % Free Space Diagram
-
-
 % Runtime analysis (?)
 % Correctness proof (?)
+
+\subsection{Improved Version?}
+
+\subsection{Algorithms for different variants}
+% discrete Fréchet distance
+
+% weak Fréchet distance
+
 
 
 \section{Conclusion}
