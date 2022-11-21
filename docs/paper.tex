@@ -28,7 +28,6 @@ fontsize=11pt
 \usepackage{subcaption}
 \usepackage{minted}
 
-
 %%%
 %%% technical packages
 %%%
@@ -219,8 +218,9 @@ However, many concepts also apply to continuous functions.
 
 % Hausdorff distance
 The commonly known \textit{Hausdorff distance} can be understood 
-as the largest distance between any two points on the curves 
-and is calculated by \autoref{eq_hausdorff_distance} \cite{alt_computing_1995}.
+as the largest distance between any two points on the curves. 
+For each curve, a point with the maximum shortest distance to a point on the other curve is searched for, see \autoref{fig_hausdorff_distance_example}.
+The Hausdorff distance is mathematically formulated as stated in \autoref{eq_hausdorff_distance} \cite{alt_computing_1995}.
 
 \begin{align}
   \label{eq_hausdorff_distance}
@@ -233,8 +233,24 @@ when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 \begin{figure}[ht]
   % TODO: insert figure
-  \caption[Hausdorff distance of two dissimilar curves]{The two shown curves are dissimilar (in a common sense) depsite having a small Hausdorff distance.}
-  \label{fig_hausdorff_distance_bad_example}
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+      }
+      \caption{Hausdorff distance between the red curve $P$ and green curve $Q$. }
+      \label{fig_hausdorff_distance_example}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-bad-example.pdf}
+      }
+      \caption[Hausdorff distance of two dissimilar curves]{Two dissimilar curves with a small Hausdorff distance.}
+      \label{fig_hausdorff_distance_bad_example}
+  \end{subfigure}
+  \caption[Hausdorff distance examples]{Hausdorff distance examples.}
+  \label{fig_hausdorff_distance_examples}
 \end{figure}
 
 
