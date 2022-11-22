@@ -36,18 +36,17 @@ fontsize=11pt
 \usepackage{amsmath,amssymb,amstext}
 
 
-
-
-
 %%%
 %%% Colors
 %%%
-
 \RequirePackage[table,dvipsnames]{xcolor}
-
-
 \definecolor{TUGreen}{rgb}{0.517,0.721,0.094}
 
+
+%%%
+%%% Macros
+%%%
+\newtheorem{mydef}{Definition}
 
 %%%
 %%% PDF
@@ -195,7 +194,7 @@ It is used in Geo-Information-Systems (GIS) to
 quantify the similarity or quality of two maps, % cite
 find patterns in vehicle traffic or animal tracking data 
 by trajectory analysis, % cite
-gesture recognition on touch devices like smartphones, % cite
+gesture recognition on touch devices like smartphones \cite{hu_research_2022}, % cite
 and shape matching in the field of computer vision. 
 
 To quantify the similairty of two given curves (e.g. shapes, paths, or trajectories)
@@ -206,28 +205,49 @@ but instead compare curves to curves.
 
 % two (polygonal) curves
 % TODO: replace continous funcitons with other name
-In the following we'll focus on polygonal curves (polygonal chains) 
-instead of continuous functions ofen used in pure mathematics 
-because most data we have for these problems is 
-captured by some none continuous mechanisms, e.g., GPS positions from a tracking device.
-Therefore we consider a polygonal curve $P$ to be definded as a 
-sequence of points $p_1, \dots, p_n \in R^d$ where $d$ is the dimensionality 
-of the space, e.g., $n=2$ or $n=3$, and linear interpolation between this points. 
-However, many concepts also apply to continuous functions.
+\begin{mydef}
+  \label{def_curve}
+  We define a curve as a continuous function $f : [a,b] \mapsto V$ 
+  with $a,b \in \mathbb{R}, a \leq b$ and $V$ being the space of the curve,
+  e.g., $\mathbb{R}^2$ or $\mathbb{R}^3$.
+\end{mydef}
+
+\begin{mydef}
+  \label{def_polygonal_curve}
+  We define a polygonal curve (polygonal chain) 
+  as a linearly interpolated curve 
+  on $n \in \mathbb{N}$ points in $V$ such that
+  $P : [0,n] \mapsto V$ 
+  with  $P(i + \lambda) = (1 - \lambda)P(i) + \lambda P(i+1)$
+  for all $\lambda \in [0,1]$ and all $i \in \{0, 1, \dots, n-1\}$.
+\end{mydef}
+
+In the following we will focus on polygonal curves (polygonal chains) 
+instead of classical continuous curves, ofen used in pure mathematics, 
+because most data we have in this area is 
+captured by some none continuous mechanism, e.g., GPS positions from a tracking device.
+Addionally, we focus on the 2D Space, i.e. $V = \mathbb{R}^2$.
+However, many concepts also apply to normal curves and higher dimensional spaces.
 
 
 % Hausdorff distance
 The commonly known \textit{Hausdorff distance} can be understood 
 as the largest distance between any two points on the curves. 
-For each curve, a point with the maximum shortest distance to a point on the other curve is searched for, see \autoref{fig_hausdorff_distance_example}.
-The Hausdorff distance is mathematically formulated as stated in \autoref{eq_hausdorff_distance} \cite{alt_computing_1995}.
+For each curve, a point with the maximum shortest distance to a point on the other curve is searched for, see \autoref{fig_hausdorff_distance_example}. \cite{alt_computing_1995}
 
-\begin{align}
-  \label{eq_hausdorff_distance}
-  \delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)
-\end{align}
 
-However, this metric does not take the course of the curves into account. 
+\begin{mydef}
+  \label{def_hausdorff_distance}
+  Given two (polygonal) curves $P$ and $Q$, 
+  their Hausdorff distance $\delta_{hd}(P,Q)$ is mathematically defined as: 
+  $$\delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)$$
+\end{mydef}
+
+This metric is very intuitive and can be easily computed for polygonal curves \cite{ko_complexity_2013}.
+It finds applications in computer vision and computer graphics 
+where it is used to compare the similarity of two mesh objects \cite{cignoni_metro_1998,ko_complexity_2013}. 
+However, this metric does not take the course of the curves into account, 
+but only the point sets of the individual curves.
 Two curves may have a small Hausdorff-distance but seem very dissimilar 
 when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
@@ -255,16 +275,47 @@ when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 
 % Fréchet distance motivation
+In reality, the course of the curves is important for many applications. 
+For example, in handwriting character recognition on digital input devices, especially in Chinese, % TODO: add more citations
+gesture recognition on smartphone touchscreens \cite{hu_research_2022}, % TODO: add more citations
+and motion evaluation in real-time motion capturing \cite{qiao_real-time_2017, shehu_curve_2012}. % TODO: add more citations
+For this reason, the \textit{Fréchet distance}, named after the famous french mathematician René Maurice Fréchet, was introduced.
+
+A common analogy for the Fréchet distance can be shown by a man walking his dog. 
+Assume that both the man and the dog are moving along a predefined fixed curve. 
+Both are free to adjust their speed as they wish, even to stop. 
+However, they are not allowed to go backwards. 
+We are looking for the minimum length of the dog leash 
+that is necessary for both of them to reach their destination. 
+The length of the dog leash is then exactly the Fréchet distance of the two curves.
 
 % continuous Fréchet distance equation
 
+\begin{mydef}
+  \label{def_frechet_distance}
+  Given two (polygonal) curves $P: [a,a'] \mapsto V$, $Q: [b,b'] \mapsto V$ and a distance function $\text{dist}: (V,V) \mapsto \mathbb{R}$, 
+  their Fréchet distance $\delta_{F}(P,Q)$ is mathematically defined as: 
+  $$\delta_{F}(P,Q) = \inf_{\substack{\alpha: [0,1] \mapsto [a, a'] \\ \beta: [0,1] \mapsto [b, b']}} \max_{t \in [0,1]} \text{dist}(P(\alpha(t)), Q(\beta(t)))$$
+  where $\alpha$ and $\beta$ represend the walking speed as 
+  continuous monotonically increasing functions with
+  $\alpha(0) = a, \alpha(1) = a'$, 
+  $\beta(0) =b, \beta(1) =b'$.
+\end{mydef}
+
+
+% TODO: Add example of Frechet distance
+
 % Scope
+% - Different Variants and their differences
+% - Original Algorithm by Alt and Godau
+% - Original Algorihm for discrete Fréchet distance
+% - Newer Algorithms (vor variants)
 
 
 
 % Fréchet distance Variants 
 \section{Variants}
-Through the years many slightly differnt variants of the continuous Fréchet distance have evolved. 
+Through the years many slightly differnt variants of the continuous Fréchet distance (see Definition \ref{def_frechet_distance}) have evolved. 
 The continuous Fréchet distance takes into account every single point on the curves, 
 with interpolation in the case of polygonal curves, 
 without allowing to walk backwards 
