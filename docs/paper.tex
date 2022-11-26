@@ -39,7 +39,7 @@ fontsize=11pt
 %%%
 %%% Colors
 %%%
-\RequirePackage[table,dvipsnames]{xcolor}
+\RequirePackage[table, dvipsnames]{xcolor}
 \definecolor{TUGreen}{rgb}{0.517,0.721,0.094}
 
 
@@ -47,6 +47,7 @@ fontsize=11pt
 %%% Macros
 %%%
 \newtheorem{mydef}{Definition}
+\newcommand{\mydefautorefname}{Definition}
 
 %%%
 %%% PDF
@@ -187,9 +188,8 @@ fontsize=11pt
 
 \section{Introduction}
 % motivation
-At first it seems that measuring the similairty between two curves
-is a very theoretical problem
-but it has many, not that obvious, pratical applications.
+At first, it seems that measuring the similarity between two curves
+is a very theoretical problem, but it has many, not that obvious, practical applications.
 It is used in Geo-Information-Systems (GIS) to 
 quantify the similarity or quality of two maps, % cite
 find patterns in vehicle traffic or animal tracking data 
@@ -197,10 +197,10 @@ by trajectory analysis, % cite
 gesture recognition on touch devices like smartphones \cite{hu_research_2022}, % cite
 and shape matching in the field of computer vision. 
 
-To quantify the similairty of two given curves (e.g. shapes, paths, or trajectories)
+To quantify the similarity of two given curves (e.g. shapes, paths, or trajectories)
 a distance metric can be used. 
-We can't simply use a distance metric like eucledian distance 
-becuase we don't want to compare points to points 
+We can't simply use a distance metric like euclidean distance 
+because we don't want to compare points to points 
 but instead compare curves to curves. 
 
 % two (polygonal) curves
@@ -216,17 +216,18 @@ but instead compare curves to curves.
   \label{def_polygonal_curve}
   We define a polygonal curve (polygonal chain) 
   as a linearly interpolated curve 
-  on $n \in \mathbb{N}$ points in $V$ such that
-  $P : [0,n] \mapsto V$ 
-  with  $P(i + \lambda) = (1 - \lambda)P(i) + \lambda P(i+1)$
-  for all $\lambda \in [0,1]$ and all $i \in \{0, 1, \dots, n-1\}$.
+  on $n \in \mathbb{N}$ points in $V$.
+  Therefore, $P : [0,n] \mapsto V$ 
+  should be affine on the interval $[i,i+1]$ for all $i \in \{0, 1, \dots, n-1\}$, 
+  i.e., $P(i + \lambda) = (1 - \lambda)P(i) + \lambda P(i+1)$ for all $\lambda \in [0,1]$.
 \end{mydef}
 
 In the following we will focus on polygonal curves (polygonal chains) 
-instead of classical continuous curves, ofen used in pure mathematics, 
+as defined in \autoref{def_polygonal_curve} 
+instead of classical curves (\autoref{def_curve}), often used in pure mathematics, 
 because most data we have in this area is 
-captured by some none continuous mechanism, e.g., GPS positions from a tracking device.
-Addionally, we focus on the 2D Space, i.e. $V = \mathbb{R}^2$.
+captured by some noncontinuous mechanism, e.g., GPS positions from a tracking device.
+Additionally, we focus on the 2D Space, i.e. $V = \mathbb{R}^2$.
 However, many concepts also apply to normal curves and higher dimensional spaces.
 
 
@@ -243,7 +244,8 @@ For each curve, a point with the maximum shortest distance to a point on the oth
   $$\delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)$$
 \end{mydef}
 
-This metric is very intuitive and can be easily computed for polygonal curves \cite{ko_complexity_2013}.
+The Hausdorff distance metric $\delta_{hd}(P,Q)$ defined in \autoref{def_hausdorff_distance} 
+is very intuitive and can be easily computed for polygonal curves \cite{ko_complexity_2013}.
 It finds applications in computer vision and computer graphics 
 where it is used to compare the similarity of two mesh objects \cite{cignoni_metro_1998,ko_complexity_2013}. 
 However, this metric does not take the course of the curves into account, 
@@ -252,7 +254,6 @@ Two curves may have a small Hausdorff-distance but seem very dissimilar
 when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 \begin{figure}[ht]
-  % TODO: insert figure
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
@@ -279,7 +280,7 @@ In reality, the course of the curves is important for many applications.
 For example, in handwriting character recognition on digital input devices, especially in Chinese, % TODO: add more citations
 gesture recognition on smartphone touchscreens \cite{hu_research_2022}, % TODO: add more citations
 and motion evaluation in real-time motion capturing \cite{qiao_real-time_2017, shehu_curve_2012}. % TODO: add more citations
-For this reason, the \textit{Fréchet distance}, named after the famous french mathematician René Maurice Fréchet, was introduced.
+For this reason, the \textit{Fréchet distance}, named after the famous French mathematician René Maurice Fréchet, was introduced.
 
 A common analogy for the Fréchet distance can be shown by a man walking his dog. 
 Assume that both the man and the dog are moving along a predefined fixed curve. 
@@ -290,20 +291,27 @@ that is necessary for both of them to reach their destination.
 The length of the dog leash is then exactly the Fréchet distance of the two curves.
 
 % continuous Fréchet distance equation
-
 \begin{mydef}
   \label{def_frechet_distance}
   Given two (polygonal) curves $P: [a,a'] \mapsto V$, $Q: [b,b'] \mapsto V$ and a distance function $\text{dist}: (V,V) \mapsto \mathbb{R}$, 
   their Fréchet distance $\delta_{F}(P,Q)$ is mathematically defined as: 
   $$\delta_{F}(P,Q) = \inf_{\substack{\alpha: [0,1] \mapsto [a, a'] \\ \beta: [0,1] \mapsto [b, b']}} \max_{t \in [0,1]} \text{dist}(P(\alpha(t)), Q(\beta(t)))$$
-  where $\alpha$ and $\beta$ represend the walking speed as 
+  where $\alpha$ and $\beta$ represent the walking speed as 
   continuous monotonically increasing functions with
   $\alpha(0) = a, \alpha(1) = a'$, 
   $\beta(0) =b, \beta(1) =b'$.
 \end{mydef}
 
+% TODO: Add example graphic of Frechet distance
 
-% TODO: Add example of Frechet distance
+Besides the previously mentioned applications, 
+where the course of the curves is important, 
+the Fréchet distance also finds applications in
+(online) signature verification \cite{zheng_algorithm_2008,fang_research_2018},
+map-matching tracking data for traffic control, routing and navigation \cite{wenk_addressing_2006,brakatsoulas_map-matching_2005},
+and moving object analysis, e.g., detecting commuting patterns \cite{buchin_detecting_2011}.
+
+
 
 % Scope
 % - Different Variants and their differences
@@ -315,9 +323,8 @@ The length of the dog leash is then exactly the Fréchet distance of the two cur
 
 % Fréchet distance Variants 
 \section{Variants}
-Through the years many slightly differnt variants of the continuous Fréchet distance (see Definition \ref{def_frechet_distance}) have evolved. 
-The continuous Fréchet distance takes into account every single point on the curves, 
-with interpolation in the case of polygonal curves, 
+Through the years many slightly different variants of the continuous Fréchet distance (see Definition \ref{def_frechet_distance}) have evolved. 
+The continuous Fréchet distance takes into account every single point on the curves 
 without allowing to walk backwards 
 and without any obstacles in between the two curves.
 
@@ -325,11 +332,87 @@ and without any obstacles in between the two curves.
 The \textit{weak Fréchet distance} slightly modifies the continuous version by allowing 
 going backwards. 
 
-% TODO: Is that mapping bijective? Add sources
-The \textit{discrete Fréchet distance} 
-This gives an upper bound on the continuous Fréchet distance % Source?
-and is often used as a approximation. % Source?
+% Discrete Fréchet distance
+The \textit{discrete Fréchet distance} is specifically tied to 
+polygonal curves (\autoref{def_polygonal_curve}) 
+because it requires a finite number of vertices.
+The dog walking analogy can be adapted by replacing both the man and the dog by two frogs,
+which are only allowed to jump from their current vertex to their next 
+vertex in forward direction \cite{bringmann_why_2014}.
+While it is allowed for both frogs to jump simultaneously,
+it is not allowed to skip vertices while jumping. 
+We ensure this behavior by defining a coupling between the curves in \autoref{def_point_coupling}.
+
+\begin{mydef}
+  \label{def_point_coupling}
+  A \textit{coupling} L between two polygonal curves $P$ and $Q$, 
+  with points $(u_1, \dots, u_p)$ and $(v_1, \dots, v_p)$ respectively, 
+  is defined as a sequence
+  $$(u_{a_1}, v_{b_1}),(u_{a_2}, v_{b_2}), \dots, (u_{a_m}, v_{b_m})$$
+  such that $a_1 = 1, b_1 = 1, a_m = p, b_m = q$ 
+  while preserving order and the jump length limitation.
+  % Note different definiton than in original paper
+  % fixes error for unequal length polygonal curves
+  Thus, for all $i \in \{1, \dots m-1\}$
+  the jump length should be positive but no more than 1,
+  i.e., $0 \leq a_{i+1} - a_i \leq 1$ (respectively $0 \leq b_{i+1} - b_i \leq 1$).
+\end{mydef}
+
+Note that $P$ and $Q$ may be different in terms of number of points,
+implying that the frog on the shorter curve 
+has to stop and wait on at least one vertex once
+due to the pigeonhole principle.
+To order the possible couplings between $P$ and $Q$ we define the 
+\textit{length} of a coupling in \autoref{def_coupling_length}. 
+
+\begin{mydef}
+  \label{def_coupling_length}
+  The \textit{length} $||L||$ of a coupling $L$ is the greatest distance of the $m$ pairs in $L$, that is, 
+  $$||L|| = \max_{i=1, \dots, m} dist(u_{a_i}, v_{b_i})$$
+\end{mydef}
+
+The definition of the discrete Fréchet distance immediately follows from 
+the length of a coupling and is given by \autoref{def_discrete_frechet_distance}.
+
+\begin{mydef}
+  \label{def_discrete_frechet_distance}
+  Given two polygonal curves $P$ and $Q$
+  their discrete Fréchet distance $\delta_{dF}(P,Q)$ is defined as the shortest coupling between them: 
+  $$\delta_{dF}(P,Q) = \min \left\{ ||L|| \ | \  L \text{ is a coupling between P and Q} \right\}$$
+\end{mydef}
+
+The discrete variation (\autoref{def_discrete_frechet_distance}) gives an upper bound on the continuous Fréchet distance (\autoref{def_frechet_distance}). 
+% Clearify if this is really an upper bound for polygonal curves with example
+This might not be very obvious for the case of polygonal curves, 
+but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive example.
+
+\begin{figure}[ht]
+  \centering
+  % TODO: Replace graphic with appropiate example
+  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \caption[Upper bound on Fréchet distance]{
+    In the case of discrete Fréchet distance 
+    one frog has to wait at either start or end of his path 
+    while the other one is at the middle vertex, 
+    thus requiring a minimal length of $\sqrt{d^2 + l^2}$ for any coupling.
+    In contrast, a leash of length $d$ is sufficient for the continuous Fréchet distance.}
+  \label{fig_frechet_distance_upper_bound_example}
+\end{figure}
+
+
+
+
+Additionally, it's also a lower bound on the continuous Fréchet distance 
+plus the distance of the longest legal jump of any frog. 
+By increasing the number of points of a polygonal curve that 
+approximates a polygonal curve 
+and can be used as an approximation. % Source?
+\cite{eiter_computing_nodate}
+
 % discrete Fréchet distance and contrast to hausdorff distance
+% The discrete Fréchet distance also assings each point another point on the other curve
+% just like the hausdorff distance, however it additionally preserves the order of points.
+
 
 % (Geodesic Fréchet distance)
 
