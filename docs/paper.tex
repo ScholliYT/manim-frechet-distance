@@ -181,7 +181,7 @@ fontsize=11pt
 %%% structure: \section \subsection \subsubsection \paragraph \subparagraph
 %%%
 
-\newgeometry{left=3cm, right=4.5cm, top=4cm, bottom=4cm}
+\newgeometry{left=3cm, right=4cm, top=3cm, bottom=3cm}
 
 \section*{Abstract}
 
@@ -289,6 +289,7 @@ However, they are not allowed to go backwards.
 We are looking for the minimum length of the dog leash 
 that is necessary for both of them to reach their destination. 
 The length of the dog leash is then exactly the Fréchet distance of the two curves.
+A formal definition is given in \autoref{def_frechet_distance}.
 
 % continuous Fréchet distance equation
 \begin{mydef}
@@ -329,10 +330,12 @@ without allowing to walk backwards
 and without any obstacles in between the two curves.
 
 % TODO: Why allow it? Better algorithms?
+\subsection{Weak Fréchet distance}
 The \textit{weak Fréchet distance} slightly modifies the continuous version by allowing 
 going backwards. 
 
 % Discrete Fréchet distance
+\subsection{Discrete Fréchet distance}
 The \textit{discrete Fréchet distance} is specifically tied to 
 polygonal curves (\autoref{def_polygonal_curve}) 
 because it requires a finite number of vertices.
@@ -422,24 +425,142 @@ and can be used as an approximation. % Source?
 
 \section{Algorithms}
 % Chapter summary and structure
+Several algorithms to compute the Fréchet distance of polygonal curves were proposed, 
+starting from the Original algorithm for the continuous variant by Alt and Godau in 1995 \cite{alt_computing_1995}.
+The algorithm is based on a concept called free-space diagram and gives a baseline for newer improved versions. 
+This chapter is structured as follows: 
+firstly the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm},
+then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
+Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_improved_algorithm}.
+Finally, an algorithm to compute the discrete Fréchet distance is given in \autoref{sec_discrete_algorithm}.
+% Finally
 
 
 \subsection{Original algorithm for the continuous Fréchet distance}
+\label{sec_original_algorithm}
+The original algorithm to compute the continuous Fréchet distance (\autoref{def_frechet_distance})
+is based on the idea of solving a simpler decision problem and then doing a parameter search to find the exact value of $\delta_{F}$.
+The decision problem is to decide whether two polygonal curves $P$ and $Q$ have a 
+Fréchet distance $\delta_{F}(P,Q) \leq \varepsilon$ for some fixed $\varepsilon \geq 0$.
+
+We start by looking at the simplest case for two polygonal curves with two vertices each, i.e., two line segments.
+The free space is are all valid combinations of positions on $P$ and $Q$ that have a distance of at most $\varepsilon$.
+Therefore, we define $F_\varepsilon = \{(s,t) \in [0,1]^2 \ | \ dist(P(s), Q(t)) \leq \varepsilon \}$.
+Plotting $s$ and $t$ on a two-dimensional graph, while indicating all illegal combinations in 
+another color, gives the free space diagram, see \autoref{fig_free_space}. \cite{alt_computing_1995}
+
 % Free Space Diagram
+\begin{figure}[ht]
+  \centering
+  % TODO: update figure graphics
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+      }
+      \caption{Line segments $P$ and $Q$}
+      \label{fig_free_space_lines_example}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-bad-example.pdf}
+      }
+      \caption{Free space diagram}
+      \label{fig_free_space_diagram_example}
+  \end{subfigure}
+  \caption[Free space diagram example]{
+    The free space diagram \autoref{fig_free_space_lines_example} 
+    for line segments $P$ and $Q$ and distance $\varepsilon$
+    from \autoref{fig_free_space_lines_example} using euclidean distance.}
+  \label{fig_free_space}
+\end{figure}
+
+The free space $F_\varepsilon$ has different shapes depending on the employed distance metric,
+e.g.,  the intersection of the unit square with an ellipse for euclidean distance 
+and with a parallelogram for $L_1$ or $L_\infty$. 
+The exact structure of the free space is not further relevant, 
+because only the convexity of the area is important. \cite{alt_computing_1995}
+
+We can now extend the free space diagram to longer polygonal curves 
+as stated in \autoref{def_free_space}.
+An example for a free space diagram on two non-trivial polygonal curves is given in \autoref{fig_complex_free_space}.
+
+\begin{mydef}
+  \label{def_free_space}
+  Given two polygonal curves $P$ and $Q$ with $p,q \in \mathbb{N}$ vertices respectively, 
+  the free space is defined as:
+  $$F_\varepsilon = \left\{ (s,t) \in [0,p] \times [0,q] \ | \ dist(P(s), Q(t)) \leq \varepsilon \right\}$$
+\end{mydef}
+
+\begin{figure}[ht]
+  \centering
+  % TODO: update figure graphics
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+      }
+      \caption{Polygonal curves $P$ and $Q$}
+      \label{fig_complex_free_space_lines_example}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+      \resizebox{\textwidth}{!}{
+        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-bad-example.pdf}
+      }
+      \caption{Free space diagram}
+      \label{fig_complex_free_space_diagram_example}
+  \end{subfigure}
+  \caption[Complex free space diagram example]{
+    The free space diagram \autoref{fig_complex_free_space_diagram_example} 
+    for polygonal curves $P$ and $Q$ and distance $\varepsilon$ 
+    from \autoref{fig_complex_free_space_lines_example} using euclidean distance.}
+  \label{fig_complex_free_space}
+\end{figure}
+
+We observe that there exists 
+a monotonically increasing curve from $(0,0)$ to $(p,q)$ in $F_\varepsilon$
+if and only if the Fréchet distance between $P$ and $Q$ is less than or equal to $\varepsilon$,
+i.e., $\delta_F(P,Q) \leq \varepsilon$.
+Given such a curve, the walking speed functions $\alpha$ and $\beta$ from \autoref{def_frechet_distance}
+can be easily obtained by rescaling the parameter ranges. 
+
+Computing the complete free space is very compute intensive 
+because each point in the continuous space needs to be computed. 
+Using the convexity property of each cell in the free space,
+we can make another observation requiring only a few points to be computed per cell. 
+These points define the legal regions on each boundary side of the cell, see \autoref{fig_legal_boundary_intervals_of_a_cell}. 
+We don't need to know the exact shape of the free space 
+because we travel in a monotonically increasing way through a convex space,
+hence never entering any illegal regions.
+
+\begin{figure}[ht]
+  \centering
+  % TODO: Replace graphic with appropiate example
+  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \caption[Legal intervals on free space cell boundary]{Legal intervals on the boundaries of a free space cell.}
+  \label{fig_legal_boundary_intervals_of_a_cell}
+\end{figure}
+
+
+
+
+
+
 % Runtime analysis (?)
-% Correctness proof (?)
+% Correctness proof (?)6
 
 \subsection{Improved Version?}
+\label{sec_improved_algorithm}
 
-\subsection{Algorithms for different variants}
-% discrete Fréchet distance
+% Algorithms for different variants
+\subsection{Algorithm for weak Fréchet distance}
 
-% weak Fréchet distance
-
+\subsection{Algorithm for discrete Fréchet distance}
+\label{sec_discrete_algorithm}
 
 
 \section{Conclusion}
-
+% Which version to use when
 
 
 
