@@ -174,7 +174,7 @@ fontsize=11pt
 \newpage
 
 % \pagenumbering{arabic} %% normal page numbers (include it, if roman was used above)
-
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
 %%% begin main document
@@ -331,7 +331,7 @@ and without any obstacles in between the two curves.
 
 % TODO: Why allow it? Better algorithms?
 \subsection{Weak Fréchet distance}
-The \textit{weak Fréchet distance} slightly modifies the continuous version by allowing 
+The \textit{weak Fréchet distance} (non-monotone Fréchet distance) slightly modifies the continuous version by allowing 
 going backwards. 
 
 % Discrete Fréchet distance
@@ -517,17 +517,10 @@ An example for a free space diagram on two non-trivial polygonal curves is given
   \label{fig_complex_free_space}
 \end{figure}
 
-We observe that there exists 
-a monotonically increasing curve from $(0,0)$ to $(p,q)$ in $F_\varepsilon$
-if and only if the Fréchet distance between $P$ and $Q$ is less than or equal to $\varepsilon$,
-i.e., $\delta_F(P,Q) \leq \varepsilon$.
-Given such a curve, the walking speed functions $\alpha$ and $\beta$ from \autoref{def_frechet_distance}
-can be easily obtained by rescaling the parameter ranges. 
-
-Computing the complete free space is very compute intensive 
+Computing the complete free space $F_\varepsilon$ is very compute intensive 
 because each point in the continuous space needs to be computed. 
 Using the convexity property of each cell in the free space,
-we can make another observation requiring only a few points to be computed per cell. 
+we can observe that only a small constant number of points need to be computed per cell. 
 These points define the legal regions on each boundary side of the cell, see \autoref{fig_legal_boundary_intervals_of_a_cell}. 
 We don't need to know the exact shape of the free space 
 because we travel in a monotonically increasing way through a convex space,
@@ -537,12 +530,78 @@ hence never entering any illegal regions.
   \centering
   % TODO: Replace graphic with appropiate example
   \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
-  \caption[Legal intervals on free space cell boundary]{Legal intervals on the boundaries of a free space cell.}
+  \caption[Legal intervals on free space cell boundary]{
+    Legal intervals on the boundaries of a free space cell. 
+    There are at most 8 intersection points for an ellipse and a rectangle.}
   \label{fig_legal_boundary_intervals_of_a_cell}
 \end{figure}
 
+Due to the constant number of intersection points required per cell, 
+the free space of a single cell can be computed in $\mathcal{O}(1)$ time.
+Therefore, the complete free space of all cells can be computed in $\mathcal{O}(pq)$
+because there are $p-1$ (respectively $q-1$) edges in $P$ (respectively $Q$).
 
+We observe that there exists 
+a monotonically increasing curve from $(0,0)$ to $(p,q)$ in $F_\varepsilon$
+if and only if the Fréchet distance between $P$ and $Q$ is less than or equal to $\varepsilon$,
+i.e., $\delta_F(P,Q) \leq \varepsilon$.
+Given such a curve, the walking speed functions $\alpha$ and $\beta$ from \autoref{def_frechet_distance}
+can be easily obtained by rescaling the parameter ranges. 
+Computing such a monotonically increasing curve can be done using dynamic programming 
+by computing the bottom left most reachable points in each cell starting at $(0,0)$. 
+In each step the solution for a single cell can be computed in constant time based on the 
+solutions to previously computed cells. 
+Therefore, the runtime is also $\mathcal{O}(pq)$. 
+See \autoref{fig_free_space_curve} for an example curve. \cite{alt_computing_1995}
 
+\begin{figure}[ht]
+  \centering
+  % TODO: Replace graphic with appropiate example
+  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \caption{The monotonically increasing curve through the free space is computed by dynamic programming.}
+  \label{fig_free_space_curve}
+\end{figure}
+
+% Actually computing the exact Fréchet distance
+So far we discussed the decision problem whether $\delta_{F}(P,Q) \leq \varepsilon$
+and observe that it is solvable in $\mathcal{O}(pq)$ time.
+What we actually want to know is the exact value of the Fréchet distance.
+A straight forward approach for this is to compute the value bit by bit 
+using binary search in total $\mathcal{O}(pq \log (\text{``accuracy bits''}))$ time.
+In practice this approach works really well 
+and is often favored over other more complicated approaches. \cite{alt_computing_1995} 
+
+Another approach is to check all values of $\varepsilon$ where something ``interesting'' happens
+until the smallest value of $\varepsilon$ is obtained where a monotonically increasing path 
+from $(0,0)$ to $(p,q)$ in $F_\varepsilon$ exists.
+We will call these the \textit{critical values} of $\varepsilon$, which are:
+\begin{enumerate}
+  \item the minimal value of $\varepsilon$ where $(0,0) \in F_\varepsilon$ and $(p,q) \in F_\varepsilon$.
+  \item values of $\varepsilon$ where a new passage on the border edge 
+        between two neighboring cells opens up.
+  \item values of $\varepsilon$ where a new passage horizontal (respectively vertical) passage 
+        between two non-neighboring cells opens up.
+\end{enumerate}
+
+There is one value of case 1, 
+specifically the maximum of starting point to starting point and endpoint to endpoint distance,
+$\mathcal{O}(pq)$ values of case 2, 
+namely the number of vertex to edge distances,
+and $\mathcal{O}(p^2q + pq^2)$ values of case 3,
+particularly the number of times two vertices of one curve have the same distance to one edge of the other curve.
+Determining all these values can be done in $\mathcal{O}(p^2q + pq^2)$ time 
+because each value in each case can be computed in constant time, 
+making the values of the third case dominate the time complexity.
+% TODO: why does this simplyfication work
+These values need to be sorted in $\mathcal{O}((p^2q + pq^2) \log (p^2q + pq^2)) = \mathcal{O}((p^2q + pq^2) \log (pq))$ time
+in order to perform binary search in $\mathcal{O}(pq \log (p^2q + pq^2))$ time on them
+using the algorithm for the decision problem.
+The overall time required for this approach is dominated by the sorting step, 
+thus $\mathcal{O}((p^2q + pq^2) \log (pq))$.
+This time complexity can be decreased to $\mathcal{O}(pq \log (pq))$ 
+using parametric search \cite{megiddo_applying_1983, cole_slowing_1987} to work faster in theory.
+However, due to the specific internally used sorting network 
+it is hard to implement this efficiently in practice. \cite{alt_computing_1995}
 
 
 
