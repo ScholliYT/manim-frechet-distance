@@ -338,7 +338,8 @@ going backwards.
 \subsection{Discrete Fréchet distance}
 The \textit{discrete Fréchet distance} is specifically tied to 
 polygonal curves (\autoref{def_polygonal_curve}) 
-because it requires a finite number of vertices.
+because it requires a finite number of vertices 
+and forbids walking or staying in between them.
 The dog walking analogy can be adapted by replacing both the man and the dog by two frogs,
 which are only allowed to jump from their current vertex to their next 
 vertex in forward direction \cite{bringmann_why_2014}.
@@ -408,9 +409,8 @@ but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive exampl
 Additionally, it's also a lower bound on the continuous Fréchet distance 
 plus the distance of the longest legal jump of any frog. 
 By increasing the number of points of a polygonal curve that 
-approximates a polygonal curve 
-and can be used as an approximation. % Source?
-\cite{eiter_computing_nodate}
+over approximates some other polygonal curve
+this property can be used to compute the continuous Fréchet distance \cite{eiter_computing_1994}.
 
 % discrete Fréchet distance and contrast to hausdorff distance
 % The discrete Fréchet distance also assings each point another point on the other curve
