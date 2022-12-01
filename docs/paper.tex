@@ -328,11 +328,34 @@ Through the years many slightly different variants of the continuous Fréchet di
 The continuous Fréchet distance takes into account every single point on the curves 
 without allowing to walk backwards 
 and without any obstacles in between the two curves.
+In this chapter the most prominent variants of the Fréchet distance are shortly described 
+while algorithms for these are given in the following \autoref{sec_algorithms}.
 
 % TODO: Why allow it? Better algorithms?
 \subsection{Weak Fréchet Distance}
-The \textit{weak Fréchet distance} (non-monotone Fréchet distance) slightly modifies the continuous version by allowing 
-going backwards. 
+\label{sec_weak_frechet_distance}
+The \textit{weak Fréchet distance} (non-monotone Fréchet distance) 
+slightly modifies the continuous version by allowing going backwards. 
+The definition remains the same as for the continuous Fréchet distance in \autoref{def_frechet_distance}
+where the monotonicity of $\alpha$ and $\beta$ is no longer required.
+Note that they are still required to be continuous and have the correct starting and ending values.
+% TODO: Add use cases
+The weak Fréchet distance is a lower bound on the continuous Fréchet distance.
+However, the Ratio between them may be arbitrarily large, 
+as can be seen by the structure given in \autoref{fig_weak_frechet_distance}. \cite{alt_computing_1995}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/frechet_distance/weak-frechet-distance-example.pdf}
+  \caption{
+    The two shown polygonal curves $P$ and $Q$ have a small weak Fréchet distance 
+    because the point on $Q$ can be moved forward and backward as often as needed. 
+    The continuous Fréchet distance is rather large 
+    because the point on $Q$ can only move forward.}
+  \label{fig_weak_frechet_distance}
+\end{figure}
+
+
 
 % Discrete Fréchet distance
 \subsection{Discrete Fréchet Distance}
@@ -393,11 +416,11 @@ but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive exampl
 \begin{figure}[ht]
   \centering
   % TODO: Replace graphic with appropiate example
-  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \includegraphics[width=0.8\textwidth]{images/frechet_distance/discrete-frechet-distance-upper-bound.pdf}
   \caption[Upper bound on Fréchet distance]{
-    In the case of discrete Fréchet distance 
-    one frog has to wait at either start or end of his path 
-    while the other one is at the middle vertex, 
+    In the case of the discrete Fréchet distance 
+    one frog has to wait at either start or end $Q$
+    while the other one is at the middle vertex of $P$, 
     thus requiring a minimal length of $\sqrt{d^2 + l^2}$ for any coupling.
     In contrast, a leash of length $d$ is sufficient for the continuous Fréchet distance.}
   \label{fig_frechet_distance_upper_bound_example}
@@ -416,21 +439,23 @@ this property can be used to compute the continuous Fréchet distance \cite{eite
 % The discrete Fréchet distance also assings each point another point on the other curve
 % just like the hausdorff distance, however it additionally preserves the order of points.
 
-
 % (Geodesic Fréchet distance)
 
 % (Homotopic Fréchet distance)
 
+\subsection{Fréchet distance with speed limits}
 
 \subsection{Fréchet Distance for Uncertain Curves}
 
 \section{Algorithms}
+\label{sec_algorithms}
 % Chapter summary and structure
 Several algorithms to compute the Fréchet distance of polygonal curves were proposed, 
 starting from the Original algorithm for the continuous variant by Alt and Godau in 1995 \cite{alt_computing_1995}.
-The algorithm is based on a concept called free-space diagram and gives a baseline for newer improved versions. 
+The algorithm is based on a concept called free-space diagram and gives a baseline for newer improved versions, 
+e.g., the version by Buchin et al. \cite{buchin_four_2017}. 
 This chapter is structured as follows: 
-firstly the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm},
+first the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm},
 then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
 Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_improved_algorithm}.
 Finally, an algorithm to compute the discrete Fréchet distance is given in \autoref{sec_discrete_algorithm}.
@@ -568,7 +593,7 @@ So far we discussed the decision problem whether $\delta_{F}(P,Q) \leq \varepsil
 and observe that it is solvable in $\mathcal{O}(pq)$ time.
 What we actually want to know is the exact value of the Fréchet distance.
 A straight forward approach for this is to compute the value bit by bit 
-using binary search in total $\mathcal{O}(pq \log (\text{``accuracy bits''}))$ time.
+using binary search in total $\mathcal{O}(pq \log (\text{``accuracy''})) = \mathcal{O}(pq  (\text{``accuracy bits''}))$ time.
 In practice this approach works really well 
 and is often favored over other more complicated approaches. \cite{alt_computing_1995} 
 
@@ -612,8 +637,56 @@ it is hard to implement this efficiently in practice. \cite{alt_computing_1995}
 \subsection{Improved Version?}
 \label{sec_improved_algorithm}
 
+
+
 % Algorithms for different variants
 \subsection{Algorithm for weak Fréchet distance}
+\label{sec_weak_algorithm}
+The weak Fréchet distance, as described in \autoref{sec_weak_frechet_distance},
+the computation becomes less complex compared to the continuous Fréchet distance.
+Specifically, we can ignore critical values of the third type, 
+since it is no longer required to move monotonically 
+and one could just go left or down in the free space diagram taking any arbitrary continuous path.
+Therefore, the focus shifts towards critical values of the second type, 
+those where new passages between neighboring cells open up.
+Alt and Godau \cite{alt_computing_1995} proposed two algorithms to compute the weak Fréchet distance.
+
+For both algorithms the problem is modeled as a grid based graph of $p$ by $q$ vertices, 
+one for each cell of the free space diagram,
+and edges connecting the vertices with their, up to six, neighboring vertices.
+Additionally, $s$ is added as start vertex and $t$ as end vertex.
+This results in an undirected Graph $G=(V,E)$ 
+where $V = \{C_{i,j} \ | \ 0 \leq i \leq p, 0 \leq j \leq q \} \cup \{s,t\}$
+and $E=\{(C_{i,j}, C_{i+1,j}) \ | \ \ 0 \leq i < p, 0 \leq j \leq q\} \cup \{(C_{i,j}, C_{i,j+1}) \ | \ \ 0 \leq i \leq p, 0 \leq j < q\} \cup \{(s, C_{0,0}), (C_{p,q}, t)\}$.
+Each edge $(C_{i,j}, C_{i',j'})$ is assigned a critical minimal value of $\varepsilon$ 
+such that there is a passage through the border between two cells in the free space. 
+Furthermore, the minimal value of $\varepsilon$ such that $(0,0) \in F_\varepsilon$ is assigned to the first edge $(s, C_{0,0})$ 
+and the minimal value of $\varepsilon$ such that $(p,q) \in F_\varepsilon$ is assigned to the last edge $(C_{p,q}, t)$. \cite{alt_computing_1995}
+
+The first algorithm is again based on first solving the decision problem 
+and then searching for the right $\varepsilon$ through binary search.
+The decision problem is satisfied, if and only if there exists a path from $s$ to $t$ in $G$ 
+with a maximum single edge value of $\varepsilon$.
+This can be checked by removing all edged with values greater than $\varepsilon$ from $E$ 
+and then checking if $s$ is still connected to $t$. 
+This can be done through some graph traversal algorithm like breadth-first search or depth-first search
+in $\mathcal{O}(pq)$ time. \cite{alt_computing_1995}
+Since the number of critical values is no longer dominated by the third case,
+rather by the second case of $\mathcal{O}(pq)$ values, 
+the overall computation problem can be solved in $\mathcal{O}(pq \log (pq))$ time using binary search \cite{van_leusden_novel_2013}. 
+
+The second algorithm works by directly searching for a path from $s$ to $t$ in $G$,
+without any prior removal of edges from $E$.
+This can be done using Prim's minimum spanning tree algorithm \cite{prim_shortest_1957} starting at $s$ 
+and stopping as soon as $t$ is included in the spanning tree. 
+The value of $\varepsilon$ is the value of the last added edge.
+Similarly, one can use Dijkstra's algorithm \cite{dijkstra_note_1959}, 
+optimizing for the minimum maximum edge value.
+Both approaches result in a time complexity of $\mathcal{O}(pq \log (pq))$. \cite{alt_computing_1995}
+In this case of a planar grid based graph with non-negative edge values 
+an even faster algorithm from Henzinger et al. \cite{henzinger_faster_1997} to solve the single source shortest paths 
+can be applied. This gives a time complexity of $\mathcal{O}(pq)$ to compute the weak Fréchet distance \cite{van_leusden_novel_2013}.
+
 
 \subsection{Algorithm for discrete Fréchet distance}
 \label{sec_discrete_algorithm}
