@@ -457,7 +457,7 @@ e.g., the version by Buchin et al. \cite{buchin_four_2017}.
 This chapter is structured as follows: 
 first the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm},
 then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
-Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_improved_algorithm}.
+Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_weak_algorithm}.
 Finally, an algorithm to compute the discrete Fréchet distance is given in \autoref{sec_discrete_algorithm}.
 % Finally
 
@@ -636,11 +636,12 @@ it is hard to implement this efficiently in practice. \cite{alt_computing_1995}
 
 \subsection{Improved Version?}
 \label{sec_improved_algorithm}
-
+\cite{van_leusden_novel_2013}
+\cite{buchin_four_2017}
 
 
 % Algorithms for different variants
-\subsection{Algorithm for weak Fréchet distance}
+\subsection{Algorithm for the Weak Fréchet Distance}
 \label{sec_weak_algorithm}
 The weak Fréchet distance, as described in \autoref{sec_weak_frechet_distance},
 the computation becomes less complex compared to the continuous Fréchet distance.
@@ -688,9 +689,34 @@ an even faster algorithm from Henzinger et al. \cite{henzinger_faster_1997} to s
 can be applied. This gives a time complexity of $\mathcal{O}(pq)$ to compute the weak Fréchet distance \cite{van_leusden_novel_2013}.
 
 
-\subsection{Algorithm for discrete Fréchet distance}
+\subsection{Algorithm for the Discrete Fréchet Distance}
 \label{sec_discrete_algorithm}
+The computation of the discrete Fréchet distance, as defined in \autoref{def_discrete_frechet_distance}, is very easy and straight forward 
+using a dynamic programming approach as originally suggested by Eiter et al. \cite{eiter_computing_1994}.
+Recall that the polygonal curves $P = (u_1, \dots, u_p)$ and $Q = (v_1, \dots, v_p)$ are defined as sequences of points.
+The algorithm works by recursively computing the minimal required $\varepsilon$ for partial curves 
+$P' = (u_1, \dots, u_i)$ and $Q' = (v_1, \dots, v_j)$
+using $c(i,j)$ as defined in \autoref{def_recursive_forumla_discrete_frechet_distance}.
+Starting from $c(1,1)$, which is the distance between the starting points $u_1$ and $v_1$,
+all other values of $c(i,j)$ are computed iteratively in a bottom up manner 
+and memoization on the previously computed values of $c(i,j)$.
+The resulting algorithm has runtime of $\mathcal{O}(pq)$
+because the constant time function $c(i,j)$ is called $pq$ times \cite{eiter_computing_1994}.
 
+\begin{mydef}
+  \label{def_recursive_forumla_discrete_frechet_distance}
+  The discrete Fréchet distance of polygonal curves $P' = (u_1, \dots, u_i)$ and $Q' = (v_1, \dots, v_j)$
+  can be computed by
+  \begin{align*}
+    c(i,j) &= \begin{cases}
+      dist(u_1, v_1), &\text{if } i=1 \text{and } j=1 \\
+      \max \{c(i-1,j), dist(u_i, v_1)\}, &\text{if } i>1 \text{and } j=1 \\
+      \max \{c(i,j-1), dist(u_1, v_j)\}, &\text{if } i=1 \text{and } j>1 \\
+      \max \{c(i-1,j), c(i,j-1), c(i-1,j-1), dist(u_i, v_j)\}, &\text{if } i>1 \text{and } j>1
+    \end{cases} \\
+    &= \delta_{dF}(P',Q')
+  \end{align*}
+\end{mydef}
 
 \section{Conclusion}
 % Which version to use when
