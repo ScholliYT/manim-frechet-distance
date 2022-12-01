@@ -330,12 +330,12 @@ without allowing to walk backwards
 and without any obstacles in between the two curves.
 
 % TODO: Why allow it? Better algorithms?
-\subsection{Weak Fréchet distance}
+\subsection{Weak Fréchet Distance}
 The \textit{weak Fréchet distance} (non-monotone Fréchet distance) slightly modifies the continuous version by allowing 
 going backwards. 
 
 % Discrete Fréchet distance
-\subsection{Discrete Fréchet distance}
+\subsection{Discrete Fréchet Distance}
 The \textit{discrete Fréchet distance} is specifically tied to 
 polygonal curves (\autoref{def_polygonal_curve}) 
 because it requires a finite number of vertices 
@@ -422,6 +422,7 @@ this property can be used to compute the continuous Fréchet distance \cite{eite
 % (Homotopic Fréchet distance)
 
 
+\subsection{Fréchet Distance for Uncertain Curves}
 
 \section{Algorithms}
 % Chapter summary and structure
@@ -436,7 +437,7 @@ Finally, an algorithm to compute the discrete Fréchet distance is given in \aut
 % Finally
 
 
-\subsection{Original algorithm for the continuous Fréchet distance}
+\subsection{Original Algorithm for the Continuous Fréchet Distance}
 \label{sec_original_algorithm}
 The original algorithm to compute the continuous Fréchet distance (\autoref{def_frechet_distance})
 is based on the idea of solving a simpler decision problem and then doing a parameter search to find the exact value of $\delta_{F}$.
@@ -455,7 +456,7 @@ another color, gives the free space diagram, see \autoref{fig_free_space}. \cite
   % TODO: update figure graphics
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
-        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+        \includegraphics[width=\textwidth]{images/frechet_distance/line_segments.pdf}
       }
       \caption{Line segments $P$ and $Q$}
       \label{fig_free_space_lines_example}
@@ -463,13 +464,13 @@ another color, gives the free space diagram, see \autoref{fig_free_space}. \cite
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
-        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-bad-example.pdf}
+        \includegraphics[width=\textwidth]{images/frechet_distance/free_space_single_cell.pdf}
       }
       \caption{Free space diagram}
       \label{fig_free_space_diagram_example}
   \end{subfigure}
   \caption[Free space diagram example]{
-    The free space diagram \autoref{fig_free_space_lines_example} 
+    The free space diagram \autoref{fig_free_space_diagram_example} 
     for line segments $P$ and $Q$ and distance $\varepsilon$
     from \autoref{fig_free_space_lines_example} using euclidean distance.}
   \label{fig_free_space}
@@ -497,7 +498,7 @@ An example for a free space diagram on two non-trivial polygonal curves is given
   % TODO: update figure graphics
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
-        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+        \includegraphics[width=\textwidth]{images/frechet_distance/polygonal_curves.pdf}
       }
       \caption{Polygonal curves $P$ and $Q$}
       \label{fig_complex_free_space_lines_example}
@@ -505,15 +506,15 @@ An example for a free space diagram on two non-trivial polygonal curves is given
   \hfill
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
-        \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-bad-example.pdf}
+        \includegraphics[width=\textwidth]{images/frechet_distance/free_space_polygonal_curves.pdf}
       }
       \caption{Free space diagram}
       \label{fig_complex_free_space_diagram_example}
   \end{subfigure}
   \caption[Complex free space diagram example]{
     The free space diagram \autoref{fig_complex_free_space_diagram_example} 
-    for polygonal curves $P$ and $Q$ and distance $\varepsilon$ 
-    from \autoref{fig_complex_free_space_lines_example} using euclidean distance.}
+    for polygonal curves $P$ and $Q$ from \autoref{fig_complex_free_space_lines_example} 
+    and distance $\varepsilon = 0.73$ using euclidean distance.}
   \label{fig_complex_free_space}
 \end{figure}
 
