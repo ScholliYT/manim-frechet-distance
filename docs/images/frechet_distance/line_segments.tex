@@ -1,0 +1,54 @@
+% This file was created with tikzplotlib v0.10.1.
+\begin{tikzpicture}
+
+\definecolor{darkgreen}{RGB}{0,100,0}
+\definecolor{darkred}{RGB}{139,0,0}
+\definecolor{dimgray85}{RGB}{85,85,85}
+\definecolor{gainsboro229}{RGB}{229,229,229}
+\definecolor{lightgray204}{RGB}{204,204,204}
+
+\begin{axis}[
+axis background/.style={fill=gainsboro229},
+axis line style={white},
+height=\textwidth,
+legend cell align={left},
+legend style={
+  fill opacity=0.8,
+  draw opacity=1,
+  text opacity=1,
+  at={(0.03,0.97)},
+  anchor=north west,
+  draw=lightgray204,
+  fill=gainsboro229
+},
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=left,
+width=\textwidth,
+x grid style={white},
+xmajorgrids,
+xmin=-1, xmax=1,
+xtick style={color=dimgray85},
+xtick={-1,-0.5,0,0.5,1},
+y grid style={white},
+ymajorgrids,
+ymin=-0.777817459305202, ymax=0.777817459305202,
+ytick style={color=dimgray85},
+ytick={-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8}
+]
+\addplot [very thick, darkred]
+table {%
+-1 0
+1 0
+};
+\addlegendentry{P}
+\addplot [very thick, darkgreen]
+table {%
+-0.707106828689575 -0.707106828689575
+0.707106828689575 0.707106828689575
+};
+\addlegendentry{Q}
+\end{axis}
+
+\end{tikzpicture}
