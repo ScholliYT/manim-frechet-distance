@@ -111,7 +111,7 @@ fontsize=11pt
 \author{Tom Stein}
 
 %%% date
-\date{November 27, 2022}
+\date{December 05, 2022}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -158,7 +158,7 @@ fontsize=11pt
 
 \newgeometry{left=3cm, right=4cm, top=3cm, bottom=3cm}
 
-\section*{Abstract}
+% \section*{Abstract}
 
 
 \section{Introduction}
@@ -166,10 +166,10 @@ fontsize=11pt
 At first, it seems that measuring the similarity between two curves
 is a very theoretical problem, but it has many, not that obvious, practical applications.
 It is used in Geo-Information-Systems (GIS) to 
-quantify the similarity or quality of two maps, % cite
+quantify the similarity or quality of two maps \cite{lyu_partial-frechet-distance-based_2022},
 find patterns in vehicle traffic or animal tracking data 
-by trajectory analysis, % cite
-gesture recognition on touch devices like smartphones \cite{hu_research_2022}, % cite
+by trajectory analysis \cite{buchin_detecting_2011},
+gesture recognition on touch devices like smartphones \cite{hu_research_2022},
 and shape matching in the field of computer vision. 
 
 To quantify the similarity of two given curves (e.g. shapes, paths, or trajectories)
@@ -177,6 +177,7 @@ a distance metric can be used.
 We can't simply use a distance metric like euclidean distance 
 because we don't want to compare points to points 
 but instead compare curves to curves. 
+Therefore, we start by defining curves in \autoref{def_curve}.
 
 % two (polygonal) curves
 % TODO: replace continous funcitons with other name
@@ -252,7 +253,7 @@ when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 % Fréchet distance motivation
 In reality, the course of the curves is important for many applications. 
-For example, in handwriting character recognition on digital input devices, especially in Chinese, % TODO: add more citations
+For example, in handwriting character recognition on digital input devices, especially in Chinese \cite{chanin_david_hanzi_nodate},
 gesture recognition on smartphone touchscreens \cite{hu_research_2022}, % TODO: add more citations
 and motion evaluation in real-time motion capturing \cite{qiao_real-time_2017, shehu_curve_2012}. % TODO: add more citations
 For this reason, the \textit{Fréchet distance}, named after the famous French mathematician René Maurice Fréchet, was introduced.
@@ -264,7 +265,8 @@ However, they are not allowed to go backwards.
 We are looking for the minimum length of the dog leash 
 that is necessary for both of them to reach their destination. 
 The length of the dog leash is then exactly the Fréchet distance of the two curves.
-A formal definition is given in \autoref{def_frechet_distance}.
+A formal definition is given in \autoref{def_frechet_distance} 
+along with a visual example in \autoref{fig_frechet_distance_example}.
 
 % continuous Fréchet distance equation
 \begin{mydef}
@@ -278,8 +280,15 @@ A formal definition is given in \autoref{def_frechet_distance}.
   $\beta(0) =b, \beta(1) =b'$.
 \end{mydef}
 
-% TODO: Add example graphic of Frechet distance
+\begin{figure}[ht]
+  \centering
+  % TODO: Add example graphic of Frechet distance
+  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \caption{The Fréchet distance is indicated by the black lines connecting the two polygonal curves.}
+  \label{fig_frechet_distance_example}
+\end{figure}
 
+% TODO: merge with above mentions of applications?
 Besides the previously mentioned applications, 
 where the course of the curves is important, 
 the Fréchet distance also finds applications in
@@ -416,9 +425,9 @@ this property can be used to compute the continuous Fréchet distance \cite{eite
 
 % (Homotopic Fréchet distance)
 
-\subsection{Fréchet distance with speed limits}
+% \subsection{Fréchet distance with speed limits}
 
-\subsection{Fréchet Distance for Uncertain Curves}
+% \subsection{Fréchet Distance for Uncertain Curves}
 
 \section{Algorithms}
 \label{sec_algorithms}
@@ -451,7 +460,6 @@ another color, gives the free space diagram, see \autoref{fig_free_space}. \cite
 % Free Space Diagram
 \begin{figure}[ht]
   \centering
-  % TODO: update figure graphics
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
         % \includegraphics[width=\textwidth]{images/frechet_distance/line_segments.pdf}
@@ -495,7 +503,6 @@ An example for a free space diagram on two non-trivial polygonal curves is given
 
 \begin{figure}[ht]
   \centering
-  % TODO: update figure graphics
   \begin{subfigure}[b]{0.45\textwidth}
       \resizebox{\textwidth}{!}{
         % \includegraphics[width=\textwidth]{images/frechet_distance/polygonal_curves.pdf}
@@ -531,7 +538,6 @@ hence never entering any illegal regions.
 
 \begin{figure}[ht]
   \centering
-  % TODO: Replace graphic with appropiate example
   \includegraphics[width=0.3\textwidth]{images/frechet_distance/square-ellipse-intersection.pdf}
   \caption[Legal intervals on free space cell boundary]{
     Legal intervals on the boundaries of a free space cell are shown with black white dashed lines. 
@@ -561,7 +567,7 @@ See \autoref{fig_free_space_curve} for an example curve. \cite{alt_computing_199
   \centering
   % TODO: Replace graphic with appropiate example
   \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
-  \caption{The monotonically increasing curve through the free space is computed by dynamic programming.}
+  \caption{The monotonically increasing curve (red) through the free space diagram.}
   \label{fig_free_space_curve}
 \end{figure}
 
@@ -611,10 +617,10 @@ it is hard to implement this efficiently in practice. \cite{alt_computing_1995}
 % Runtime analysis (?)
 % Correctness proof (?)6
 
-\subsection{Improved Version?}
-\label{sec_improved_algorithm}
-\cite{van_leusden_novel_2013}
-\cite{buchin_four_2017}
+% \subsection{Improved Version?}
+% \label{sec_improved_algorithm}
+% \cite{van_leusden_novel_2013}
+% \cite{buchin_four_2017}
 
 
 % Algorithms for different variants
@@ -697,6 +703,20 @@ because the constant time function $c(i,j)$ is called $pq$ times \cite{eiter_com
 
 \section{Conclusion}
 % Which version to use when
+This work gives an overview on the Fréchet distance, 
+its variants and algorithms to compute them. 
+Several differences between the variants have been described 
+and evaluated. 
+In conclusion, it can be stated that computing the continuous 
+Fréchet distance is more computationally expensive compared 
+to its discrete and weak variants.
+However, computing the continuous variant can be done efficiently
+in practice by binary searching the bits of the desired accuracy directly
+instead of computing the formally correct value. 
+Alternatively, the discrete Fréchet distance can be calculated, 
+since it constrains the continuous distance 
+from below and above. 
+In this way, the tolerance range can be narrowed down.
 
 
 
