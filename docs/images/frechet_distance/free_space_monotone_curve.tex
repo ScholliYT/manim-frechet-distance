@@ -1,0 +1,41 @@
+% This file was created with tikzplotlib v0.10.1.
+\begin{tikzpicture}
+
+\definecolor{darkred}{RGB}{139,0,0}
+\definecolor{dimgray85}{RGB}{85,85,85}
+\definecolor{gainsboro229}{RGB}{229,229,229}
+
+\begin{axis}[
+axis background/.style={fill=gainsboro229},
+axis line style={white},
+height=\textwidth,
+minor xtick={},
+minor ytick={},
+tick align=outside,
+tick pos=left,
+width=\textwidth,
+x grid style={white},
+xlabel=\textcolor{dimgray85}{Normalized distance along P},
+xmajorgrids,
+xmin=-0.5, xmax=1000,
+xtick style={color=dimgray85},
+xtick={0,250,500,750,1000},
+xticklabels={0.0,0.25,0.5,0.75,1.0},
+y grid style={white},
+ylabel=\textcolor{dimgray85}{Normalized distance along Q},
+ymajorgrids,
+ymin=-0.5, ymax=1000,
+ytick style={color=dimgray85},
+ytick={0,250,500,750,1000},
+yticklabels={0.0,0.25,0.5,0.75,1.0}
+]
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=999.5, ymin=999.5, ymax=-0.5] {images/frechet_distance/free_space_monotone_curve_image.png};
+\addplot [very thick, darkred]
+table {%
+0 0
+100 250
+1000 1000
+};
+\end{axis}
+
+\end{tikzpicture}
