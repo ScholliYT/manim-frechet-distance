@@ -1,0 +1,1 @@
+{"rule":"THE_SUPERLATIVE","sentence":"^\\Q\\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q In this case of a planar grid based graph with non-negative edge values an even faster algorithm from Henzinger et al. \\E(?:Dummy|Ina|Jimmy-)[0-9]+\\Q to solve the single source shortest paths can be applied.\\E$"}

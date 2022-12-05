@@ -2,3 +2,4 @@ Manim
 Fréchet
 Manim-Editor
 monotonicity
+memoization

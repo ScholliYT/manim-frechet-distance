@@ -215,7 +215,7 @@ For each curve, a point with the maximum shortest distance to a point on the oth
 
 \begin{mydef}
   \label{def_hausdorff_distance}
-  Given two (polygonal) curves $P$ and $Q$, 
+  Given two normal or polygonal curves $P$ and $Q$, 
   their Hausdorff distance $\delta_{hd}(P,Q)$ is mathematically defined as: 
   $$\delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)$$
 \end{mydef}
@@ -437,11 +437,10 @@ starting from the Original algorithm for the continuous variant by Alt and Godau
 The algorithm is based on a concept called free-space diagram and gives a baseline for newer improved versions, 
 e.g., the version by Buchin et al. \cite{buchin_four_2017}. 
 This chapter is structured as follows: 
-first the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm},
-then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
+first the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm}.
+% then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
 Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_weak_algorithm}.
 Finally, an algorithm to compute the discrete Fréchet distance is given in \autoref{sec_discrete_algorithm}.
-% Finally
 
 
 \subsection{Original Algorithm for the Continuous Fréchet Distance}
@@ -452,7 +451,7 @@ The decision problem is to decide whether two polygonal curves $P$ and $Q$ have 
 Fréchet distance $\delta_{F}(P,Q) \leq \varepsilon$ for some fixed $\varepsilon \geq 0$.
 
 We start by looking at the simplest case for two polygonal curves with two vertices each, i.e., two line segments.
-The free space is are all valid combinations of positions on $P$ and $Q$ that have a distance of at most $\varepsilon$.
+The free space is all valid combinations of positions on $P$ and $Q$ that have a distance of at most $\varepsilon$.
 Therefore, we define $F_\varepsilon = \{(s,t) \in [0,1]^2 \ | \ dist(P(s), Q(t)) \leq \varepsilon \}$.
 Plotting $s$ and $t$ on a two-dimensional graph, while indicating all illegal combinations in 
 another color, gives the free space diagram, see \autoref{fig_free_space}. \cite{alt_computing_1995}
