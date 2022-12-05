@@ -32,6 +32,8 @@ fontsize=11pt
 %%% technical packages
 %%%
 
+\usepackage{svg}
+
 %%% pgf plots from matplotlib tikzplotlib
 \usepackage{pgfplots}
 \DeclareUnicodeCharacter{2212}{−}
@@ -283,7 +285,8 @@ along with a visual example in \autoref{fig_frechet_distance_example}.
 \begin{figure}[ht]
   \centering
   % TODO: Add example graphic of Frechet distance
-  \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  % \includegraphics[width=\textwidth]{images/hausdorff/hausdorff-distance-example.pdf}
+  \includesvg{images/frechet_distance/frechet-distance-example.svg}
   \caption{The Fréchet distance is indicated by the black lines connecting the two polygonal curves.}
   \label{fig_frechet_distance_example}
 \end{figure}
