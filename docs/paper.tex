@@ -160,14 +160,30 @@ fontsize=11pt
 
 \newgeometry{left=3cm, right=4cm, top=3cm, bottom=3cm}
 
-% \section*{Abstract}
+\section*{Abstract}
+% The Fréchet distance is a metric used to compare curves in a metric space
+% that takes the course of the curves into account.
+% This report will give an overview on the Fréchet distance 
+% covering the general motivation, 
+% the formal definition along with easy to understand explanations, 
+% the weak and discrete variants, and algorithms to compute all of them.
+
+The Fréchet distance is a metric used to compare curves in a metric space. 
+It measures the similarity between two curves based on the overall shape and course of the curves. 
+This report will provide an overview of the Fréchet distance, 
+including its formal definition, weak and discrete variants, and algorithms for efficiently computing the distance. 
+The report will also cover the general motivation for using the Fréchet distance 
+and its applications in fields such as pattern recognition, computer vision, and geographic information systems. 
+The report is structured to provide a comprehensive understanding of the Fréchet distance, 
+including easy-to-understand explanations 
+and a discussion of trade-offs between computational complexity and accuracy in the algorithms for computing the distance.
 
 
 \section{Introduction}
 % motivation
 At first, it seems that measuring the similarity between two curves
 is a very theoretical problem, but it has many, not that obvious, practical applications.
-It is used in Geo-Information-Systems (GIS) to 
+It is used in geographic information systems (GIS) to 
 quantify the similarity or quality of two maps \cite{lyu_partial-frechet-distance-based_2022},
 find patterns in vehicle traffic or animal tracking data 
 by trajectory analysis \cite{buchin_detecting_2011},
