@@ -176,8 +176,8 @@ and shape matching in the field of computer vision.
 
 To quantify the similarity of two given curves (e.g. shapes, paths, or trajectories)
 a distance metric can be used. 
-We can't simply use a distance metric like euclidean distance 
-because we don't want to compare points to points 
+We can not simply use a distance metric like euclidean distance 
+because we do not want to compare points to points 
 but instead compare curves to curves. 
 Therefore, we start by defining curves in \autoref{def_curve}.
 
@@ -218,7 +218,7 @@ For each curve, a point with the maximum shortest distance to a point on the oth
 \begin{mydef}
   \label{def_hausdorff_distance}
   Given two normal or polygonal curves $P$ and $Q$, 
-  their Hausdorff distance $\delta_{hd}(P,Q)$ is mathematically defined as: 
+  their Hausdorff distance $\delta_{hd}(P,Q)$ is defined as: 
   $$\delta_{hd}(P,Q) = \max \left( \sup_{p \in P} \inf_{q \in Q} \text{dist}(p,q), \sup_{q \in Q} \inf_{p \in P} \text{dist}(p,q) \right)$$
 \end{mydef}
 
@@ -228,7 +228,7 @@ It finds applications in computer vision and computer graphics
 where it is used to compare the similarity of two mesh objects \cite{cignoni_metro_1998,ko_complexity_2013}. 
 However, this metric does not take the course of the curves into account, 
 but only the point sets of the individual curves.
-Two curves may have a small Hausdorff-distance but seem very dissimilar 
+Two curves may have a small Hausdorff distance but seem very dissimilar 
 when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 \begin{figure}[ht]
@@ -255,8 +255,12 @@ when looking at them, see \autoref{fig_hausdorff_distance_bad_example}.
 
 % Fréchet distance motivation
 In reality, the course of the curves is important for many applications. 
-For example, in handwriting character recognition on digital input devices, especially in Chinese \cite{chanin_david_hanzi_nodate},
+For example, 
+in handwriting character recognition on digital input devices, especially in Chinese \cite{chanin_david_hanzi_nodate},
+(online) handwriting signature verification \cite{zheng_algorithm_2008,fang_research_2018},
 gesture recognition on smartphone touchscreens \cite{hu_research_2022}, % TODO: add more citations
+map-matching tracking data for traffic control, routing and navigation \cite{wenk_addressing_2006,brakatsoulas_map-matching_2005},
+moving object analysis, e.g., detecting commuting patterns \cite{buchin_detecting_2011},
 and motion evaluation in real-time motion capturing \cite{qiao_real-time_2017, shehu_curve_2012}. % TODO: add more citations
 For this reason, the \textit{Fréchet distance}, named after the famous French mathematician René Maurice Fréchet, was introduced.
 
@@ -274,7 +278,7 @@ along with a visual example in \autoref{fig_frechet_distance_example}.
 \begin{mydef}
   \label{def_frechet_distance}
   Given two (polygonal) curves $P: [a,a'] \mapsto V$, $Q: [b,b'] \mapsto V$ and a distance function $\text{dist}: (V,V) \mapsto \mathbb{R}$, 
-  their Fréchet distance $\delta_{F}(P,Q)$ is mathematically defined as: 
+  their Fréchet distance $\delta_{F}(P,Q)$ is defined as: 
   $$\delta_{F}(P,Q) = \inf_{\substack{\alpha: [0,1] \mapsto [a, a'] \\ \beta: [0,1] \mapsto [b, b']}} \max_{t \in [0,1]} \text{dist}(P(\alpha(t)), Q(\beta(t)))$$
   where $\alpha$ and $\beta$ represent the walking speed as 
   continuous monotonically increasing functions with
@@ -290,14 +294,6 @@ along with a visual example in \autoref{fig_frechet_distance_example}.
   \caption{The Fréchet distance is indicated by the black lines connecting the two polygonal curves.}
   \label{fig_frechet_distance_example}
 \end{figure}
-
-% TODO: merge with above mentions of applications?
-Besides the previously mentioned applications, 
-where the course of the curves is important, 
-the Fréchet distance also finds applications in
-(online) handwriting signature verification \cite{zheng_algorithm_2008,fang_research_2018},
-map-matching tracking data for traffic control, routing and navigation \cite{wenk_addressing_2006,brakatsoulas_map-matching_2005},
-and moving object analysis, e.g., detecting commuting patterns \cite{buchin_detecting_2011}.
 
 
 
@@ -321,13 +317,13 @@ while algorithms for these are given in the following \autoref{sec_algorithms}.
 \subsection{Weak Fréchet Distance}
 \label{sec_weak_frechet_distance}
 The \textit{weak Fréchet distance} (non-monotone Fréchet distance) 
-slightly modifies the continuous version by allowing going backwards. 
+slightly modifies the continuous version by allowing to go backwards. 
 The definition remains the same as for the continuous Fréchet distance in \autoref{def_frechet_distance}
 where the monotonicity of $\alpha$ and $\beta$ is no longer required.
 Note that they are still required to be continuous and have the correct starting and ending values.
 % TODO: Add use cases
 The weak Fréchet distance is a lower bound on the continuous Fréchet distance.
-However, the Ratio between them may be arbitrarily large, 
+However, the ratio between them may be arbitrarily large, 
 as can be seen by the structure given in \autoref{fig_weak_frechet_distance}. \cite{alt_computing_1995}
 
 \begin{figure}[ht]
@@ -359,7 +355,7 @@ We ensure this behavior by defining a coupling between the curves in \autoref{de
 \begin{mydef}
   \label{def_point_coupling}
   A \textit{coupling} L between two polygonal curves $P$ and $Q$, 
-  with points $(u_1, \dots, u_p)$ and $(v_1, \dots, v_p)$ respectively, 
+  with points $(u_1, \dots, u_p)$ and $(v_1, \dots, v_q)$ respectively, 
   is defined as a sequence
   $$(u_{a_1}, v_{b_1}),(u_{a_2}, v_{b_2}), \dots, (u_{a_m}, v_{b_m})$$
   such that $a_1 = 1, b_1 = 1, a_m = p, b_m = q$ 
@@ -394,7 +390,7 @@ the length of a coupling and is given by \autoref{def_discrete_frechet_distance}
   $$\delta_{dF}(P,Q) = \min \left\{ ||L|| \ | \  L \text{ is a coupling between P and Q} \right\}$$
 \end{mydef}
 
-The discrete variation (\autoref{def_discrete_frechet_distance}) gives an upper bound on the continuous Fréchet distance (\autoref{def_frechet_distance}). 
+The discrete variant (\autoref{def_discrete_frechet_distance}) gives an upper bound on the continuous Fréchet distance (\autoref{def_frechet_distance}). 
 % Clearify if this is really an upper bound for polygonal curves with example
 This might not be very obvious for the case of polygonal curves, 
 but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive example.
@@ -404,7 +400,7 @@ but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive exampl
   \includegraphics[width=0.8\textwidth]{images/frechet_distance/discrete-frechet-distance-upper-bound.pdf}
   \caption[Upper bound on Fréchet distance]{
     In the case of the discrete Fréchet distance 
-    one frog has to wait at either start or end $Q$
+    one frog has to wait at either start or end of $Q$
     while the other one is at the middle vertex of $P$, 
     thus requiring a minimal length of $\sqrt{d^2 + l^2}$ for any coupling.
     In contrast, a leash of length $d$ is sufficient for the continuous Fréchet distance.}
@@ -414,10 +410,10 @@ but \autoref{fig_frechet_distance_upper_bound_example} gives an intuitive exampl
 
 
 
-Additionally, it's also a lower bound on the continuous Fréchet distance 
+Additionally, it is also a lower bound on the continuous Fréchet distance 
 plus the distance of the longest legal jump of any frog. 
 By increasing the number of points of a polygonal curve that 
-over approximates some other polygonal curve
+overapproximates some other polygonal curve
 this property can be used to compute the continuous Fréchet distance \cite{eiter_computing_1994}.
 
 % discrete Fréchet distance and contrast to hausdorff distance
@@ -436,13 +432,13 @@ this property can be used to compute the continuous Fréchet distance \cite{eite
 \label{sec_algorithms}
 % Chapter summary and structure
 Several algorithms to compute the Fréchet distance of polygonal curves were proposed, 
-starting from the Original algorithm for the continuous variant by Alt and Godau in 1995 \cite{alt_computing_1995}.
+starting from the original algorithm for the continuous variant by Alt and Godau in 1995 \cite{alt_computing_1995}.
 The algorithm is based on a concept called free-space diagram and gives a baseline for newer improved versions, 
 e.g., the version by Buchin et al. \cite{buchin_four_2017}. 
 This chapter is structured as follows: 
 first the original algorithm for the continuous Fréchet distance is described in \autoref{sec_original_algorithm}.
 % then in \autoref{sec_improved_algorithm} a more recent improved algorithm for the same problem is given.
-Afterwards, the modification necessary to compute the weak variant are described in \autoref{sec_weak_algorithm}.
+Afterwards, the modifications necessary to compute the weak variant are described in \autoref{sec_weak_algorithm}.
 Finally, an algorithm to compute the discrete Fréchet distance is given in \autoref{sec_discrete_algorithm}.
 
 
@@ -454,7 +450,7 @@ The decision problem is to decide whether two polygonal curves $P$ and $Q$ have 
 Fréchet distance $\delta_{F}(P,Q) \leq \varepsilon$ for some fixed $\varepsilon \geq 0$.
 
 We start by looking at the simplest case for two polygonal curves with two vertices each, i.e., two line segments.
-The free space is all valid combinations of positions on $P$ and $Q$ that have a distance of at most $\varepsilon$.
+The free space is the set of all valid combinations of positions on $P$ and $Q$ that have a distance of at most $\varepsilon$.
 Therefore, we define $F_\varepsilon = \{(s,t) \in [0,1]^2 \ | \ dist(P(s), Q(t)) \leq \varepsilon \}$.
 Plotting $s$ and $t$ on a two-dimensional graph, while indicating all illegal combinations in 
 another color, gives the free space diagram, see \autoref{fig_free_space}. \cite{alt_computing_1995}
@@ -534,7 +530,7 @@ because each point in the continuous space needs to be computed.
 Using the convexity property of each cell in the free space,
 we can observe that only a small constant number of points need to be computed per cell. 
 These points define the legal regions on each boundary side of the cell, see \autoref{fig_legal_boundary_intervals_of_a_cell}. 
-We don't need to know the exact shape of the free space 
+We do not need to know the exact shape of the free space 
 because we travel in a monotonically increasing way through a convex space,
 hence never entering any illegal regions.
 
@@ -549,7 +545,7 @@ hence never entering any illegal regions.
 
 Due to the constant number of intersection points required per cell, 
 the free space of a single cell can be computed in $\mathcal{O}(1)$ time.
-Therefore, the complete free space of all cells can be computed in $\mathcal{O}(pq)$
+Therefore, the complete free space of all cells can be computed in $\mathcal{O}(pq)$ time
 because there are $p-1$ (respectively $q-1$) edges in $P$ (respectively $Q$).
 
 We observe that there exists 
@@ -591,7 +587,7 @@ We will call these the \textit{critical values} of $\varepsilon$, which are:
   \item the minimal value of $\varepsilon$ where $(0,0) \in F_\varepsilon$ and $(p,q) \in F_\varepsilon$.
   \item values of $\varepsilon$ where a new passage on the border edge 
         between two neighboring cells opens up.
-  \item values of $\varepsilon$ where a new passage horizontal (respectively vertical) passage 
+  \item values of $\varepsilon$ where a new horizontal (respectively vertical) passage 
         between two non-neighboring cells opens up.
 \end{enumerate}
 
@@ -629,7 +625,7 @@ it is hard to implement this efficiently in practice. \cite{alt_computing_1995}
 % Algorithms for different variants
 \subsection{Algorithm for the Weak Fréchet Distance}
 \label{sec_weak_algorithm}
-The weak Fréchet distance, as described in \autoref{sec_weak_frechet_distance},
+For the weak Fréchet distance, as described in \autoref{sec_weak_frechet_distance},
 the computation becomes less complex compared to the continuous Fréchet distance.
 Specifically, we can ignore critical values of the third type, 
 since it is no longer required to move monotonically 
@@ -640,8 +636,10 @@ Alt and Godau \cite{alt_computing_1995} proposed two algorithms to compute the w
 
 For both algorithms the problem is modeled as a grid based graph of $p$ by $q$ vertices, 
 one for each cell of the free space diagram,
-and edges connecting the vertices with their, up to six, neighboring vertices.
-Additionally, $s$ is added as start vertex and $t$ as end vertex.
+and edges connecting the vertices with their neighboring vertices.
+There may be up to four neighboring vertices, namely, 
+top, bottom, left, and right.
+Additionally, $s$ is added as the start vertex and $t$ as the end vertex.
 This results in an undirected Graph $G=(V,E)$ 
 where $V = \{C_{i,j} \ | \ 0 \leq i \leq p, 0 \leq j \leq q \} \cup \{s,t\}$
 and $E=\{(C_{i,j}, C_{i+1,j}) \ | \ \ 0 \leq i < p, 0 \leq j \leq q\} \cup \{(C_{i,j}, C_{i,j+1}) \ | \ \ 0 \leq i \leq p, 0 \leq j < q\} \cup \{(s, C_{0,0}), (C_{p,q}, t)\}$.
@@ -654,7 +652,7 @@ The first algorithm is again based on first solving the decision problem
 and then searching for the right $\varepsilon$ through binary search.
 The decision problem is satisfied, if and only if there exists a path from $s$ to $t$ in $G$ 
 with a maximum single edge value of $\varepsilon$.
-This can be checked by removing all edged with values greater than $\varepsilon$ from $E$ 
+This can be checked by removing all edges with values greater than $\varepsilon$ from $E$ 
 and then checking if $s$ is still connected to $t$. 
 This can be done through some graph traversal algorithm like breadth-first search or depth-first search
 in $\mathcal{O}(pq)$ time. \cite{alt_computing_1995}
@@ -696,8 +694,8 @@ because the constant time function $c(i,j)$ is called $pq$ times \cite{eiter_com
   \begin{align*}
     c(i,j) &= \begin{cases}
       dist(u_1, v_1), &\text{if } i=1 \text{and } j=1 \\
-      \max \{c(i-1,j), dist(u_i, v_1)\}, &\text{if } i>1 \text{and } j=1 \\
-      \max \{c(i,j-1), dist(u_1, v_j)\}, &\text{if } i=1 \text{and } j>1 \\
+      \max \{c(i-1,1), dist(u_i, v_1)\}, &\text{if } i>1 \text{and } j=1 \\
+      \max \{c(1,j-1), dist(u_1, v_j)\}, &\text{if } i=1 \text{and } j>1 \\
       \max \{c(i-1,j), c(i,j-1), c(i-1,j-1), dist(u_i, v_j)\}, &\text{if } i>1 \text{and } j>1
     \end{cases} \\
     &= \delta_{dF}(P',Q')
@@ -717,9 +715,9 @@ However, computing the continuous variant can be done efficiently
 in practice by binary searching the bits of the desired accuracy directly
 instead of computing the formally correct value. 
 Alternatively, the discrete Fréchet distance can be calculated, 
-since it constrains the continuous distance 
+since it bounds the continuous distance 
 from below and above. 
-In this way, the tolerance range can be narrowed down.
+In this way, the tolerance range can be narrowed down to a desired size.
 
 
 

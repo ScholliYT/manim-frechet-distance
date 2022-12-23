@@ -3,3 +3,6 @@ Fréchet
 Manim-Editor
 monotonicity
 memoization
+overapproximates
+Buchin
+Godau
