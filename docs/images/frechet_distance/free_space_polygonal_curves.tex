@@ -14,21 +14,21 @@ tick align=outside,
 tick pos=left,
 width=\textwidth,
 x grid style={white},
-xlabel=\textcolor{dimgray85}{Normalized distance along P},
+xlabel=\textcolor{dimgray85}{s value used for P(s)},
 xmajorgrids,
-xmin=-0.5, xmax=1000,
+xmin=-0.5, xmax=4995.5,
 xtick style={color=dimgray85},
-xtick={0,250,500,750,1000},
-xticklabels={0.0,0.25,0.5,0.75,1.0},
+xtick={0,999,1998,2997,3996,4995},
+xticklabels={0,1,2,3,4,5},
 y grid style={white},
-ylabel=\textcolor{dimgray85}{Normalized distance along Q},
+ylabel=\textcolor{dimgray85}{t value used for Q(t)},
 ymajorgrids,
-ymin=-0.5, ymax=1000,
+ymin=-0.5, ymax=4995.5,
 ytick style={color=dimgray85},
-ytick={0,250,500,750,1000},
-yticklabels={0.0,0.25,0.5,0.75,1.0}
+ytick={0,999,1998,2997,3996,4995},
+yticklabels={0,1,2,3,4,5}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=999.5, ymin=999.5, ymax=-0.5] {images/frechet_distance/free_space_polygonal_curves_image.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=4995.5, ymin=4995.5, ymax=-0.5] {images/frechet_distance/free_space_polygonal_curves_image.png};
 \end{axis}
 
 \end{tikzpicture}
