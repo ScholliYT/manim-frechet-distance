@@ -16,8 +16,8 @@ legend style={
   fill opacity=0.8,
   draw opacity=1,
   text opacity=1,
-  at={(0.03,0.97)},
-  anchor=north west,
+  at={(0.97,0.03)},
+  anchor=south east,
   draw=lightgray204,
   fill=gainsboro229
 },
@@ -28,15 +28,22 @@ tick pos=left,
 width=\textwidth,
 x grid style={white},
 xmajorgrids,
-xmin=-1, xmax=1,
+xmin=-1.1, xmax=1.1,
 xtick style={color=dimgray85},
-xtick={-1,-0.5,0,0.5,1},
+xtick={-1.5,-1,-0.5,0,0.5,1,1.5},
 y grid style={white},
 ymajorgrids,
 ymin=-0.777817459305202, ymax=0.777817459305202,
 ytick style={color=dimgray85},
 ytick={-0.8,-0.6,-0.4,-0.2,0,0.2,0.4,0.6,0.8}
 ]
+\addplot [draw=black, fill=black, mark=*, only marks]
+table{%
+x  y
+-1 0
+-0.707106781186548 -0.707106781186547
+};
+\addlegendentry{Start}
 \addplot [very thick, darkred]
 table {%
 -1 0
