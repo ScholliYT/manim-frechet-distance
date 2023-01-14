@@ -29,6 +29,7 @@ poetry run manim -qm -a --save_sections manim_frechet_distance/presentation.py
 poetry run manedit --project_name Fréchet-Distance \
     --quick_present_export ./media/videos/presentation/720p30/sections/MinimalPresentationExample.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/BraceAnnotation.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/HausdorffDistance.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/ArgMinExample.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceExample.json
 ```

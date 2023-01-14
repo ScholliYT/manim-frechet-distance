@@ -9,6 +9,7 @@ packages = [{include = "manim_frechet_distance"}]
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
 manim-editor = "^0.3.8"
+scipy = "^1.10.0"
 
 
 [tool.poetry.group.dev.dependencies]

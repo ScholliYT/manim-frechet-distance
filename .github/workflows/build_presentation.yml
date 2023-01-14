@@ -92,6 +92,7 @@ jobs:
           poetry run manedit --project_name Fréchet-Distance \
             --quick_present_export ../media/videos/presentation/1080p60/sections/MinimalPresentationExample.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/BraceAnnotation.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/HausdorffDistance.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/ArgMinExample.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/FrechetDistanceExample.json \
 
