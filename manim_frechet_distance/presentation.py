@@ -150,16 +150,18 @@ class HausdorffDistance(Scene):
         dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         self.play(Write(dist_text), Write(dist_number))
+        self.wait()
         
-        # self.next_section("Animate distance around curves")
-        # self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
-        # p_alpha.set_value(0)
-        # q_alpha.set_value(0)
+        self.next_section("Animate distance around curves")
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
+        p_alpha.set_value(0)
+        q_alpha.set_value(0)
+        self.wait()
         
-        # self.next_section("Go to maximum distance")
-        # minimum = optimize.fmin(lambda x: -1*dist(x), [0.5, 0.5], full_output=True)
-        # print(minimum)
-        # self.play(p_alpha.animate.set_value(minimum[0][0]), q_alpha.animate.set_value(minimum[0][1]), run_time=1)
+        self.next_section("Go to maximum distance")
+        minimum = optimize.fmin(lambda x: -1*dist(x), [0.5, 0.5], full_output=True)
+        print(minimum)
+        self.play(p_alpha.animate.set_value(minimum[0][0]), q_alpha.animate.set_value(minimum[0][1]), run_time=1)
         self.wait()
         
         # we need to provide the directed_hausdorff function with some sample points
@@ -183,12 +185,12 @@ class HausdorffDistance(Scene):
         dh, ip, iq =  directed_hausdorff(p_points, q_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
         self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
-        self.wait()
 
         self.next_section("Mark directed distance with arrow")
         pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
         pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.wait()
 
         
 
@@ -202,7 +204,7 @@ class HausdorffDistance(Scene):
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(qp_dist_arrow), Write(qp_dist_value))
         self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot))
-
+        self.wait()
 
             
         
