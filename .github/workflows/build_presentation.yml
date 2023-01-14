@@ -33,14 +33,14 @@ jobs:
 
       - uses: awalsh128/cache-apt-pkgs-action@v1
         with:
-          packages: texlive-full tipa python-opengl libpango1.0-dev
-          version: 1.0
+          packages: texlive-full tipa python3-opengl libpango1.0-dev
+          version: 1.1
 
       - name: Install system dependencies (Linux)
         id: system-dependencies
         run: |
           sudo apt update
-          sudo apt -y install texlive-full tipa python-opengl libpango1.0-dev
+          sudo apt -y install texlive-full tipa python3-opengl libpango1.0-dev
           echo "$HOME/.poetry/bin" >> $GITHUB_PATH
 
       #----------------------------------------------
