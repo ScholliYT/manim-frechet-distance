@@ -1,7 +1,12 @@
+import hashlib
 from manim import *
 from manim_editor import PresentationSectionType
+from cachier import cachier
 from scipy import optimize
 from scipy.spatial.distance import directed_hausdorff
+
+# config.background_color=BLACK
+config.background_color = WHITE
 
 def make_elements():  # only setting up the mobjects
     dots = VGroup(Dot(), Dot(), Dot(), Dot(), Dot(), Dot(), Dot(), z_index=0)
@@ -127,26 +132,30 @@ class HausdorffDistance(Scene):
 
         self.next_section("Distance line")
         q_alpha = ValueTracker(0)
-        q_dot = Dot().move_to(p_curve.point_from_proportion(0))
+        q_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
         q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
         self.play(Create(q_dot))
 
         p_alpha = ValueTracker(0)
-        p_dot = Dot().move_to(p_curve.point_from_proportion(0))
+        p_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
         p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
         self.play(Create(p_dot))
 
-        line = Line(p_dot.get_center(), q_dot.get_center())
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center())))
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
         self.play(Create(line))
-
-        def dist(alphas: np.ndarray):
-            p = p_curve.point_from_proportion(alphas[0])
-            q = q_curve.point_from_proportion(alphas[1])
+        
+        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
+            p = c1.point_from_proportion(alphas[0])
+            q = c2.point_from_proportion(alphas[1])
             d = np.linalg.norm(p-q, ord=2)
             return d
-        dist_text = Text("d=").to_edge(RIGHT).shift(LEFT)
-        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()])).next_to(dist_text, RIGHT)
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve, q_curve)
+
+        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
+        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
         dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         self.play(Write(dist_text), Write(dist_number))
@@ -158,10 +167,34 @@ class HausdorffDistance(Scene):
         q_alpha.set_value(0)
         self.wait()
         
+        self.next_section("Show maximum distance formula")
+        max_distance_text = MathTex(
+            "\\delta_{max}(P,Q) = \\sup_{p \\in P} \\sup_{q \\in Q} \\text{dist}(p,q)", 
+            color = BLACK, font_size=30).to_edge(LEFT)
+        self.play(Write(max_distance_text))
+        self.wait()
+
         self.next_section("Go to maximum distance")
-        minimum = optimize.fmin(lambda x: -1*dist(x), [0.5, 0.5], full_output=True)
-        print(minimum)
-        self.play(p_alpha.animate.set_value(minimum[0][0]), q_alpha.animate.set_value(minimum[0][1]), run_time=1)
+
+        def _distance_func_hasher(distance_func, kwargs):
+            print("Hashing func and kwargs", kwargs)
+            hash_tuple = (
+                # hashlib.sha256(distance_func).hexdigest(),
+                hashlib.sha256(p_curve.points.tobytes()).hexdigest(),
+                hashlib.sha256(p_curve.color.get_hex().encode("utf-8")).hexdigest(),
+                hashlib.sha256(q_curve.points.tobytes()).hexdigest(),
+                hashlib.sha256(q_curve.color.get_hex().encode("utf-8")).hexdigest())
+
+            print("Hash", hash_tuple)
+            return  hash_tuple
+
+        @cachier(hash_params=_distance_func_hasher)
+        def argmin_max_distance(distance_func):
+            minimum = optimize.fmin(lambda x: -1*distance_func(x, p_curve, q_curve), [0.5, 0.5], full_output=True)
+            print(minimum)
+            return minimum[0]
+        minimum_alphas = argmin_max_distance(dist_full)
+        self.play(p_alpha.animate.set_value(minimum_alphas[0]), q_alpha.animate.set_value(minimum_alphas[1]), run_time=1)
         self.wait()
         
         # we need to provide the directed_hausdorff function with some sample points
@@ -180,7 +213,14 @@ class HausdorffDistance(Scene):
 
         
 
-        self.next_section("To to direct Hausdorff distance from P to Q")
+        self.next_section("Show formula for direct Hausdorff distance from P to Q")
+        directed_hausdorff_dist_p_q_text = MathTex(
+            "\\delta_{dhd}(P,Q) = \\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)", 
+            color = BLACK, font_size=30).to_edge(LEFT)
+        self.play(ReplacementTransform(max_distance_text, directed_hausdorff_dist_p_q_text))
+        self.wait()
+        
+        self.next_section("Go to direct Hausdorff distance from P to Q")
         print("Calculating directed Hausdorff distance")
         dh, ip, iq =  directed_hausdorff(p_points, q_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
@@ -194,7 +234,15 @@ class HausdorffDistance(Scene):
 
         
 
-        self.next_section("To to direct Hausdorff distance from Q to P")
+        self.next_section("Show formula for direct Hausdorff distance from P to Q")
+        directed_hausdorff_dist_q_p_text = MathTex(
+            "\\delta_{dhd}(Q,P) = \\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)", 
+            color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
+        # self.play(hausdorff_dist_p_q_text.animate.shift(UP))
+        self.play(Write(directed_hausdorff_dist_q_p_text))
+        self.wait()
+
+        self.next_section("Go to direct Hausdorff distance from Q to P")
         dh, iq, ip =  directed_hausdorff(q_points, p_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
         self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
@@ -203,8 +251,23 @@ class HausdorffDistance(Scene):
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(qp_dist_arrow), Write(qp_dist_value))
-        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot))
+        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
         self.wait()
+
+        self.next_section("Show formula for Hausdorff distance")
+        hausdorff_dist_p_q_text_1 = MathTex(
+            "\\delta_{hd}(P,Q)=","\\max \\left(","\\delta_{dhd}(P,Q)",",","\\delta_{dhd}(Q,P)","\\right)", 
+            color = BLACK, font_size=30).to_edge(LEFT).shift(3*DOWN)
+        self.play(Write(hausdorff_dist_p_q_text_1))
+        self.wait()
+
+        hausdorff_dist_p_q_text = MathTex(
+            "\\delta_{hd}(P,Q)=","\\max \\left(","\\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)",",","\\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)","\\right)", 
+            color = BLACK, font_size=30).to_edge(LEFT).shift(3*DOWN)
+        self.play(TransformMatchingTex(hausdorff_dist_p_q_text_1, hausdorff_dist_p_q_text))
+        self.wait()
+
+        # TODO: compute with concrete values
 
             
         
@@ -215,6 +278,33 @@ class HausdorffDistance(Scene):
         # self.add(square, point)
         # self.play(alpha.animate.set_value(1), run_time=3)
         self.wait()
+
+
+class TestTex(Scene):
+    def construct(self):
+        hausdorff_dist_p_q_text_1 = MathTex(
+            "\\delta_{hd}(P,Q)=","\\max \\left(","\\delta_{dhd}(P,Q)",",","\\delta_{dhd}(Q,P)","\\right)", 
+            color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
+        self.play(Write(hausdorff_dist_p_q_text_1))
+        self.wait()
+
+        hausdorff_dist_p_q_text_2 = MathTex(
+            "\\delta_{hd}(P,Q)=","\\max \\left(","\\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)",",","\\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)","\\right)", 
+            color = BLACK).to_edge(LEFT).shift(DOWN)
+        self.play(TransformMatchingTex(hausdorff_dist_p_q_text_1, hausdorff_dist_p_q_text_2))
+        self.wait()
+
+
+        hausdorff_dist_p_q_text = MathTex(
+            "\\delta_{hd}(P,Q)=","\\max \\left(","5",",","3","\\right)", 
+            # substrings_to_isolate=,
+            color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
+        self.play(TransformMatchingTex(hausdorff_dist_p_q_text_2, hausdorff_dist_p_q_text))
+        self.wait()
+
+        self.play(Unwrite(hausdorff_dist_p_q_text))
+
+
 
 
 class ArgMinExample(Scene):
