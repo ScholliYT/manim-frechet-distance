@@ -404,10 +404,18 @@ class FrechetDistanceIntro(Scene):
         title = Text("Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
+
 class DiscreteFrechetDistanceIntro(Scene):
     def construct(self):
         title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
+
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
 
 
 class ComputingTheFrechetDistance(Scene):
@@ -416,6 +424,7 @@ class ComputingTheFrechetDistance(Scene):
         self.add(title)
 
         blist = BulletedList("Free Space Diagram", "Monotone Path", "Critical values")
+        blist.set_color(BLACK)
         self.play(Write(blist))
 
 class FreeSpaceCell(Scene):
@@ -423,116 +432,136 @@ class FreeSpaceCell(Scene):
         title = Text("Free Space Cell", color=BLUE).to_edge(UP)
         self.add(title)
 
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
+
 class FreeSpaceDiagram(Scene):
     def construct(self):
         title = Text("Free Space Diagram", color=BLUE).to_edge(UP)
         self.add(title)
+
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
 
 class FrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
+
 class DiscreteFrechetDistanceAlgorithm(Scene):
     def construct(self):
         title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
+
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
 
 class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
+        blist = BulletedList("Placeholder")
+        blist.set_color(BLACK)
+        self.play(Write(blist))
 
 
 
-class FrechetDistanceExample(Scene):
-    def construct(self):
-        ax = Axes(
-            x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False, "include_numbers": True}
-        )
-        labels = ax.get_axis_labels(x_label="x", y_label="y")
 
-        self.add(ax, labels)
-        self.next_section("Axes", PresentationSectionType.NORMAL)
+# class FrechetDistanceExample(Scene):
+#     def construct(self):
+#         ax = Axes(
+#             x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False, "include_numbers": True}
+#         )
+#         labels = ax.get_axis_labels(x_label="x", y_label="y")
+
+#         self.add(ax, labels)
+#         self.next_section("Axes", PresentationSectionType.NORMAL)
         
         
-        x1 = ValueTracker(0)
-        x2 = ValueTracker(0)
+#         x1 = ValueTracker(0)
+#         x2 = ValueTracker(0)
 
-        def func1(x):
-            return 2 * (x - 5) ** 2
-        def func2(x):
-            return -1.5 * (x - 2) ** 2 + 81
-        graph1 = ax.plot(func1, color=MAROON)
-        graph2 = ax.plot(func2, color=BLUE)
+#         def func1(x):
+#             return 2 * (x - 5) ** 2
+#         def func2(x):
+#             return -1.5 * (x - 2) ** 2 + 81
+#         graph1 = ax.plot(func1, color=MAROON)
+#         graph2 = ax.plot(func2, color=BLUE)
 
-        self.next_section("Function 1")
-        self.play(Create(graph1))
+#         self.next_section("Function 1")
+#         self.play(Create(graph1))
 
-        self.next_section("Function 2")
-        self.play(Create(graph2))
+#         self.next_section("Function 2")
+#         self.play(Create(graph2))
 
 
-        initial_point1 = [ax.coords_to_point(x1.get_value(), func1(x1.get_value()))]
-        dot1 = Dot(point=initial_point1)
-        dot1.add_updater(lambda x: x.move_to(ax.c2p(x1.get_value(), func1(x1.get_value()))))
+#         initial_point1 = [ax.coords_to_point(x1.get_value(), func1(x1.get_value()))]
+#         dot1 = Dot(point=initial_point1)
+#         dot1.add_updater(lambda x: x.move_to(ax.c2p(x1.get_value(), func1(x1.get_value()))))
 
-        initial_point2 = [ax.coords_to_point(x2.get_value(), func2(x2.get_value()))]
-        dot2 = Dot(point=initial_point2)
-        dot2.add_updater(lambda x: x.move_to(ax.c2p(x2.get_value(), func2(x2.get_value()))))
-        dot1.set_z_index(1)
-        dot2.set_z_index(1)
+#         initial_point2 = [ax.coords_to_point(x2.get_value(), func2(x2.get_value()))]
+#         dot2 = Dot(point=initial_point2)
+#         dot2.add_updater(lambda x: x.move_to(ax.c2p(x2.get_value(), func2(x2.get_value()))))
+#         dot1.set_z_index(1)
+#         dot2.set_z_index(1)
 
-        self.next_section("Points")
-        self.play(Create(dot1), Create(dot2))
+#         self.next_section("Points")
+#         self.play(Create(dot1), Create(dot2))
 
-        self.next_section("Line")
-        line = Line(dot1.get_center(), dot2.get_center()).set_color(ORANGE)
-        line.add_updater(lambda z: z.become(Line(dot1.get_center(), dot2.get_center(), color=ORANGE)))
-        self.play(Create(line))
+#         self.next_section("Line")
+#         line = Line(dot1.get_center(), dot2.get_center()).set_color(ORANGE)
+#         line.add_updater(lambda z: z.become(Line(dot1.get_center(), dot2.get_center(), color=ORANGE)))
+#         self.play(Create(line))
 
-        def dist():
-            d = np.sqrt((x1.get_value() - x2.get_value())**2 + (func1(x1.get_value()) - func2(x2.get_value()))**2)
-            return d
-        distNumber = DecimalNumber(dist()).next_to(line.get_center(), RIGHT)
-        distNumber.add_updater(lambda t: t.set_value(dist()))
-        distNumber.add_updater(lambda t: t.next_to(line.get_center(), RIGHT))
-        self.play(Create(distNumber))
-        self.wait(1)
+#         def dist():
+#             d = np.sqrt((x1.get_value() - x2.get_value())**2 + (func1(x1.get_value()) - func2(x2.get_value()))**2)
+#             return d
+#         distNumber = DecimalNumber(dist()).next_to(line.get_center(), RIGHT)
+#         distNumber.add_updater(lambda t: t.set_value(dist()))
+#         distNumber.add_updater(lambda t: t.next_to(line.get_center(), RIGHT))
+#         self.play(Create(distNumber))
+#         self.wait(1)
 
-        x_space = np.linspace(*ax.x_range[:2],200)
-        minimum_index = func1(x_space).argmin()
+#         x_space = np.linspace(*ax.x_range[:2],200)
+#         minimum_index = func1(x_space).argmin()
 
-        self.next_section("Minimum 1", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(x_space[minimum_index]), run_time=2)
-        self.wait(1)
+#         self.next_section("Minimum 1", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(x_space[minimum_index]), run_time=2)
+#         self.wait(1)
 
-        self.next_section("Minimum 2", PresentationSectionType.NORMAL)
-        self.play(x2.animate.set_value(x_space[minimum_index]), run_time=2)
-        self.wait(1)
+#         self.next_section("Minimum 2", PresentationSectionType.NORMAL)
+#         self.play(x2.animate.set_value(x_space[minimum_index]), run_time=2)
+#         self.wait(1)
 
-        self.next_section("Together to 0", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(0), x2.animate.set_value(0), run_time=3, rate_func=smooth)
-        self.wait(1)
+#         self.next_section("Together to 0", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(0), x2.animate.set_value(0), run_time=3, rate_func=smooth)
+#         self.wait(1)
 
-        self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7), run_time=2)
-        self.wait(1)
+#         self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7), run_time=2)
+#         self.wait(1)
 
-        self.next_section("Max vertical dist right", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(26/7+0.5), x2.animate.set_value(26/7+0.5))
+#         self.next_section("Max vertical dist right", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(26/7+0.5), x2.animate.set_value(26/7+0.5))
 
-        self.next_section("Max vertical dist left", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(26/7-0.5), x2.animate.set_value(26/7-0.5))
+#         self.next_section("Max vertical dist left", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(26/7-0.5), x2.animate.set_value(26/7-0.5))
         
-        self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7))
-        self.wait(1)
+#         self.next_section("Max vertical dist", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(26/7), x2.animate.set_value(26/7))
+#         self.wait(1)
 
-        self.next_section("Diagonal", PresentationSectionType.NORMAL)
-        self.play(x1.animate.set_value(26/7-0.1), x2.animate.set_value(26/7+0.1))
-        self.wait(1)
+#         self.next_section("Diagonal", PresentationSectionType.NORMAL)
+#         self.play(x1.animate.set_value(26/7-0.1), x2.animate.set_value(26/7+0.1))
+#         self.wait(1)
 
 
 
