@@ -27,11 +27,17 @@ poetry run manim -qm -a --save_sections manim_frechet_distance/presentation.py
 ### 2. Build presentation using Manim-Editor
 ```sh
 poetry run manedit --project_name Fréchet-Distance \
-    --quick_present_export ./media/videos/presentation/720p30/sections/MinimalPresentationExample.json \
-    --quick_present_export ./media/videos/presentation/720p30/sections/BraceAnnotation.json \
-    --quick_present_export ./media/videos/presentation/720p30/sections/HausdorffDistance.json \
-    --quick_present_export ./media/videos/presentation/720p30/sections/ArgMinExample.json \
-    --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceExample.json
+    --quick_present_export ./media/videos/presentation/720p30/sections/Titlepage.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/DistanceOfCurves.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/ProblemsWithHausdorffDistance.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceIntro.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/DiscreteFrechetDistanceIntro.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/ComputingTheFrechetDistance.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/FreeSpaceCell.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/FreeSpaceDiagram.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceAlgorithmicComplexity.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/DiscreteFrechetDistanceAlgorithm.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/DiscreteFrechetDistanceAlgorithmicComplexity.json
 ```
 
 ### 3. Viewing the presentation

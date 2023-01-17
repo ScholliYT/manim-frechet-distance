@@ -20,29 +20,18 @@ def make_elements():  # only setting up the mobjects
     return dots, moving_dot, path
 
 
-class MinimalPresentationExample(Scene):
+class Titlepage(Scene):
     def construct(self):
 
-        dots, moving_dot, path = make_elements()
-        self.add(dots, moving_dot, path)
+        text = Text("Fréchet Distance", color=BLUE, font_size=70)
+        self.add(text)
+        self.wait()
 
-        self.next_section("A", PresentationSectionType.NORMAL)
-        self.play(moving_dot.animate.move_to(dots[1]), rate_func=linear)
+        self.next_section("Subtitle")
+        subtitle = Text("Origin, Variations and Algorithms", color=BLACK)
+        self.play(text.animate.to_edge(UP))
+        self.play(Write(subtitle))
 
-        self.next_section("A.1", PresentationSectionType.SUB_NORMAL)
-        self.play(moving_dot.animate.move_to(dots[2]), rate_func=linear)
-
-        self.next_section("B", PresentationSectionType.SKIP)
-        self.play(moving_dot.animate.move_to(dots[3]), rate_func=linear)
-
-        self.next_section("C", PresentationSectionType.LOOP)
-        self.play(moving_dot.animate.move_to(dots[4]), rate_func=linear)
-
-        self.next_section("D", PresentationSectionType.COMPLETE_LOOP)
-        self.play(moving_dot.animate.move_to(dots[5]), rate_func=linear)
-
-        self.next_section("E", PresentationSectionType.NORMAL)
-        self.play(moving_dot.animate.move_to(dots[6]), rate_func=linear)
 
 
 class BraceAnnotation(Scene):
@@ -65,7 +54,7 @@ class BraceAnnotation(Scene):
         self.play(Create(b2))
         self.play(Write(b2text))
 
-class HausdorffDistance(Scene):
+class DistanceOfCurves(Scene):
     def construct(self):
         title = Text("Distance of Curves", color=BLUE).to_edge(UP)
         self.add(title)
@@ -251,6 +240,7 @@ class HausdorffDistance(Scene):
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(qp_dist_arrow), Write(qp_dist_value))
+        dist_number.clear_updaters()
         self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
         self.wait()
 
@@ -280,6 +270,110 @@ class HausdorffDistance(Scene):
         self.wait()
 
 
+class ProblemsWithHausdorffDistance(Scene):
+    def construct(self):
+        title = Text("Problems with Hausdorff Distance", color=BLUE).to_edge(UP)
+        self.add(title)
+
+        self.next_section("P curve")
+        p_curve = Polygon(
+            [-2.82, -2.14, 0], [-1.5, 2.6, 0], [-1.1, -2.01, 0], [0.347, 2.68, 0], [0.896, -2.28, 0], [1.88, 2.67, 0], [2.26, -1.869, 0], 
+            color=RED)
+        self.play(Create(p_curve))
+        p_label = Text("P", color=RED).move_to([2.6, -1.5, 0])
+        self.play(Write(p_label))
+
+        self.next_section("Q curve")
+        q_curve = Polygon(
+            [-2.783, 2.731, 0], [2.72, 2.65, 0], [-2.99, 0.79, 0], [2.37, 0.1316, 0], [-3.0, -1.11, 0], [1.53, -1.97, 0], [-1.3, -2.28, 0],
+            color=GREEN)
+        self.play(Create(q_curve))
+        q_label = Text("Q", color=GREEN).move_to([3.1, 2.6, 0])
+        self.play(Write(q_label))
+    
+
+        self.next_section("Distance line")
+        q_alpha = ValueTracker(0)
+        q_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
+        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
+        self.play(Create(q_dot))
+
+        p_alpha = ValueTracker(0)
+        p_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
+        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
+        self.play(Create(p_dot))
+
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
+        self.play(Create(line))
+        
+        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
+            p = c1.point_from_proportion(alphas[0])
+            q = c2.point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve, q_curve)
+
+        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
+        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
+        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
+        self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+        
+        self.next_section("Animate distance around curves")
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
+        p_alpha.set_value(0)
+        q_alpha.set_value(0)
+        self.wait()
+
+        # we need to provide the directed_hausdorff function with some sample points
+        print("Sampling points on curves")
+        alphas = np.linspace(0, 1, num=256)
+        p_points, q_points = [], []
+        debug_dots = []
+        for a in alphas:
+            p_pos = p_curve.point_from_proportion(a)
+            q_pos = q_curve.point_from_proportion(a)
+            p_points.append(p_pos[:2])
+            q_points.append(q_pos[:2])
+            debug_dots.append(Dot(p_pos).set_fill(GRAY, opacity=0.5))
+            debug_dots.append(Dot(q_pos).set_fill(GRAY, opacity=0.5))
+        debug_dots = Group(*debug_dots)
+        self.add(debug_dots)
+
+        self.next_section("Go to direct Hausdorff distance from P to Q")
+        print("Calculating directed Hausdorff distance")
+        dh, ip, iq =  directed_hausdorff(p_points, q_points)
+        print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
+        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
+
+        self.next_section("Mark directed distance with arrow")
+        pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
+        pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow)
+        self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.wait()
+
+        self.next_section("Go to direct Hausdorff distance from Q to P")
+        dh, iq, ip =  directed_hausdorff(q_points, p_points)
+        print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
+        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
+        
+        self.next_section("Mark directed distance with arrow")
+        qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
+        qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow, direction=LEFT)
+        self.play(Create(qp_dist_arrow), Write(qp_dist_value))
+        dist_number.clear_updaters()
+        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+        self.wait()
+
+        if "debug_dots" in locals():
+            self.remove(debug_dots)
+            self.wait()
+
+
 class TestTex(Scene):
     def construct(self):
         hausdorff_dist_p_q_text_1 = MathTex(
@@ -305,39 +399,51 @@ class TestTex(Scene):
         self.play(Unwrite(hausdorff_dist_p_q_text))
 
 
-
-
-class ArgMinExample(Scene):
+class FrechetDistanceIntro(Scene):
     def construct(self):
-        ax = Axes(
-            x_range=[0, 10], y_range=[0, 100, 10], axis_config={"include_tip": False}
-        )
-        labels = ax.get_axis_labels(x_label="x", y_label="f(x)")
+        title = Text("Fréchet Distance", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        t = ValueTracker(0)
+class DiscreteFrechetDistanceIntro(Scene):
+    def construct(self):
+        title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        def func(x):
-            return 2 * (x - 5) ** 2
-        graph = ax.plot(func, color=MAROON)
 
-        initial_point = [ax.coords_to_point(t.get_value(), func(t.get_value()))]
-        dot = Dot(point=initial_point)
+class ComputingTheFrechetDistance(Scene):
+    def construct(self):
+        title = Text("Computing the Fréchet Distance", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        dot.add_updater(lambda x: x.move_to(ax.c2p(t.get_value(), func(t.get_value()))))
-        x_space = np.linspace(*ax.x_range[:2],200)
-        minimum_index = func(x_space).argmin()
+        blist = BulletedList("Free Space Diagram", "Monotone Path", "Critical values")
+        self.play(Write(blist))
 
-        self.add(ax, labels)
-        self.next_section("Axes", PresentationSectionType.NORMAL)
+class FreeSpaceCell(Scene):
+    def construct(self):
+        title = Text("Free Space Cell", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        self.next_section("Function")
-        self.play(Create(graph))
+class FreeSpaceDiagram(Scene):
+    def construct(self):
+        title = Text("Free Space Diagram", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        self.next_section("Point")
-        self.play(Create(dot))
+class FrechetDistanceAlgorithmicComplexity(Scene):
+    def construct(self):
+        title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
+        self.add(title)
 
-        self.next_section("Minimum", PresentationSectionType.NORMAL)
-        self.play(t.animate.set_value(x_space[minimum_index]))
+class DiscreteFrechetDistanceAlgorithm(Scene):
+    def construct(self):
+        title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
+        self.add(title)
+
+class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
+    def construct(self):
+        title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
+        self.add(title)
+
+
 
 
 class FrechetDistanceExample(Scene):
