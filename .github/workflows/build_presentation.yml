@@ -100,8 +100,7 @@ jobs:
             --quick_present_export ../media/videos/presentation/1080p60/sections/FreeSpaceDiagram.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceAlgorithm.json \
-            --quick_present_export ../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceAlgorithmicComplexity.json \
-            --quick_present_export ../media/videos/presentation/1080p60/sections/FrechetDistanceExample.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceAlgorithmicComplexity.json
 
       - name: Create Redirect
         run: echo "<head><meta http-equiv='refresh' content='0; URL=Fréchet-Distance/index.html'></head>" > pages/index.html
