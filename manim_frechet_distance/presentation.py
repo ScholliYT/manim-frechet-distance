@@ -373,40 +373,85 @@ class ProblemsWithHausdorffDistance(Scene):
             self.remove(debug_dots)
             self.wait()
 
-
-class TestTex(Scene):
-    def construct(self):
-        hausdorff_dist_p_q_text_1 = MathTex(
-            "\\delta_{hd}(P,Q)=","\\max \\left(","\\delta_{dhd}(P,Q)",",","\\delta_{dhd}(Q,P)","\\right)", 
-            color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
-        self.play(Write(hausdorff_dist_p_q_text_1))
-        self.wait()
-
-        hausdorff_dist_p_q_text_2 = MathTex(
-            "\\delta_{hd}(P,Q)=","\\max \\left(","\\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)",",","\\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)","\\right)", 
-            color = BLACK).to_edge(LEFT).shift(DOWN)
-        self.play(TransformMatchingTex(hausdorff_dist_p_q_text_1, hausdorff_dist_p_q_text_2))
-        self.wait()
-
-
-        hausdorff_dist_p_q_text = MathTex(
-            "\\delta_{hd}(P,Q)=","\\max \\left(","5",",","3","\\right)", 
-            # substrings_to_isolate=,
-            color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
-        self.play(TransformMatchingTex(hausdorff_dist_p_q_text_2, hausdorff_dist_p_q_text))
-        self.wait()
-
-        self.play(Unwrite(hausdorff_dist_p_q_text))
-
-
 class FrechetDistanceIntro(Scene):
     def construct(self):
         title = Text("Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        self.next_section("Dog")
+        p_curve = Polygon(
+            [-5.25,  0.25,  0.  ],
+            [-2.25,  0.25,  0.  ],
+            [-1.5 ,  1.75,  0.  ],
+            [-0.9 ,  1.75,  0.  ],
+            [-0.6 ,  0.4 ,  0.  ],
+            [ 0.75,  1.75,  0.  ],
+            [ 1.5 ,  1.  ,  0.  ],
+            [ 3.  ,  0.25,  0.  ],
+            [ 3.9 ,  0.7 ,  0.  ],
+            [ 3.  , -1.4 ,  0.  ],
+            [-4.8 , -1.4 ,  0.  ],
+            color=RED)
+        self.play(Create(p_curve))
+        p_label = Text("Dog", color=RED).move_to([-4, 0.8, 0])
+        self.play(Write(p_label))
+
+        self.next_section("Owner")
+        q_curve = Polygon(
+            [-5.25,  0.25,  0.  ],
+            [-4.5 , -0.5 ,  0.  ],
+            [-2.25, -0.5 ,  0.  ],
+            [-1.2 ,  0.4 ,  0.  ],
+            [-0.75, -0.5 ,  0.  ],
+            [ 2.25,  1.  ,  0.  ],
+            [ 3.  ,  1.  ,  0.  ],
+            [ 3.9 , -0.2 ,  0.  ],
+            [ 3.3 , -1.7 ,  0.  ],
+            [-5.1 , -1.7 ,  0.  ],
+            color=GREEN)
+        self.play(Create(q_curve))
+        q_label = Text("Owner", color=GREEN).move_to([-4, -2.1, 0])
+        self.play(Write(q_label))
+    
+
+        self.next_section("Distance line")
+        dog = ImageMobject("manim_frechet_distance/assets/icons8-dog-jump-90.png")
+        p_alpha = ValueTracker(0)
+        p_dot = dog.move_to(p_curve.point_from_proportion(0))
+        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
+        self.add(p_dot)
+
+        owner = ImageMobject("manim_frechet_distance/assets/icons8-person-pointing-90.png").scale(1.2)
+        q_alpha = ValueTracker(0)
+        q_dot = owner.move_to(p_curve.point_from_proportion(0))
+        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
+        self.add(q_dot)
+
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center()  + [-0.22, -0.06, 0], color=DARK_GRAY)))
+        self.play(Create(line))
+        
+        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
+            p = c1.point_from_proportion(alphas[0])
+            q = c2.point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve, q_curve)
+
+        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
+        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
+        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
+        self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+        
+        self.next_section("Animate distance around curves")
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=10)
+        p_alpha.set_value(0)
+        q_alpha.set_value(0)
+        self.wait()
 
 class DiscreteFrechetDistanceIntro(Scene):
     def construct(self):

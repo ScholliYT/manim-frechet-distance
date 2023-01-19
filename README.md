@@ -47,3 +47,9 @@ poetry run python3 -m http.server
 ```
 
 Then open [localhost:8000](http://localhost:8000)
+
+
+# Credits
+Some images used in the presentation are from external sources as noted below.
+- [Person Pointing](https://icons8.com/icon/HHppGuDxwFp0/person-pointing) icon by [Icons8](https://icons8.com)</a>
+- [Dog Jump](https://icons8.com/icon/GZSZiebXkvbw/dog-jump) icon by [Icons8](https://icons8.com)</a>
