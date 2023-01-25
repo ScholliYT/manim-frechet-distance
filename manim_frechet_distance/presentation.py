@@ -1,3 +1,4 @@
+from functools import partial
 import hashlib
 from manim import *
 from manim_editor import PresentationSectionType
@@ -416,19 +417,19 @@ class FrechetDistanceIntro(Scene):
 
         self.next_section("Distance line")
         dog = ImageMobject("manim_frechet_distance/assets/icons8-dog-jump-90.png")
-        p_alpha = ValueTracker(0)
-        p_dot = dog.move_to(p_curve.point_from_proportion(0))
-        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
-        self.add(p_dot)
+        dog_alpha = ValueTracker(0)
+        dog = dog.move_to(p_curve.point_from_proportion(0))
+        dog.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(dog_alpha.get_value())))
+        self.add(dog)
 
         owner = ImageMobject("manim_frechet_distance/assets/icons8-person-pointing-90.png").scale(1.2)
-        q_alpha = ValueTracker(0)
-        q_dot = owner.move_to(p_curve.point_from_proportion(0))
-        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
-        self.add(q_dot)
+        owner_alpha = ValueTracker(0)
+        owner = owner.move_to(p_curve.point_from_proportion(0))
+        owner.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(owner_alpha.get_value())))
+        self.add(owner)
 
-        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center()  + [-0.22, -0.06, 0], color=DARK_GRAY)))
+        line = Line(dog.get_center(), owner.get_center(), color=DARK_GRAY)
+        line.add_updater(lambda z: z.become(Line(dog.get_center(), owner.get_center()  + [-0.22, -0.06, 0], color=DARK_GRAY)))
         self.play(Create(line))
         
         def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
@@ -441,16 +442,16 @@ class FrechetDistanceIntro(Scene):
             return dist_full(alphas, p_curve, q_curve)
 
         dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
-        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
-        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
+        dist_number = DecimalNumber(dist([dog_alpha.get_value(), owner_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([dog_alpha.get_value(), owner_alpha.get_value()])))
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         self.play(Write(dist_text), Write(dist_number))
         self.wait()
         
         self.next_section("Animate distance around curves")
-        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=10)
-        p_alpha.set_value(0)
-        q_alpha.set_value(0)
+        self.play(dog_alpha.animate.set_value(1), owner_alpha.animate.set_value(1), run_time=10)
+        dog_alpha.set_value(0)
+        owner_alpha.set_value(0)
         self.wait()
 
 class DiscreteFrechetDistanceIntro(Scene):
@@ -477,9 +478,170 @@ class FreeSpaceCell(Scene):
         title = Text("Free Space Cell", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        self.next_section("P line segment")
+        p_curve = Line(
+            [-2,0,0],
+            [2,0,0],
+            color=RED)
+        self.play(Create(p_curve))
+        p_label = Text("P", color=RED).move_to([2.5, 0, 0])
+        self.play(Write(p_label))
+
+        self.next_section("Q line segment")
+        q_curve = Line(
+            [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
+            [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0],
+            color=GREEN)
+        self.play(Create(q_curve))
+        q_label = Text("Q", color=GREEN).move_to([2.5*np.cos(np.pi/4), 2.5*np.sin(np.pi/4), 0])
+        self.play(Write(q_label))
+
+        self.next_section("Add moving points")
+        p_dot = Dot(p_curve.point_from_proportion(0), color=BLACK)
+        q_dot = Dot(q_curve.point_from_proportion(0), color=BLACK)
+        self.play(Create(p_dot), Create(q_dot))
+
+        graph = VGroup(p_curve, p_label, q_curve, q_label, p_dot, q_dot)
+        self.play(graph.animate.shift(4*LEFT))
+        self.wait()
+        
+        
+        epsilon = ValueTracker(0.73)
+
+        # Draw plot of cell
+        image = ImageMobject("manim_frechet_distance/assets/free_space_cell_points.png")
+        image.height = 5
+
+
+        axes = Axes(
+            x_range=[0,1,0.25],
+            y_range=[0,1,0.25],
+            x_length=image.width,
+            y_length=image.height,
+            tips=False,
+            axis_config={"include_numbers": True}
+        ).set_color(BLACK)
+
+        ax_p_label = MathTex("\\alpha_P", color=BLACK).next_to(image, RIGHT).align_to(image, DOWN)
+        ax_q_label = MathTex("\\alpha_Q", color=BLACK).next_to(image, UP).align_to(image, LEFT)
+        diagram = Group(image, axes, ax_p_label, ax_q_label)
+        diagram.shift(3.5*RIGHT + 0.5*DOWN)
+
+        self.add(image)
+        self.play(Create(axes), run_time=2)
+        self.play(Write(ax_p_label), Write(ax_q_label))
+        self.wait()
+
+        
+
+        self.next_section("Dot in free space cell")
+        dot = Dot(axes.c2p(0,0), color=BLACK)
+        self.play(Create(dot))
+        self.wait()
+
+
+        p_alpha = ValueTracker(0)
+        q_alpha = ValueTracker(0)
+        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
+        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
+        dot.add_updater(lambda m: m.move_to(axes.c2p(p_alpha.get_value(), q_alpha.get_value())))
+
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
+        self.wait()
+
+        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
+        self.wait()
+
+
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
+        self.play(Create(line))
+        
+        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
+            p = c1.point_from_proportion(alphas[0])
+            q = c2.point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            d /= 2 # adjust for figure scaling
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve, q_curve)
+
+        dist_text = Text("d=", color=BLACK)
+        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
+        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
+        dist_group = VGroup(dist_text, dist_number)
+        dist_group.next_to(graph, DOWN).shift(0.5*DOWN)
+        self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+
+        self.play(p_alpha.animate.set_value(0.8), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
+        self.wait()
+
+
+        epsilon_text = MathTex("\\varepsilon=", color=BLACK)
+        epsilon_number =  DecimalNumber(epsilon.get_value(), color=BLACK).next_to(epsilon_text, RIGHT)
+        epslion_group = VGroup(epsilon_text, epsilon_number)
+        epslion_group.next_to(image, UP)
+        epsilon_number.add_updater(lambda t: t.set_value(epsilon.get_value()))
+        self.play(Write(epsilon_text), Write(epsilon_number))
+        line.clear_updaters()
+        self.play(Indicate(line))
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY if dist([p_alpha.get_value(), q_alpha.get_value()]) <= epsilon.get_value() else RED)))
+        
+
+
+        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
+        self.wait()
+        self.play(p_alpha.animate.set_value(0.8), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
+        self.wait()
+
+        
+
+
+
+
+
+        # ax = Axes(fill_color=BLACK, color=BLACK)
+        # ax.set_color(BLACK)
+
+        # def polygonal_curve(points: np.ndarray, t: float):
+        #     if t < 0 or t > len(points) -1:
+        #         raise ValueError()
+            
+        #     x,y = points[np.floor(t).astype(np.int64)], points[np.ceil(t).astype(np.int64)]
+
+        #     point = x + (y-x) * (t%1)
+
+        #     return point
+        # points = np.array([[-5.25,  0.25,  0.  ],
+        #     [-2.25,  0.25,  0.  ],
+        #     [-1.5 ,  1.75,  0.  ],
+        #     [-0.9 ,  1.75,  0.  ],
+        #     [-0.6 ,  0.4 ,  0.  ],
+        #     [ 0.75,  1.75,  0.  ],
+        #     [ 1.5 ,  1.  ,  0.  ],
+        #     [ 3.  ,  0.25,  0.  ],
+        #     [ 3.9 ,  0.7 ,  0.  ],
+        #     [ 3.  , -1.4 ,  0.  ],
+        #     [-4.8 , -1.4 ,  0.  ],])
+        # cardioid = ax.plot_parametric_curve(
+        #     partial(polygonal_curve, points),
+        #     t_range=[0, points.shape[0]-1],
+        #     color="#0FF1CE",
+        # )
+
+        # d = Dot(cardioid.point_from_proportion(0), color=RED)
+        # alpha = ValueTracker(0)
+        # d.add_updater(lambda m: m.move_to(cardioid.point_from_proportion(alpha.get_value())))
+        # self.add(ax)
+        # self.play(Create(cardioid))
+        # # self.play(Create(d))
+        # # self.play(alpha.animate.set_value(1), run_time=5)
+        # self.wait()
+
+
 
 class FreeSpaceDiagram(Scene):
     def construct(self):
