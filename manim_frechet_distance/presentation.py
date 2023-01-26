@@ -5,7 +5,7 @@ from manim import *
 from manim_editor import PresentationSectionType
 from cachier import cachier
 from scipy import optimize
-from scipy.spatial.distance import directed_hausdorff
+from scipy.spatial.distance import directed_hausdorff, cdist
 
 # config.background_color=BLACK
 config.background_color = WHITE
@@ -35,26 +35,6 @@ class Titlepage(Scene):
         self.play(Write(subtitle))
 
 
-
-class BraceAnnotation(Scene):
-    def construct(self):
-        
-        dot = Dot([-2, -1, 0])
-        dot2 = Dot([2, 1, 0])
-        line = Line(dot.get_center(), dot2.get_center()).set_color(ORANGE)
-        b1 = Brace(line)
-        self.add(line, dot, dot2, b1)
-
-        self.next_section("Horizontal distance", PresentationSectionType.NORMAL)
-        b1text = b1.get_text("Horizontal distance")
-        self.play(Write(b1text))
-        
-
-        self.next_section("Diagonal distance", PresentationSectionType.NORMAL)
-        b2 = Brace(line, direction=line.copy().rotate(PI / 2).get_unit_vector())
-        b2text = b2.get_tex("x-x_1")
-        self.play(Create(b2))
-        self.play(Write(b2text))
 
 class DistanceOfCurves(Scene):
     def construct(self):
@@ -187,7 +167,7 @@ class DistanceOfCurves(Scene):
         minimum_alphas = argmin_max_distance(dist_full)
         self.play(p_alpha.animate.set_value(minimum_alphas[0]), q_alpha.animate.set_value(minimum_alphas[1]), run_time=1)
         self.wait()
-        
+
         # we need to provide the directed_hausdorff function with some sample points
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=64)
@@ -210,22 +190,32 @@ class DistanceOfCurves(Scene):
             color = BLACK, font_size=30).to_edge(LEFT)
         self.play(ReplacementTransform(max_distance_text, directed_hausdorff_dist_p_q_text))
         self.wait()
+
+        self.next_section("Show all distance arrows from P to Q")
+        dist_number.clear_updaters()
+        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+        arrows_from_p_to_q = min_dist_arrows(p_points, q_points, color=RED)
+        self.play(LaggedStart(*[Create(a) for a in arrows_from_p_to_q]), run_time=2)
+        self.wait()
         
-        self.next_section("Go to direct Hausdorff distance from P to Q")
+        # self.next_section("Go to direct Hausdorff distance from P to Q")
         print("Calculating directed Hausdorff distance")
         dh, ip, iq =  directed_hausdorff(p_points, q_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
-        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
+        # self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
 
         self.next_section("Mark directed distance with arrow")
         pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
         pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.play(Indicate(pq_dist_arrow))
         self.wait()
 
-        
+        self.next_section("Remove arrows from P to Q")
+        self.play(LaggedStart(*[Uncreate(a) for a in arrows_from_p_to_q]), run_time=1)
 
-        self.next_section("Show formula for direct Hausdorff distance from P to Q")
+
+        self.next_section("Show formula for direct Hausdorff distance from Q to P")
         directed_hausdorff_dist_q_p_text = MathTex(
             "\\delta_{dhd}(Q,P) = \\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)", 
             color = BLACK, font_size=30).to_edge(LEFT).shift(DOWN)
@@ -233,18 +223,25 @@ class DistanceOfCurves(Scene):
         self.play(Write(directed_hausdorff_dist_q_p_text))
         self.wait()
 
-        self.next_section("Go to direct Hausdorff distance from Q to P")
+        self.next_section("Show all distance arrows from Q to P")
+        arrows_from_q_to_p = min_dist_arrows(q_points, p_points, color=GREEN)
+        self.play(LaggedStart(*[Create(a) for a in arrows_from_q_to_p]), run_time=2)
+        self.wait()
+
+        # self.next_section("Go to direct Hausdorff distance from Q to P")
         dh, iq, ip =  directed_hausdorff(q_points, p_points)
-        print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
-        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
+        # print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
+        # self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
         
         self.next_section("Mark directed distance with arrow")
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow).shift(UP + 0.1*RIGHT)
         self.play(Create(qp_dist_arrow), Write(qp_dist_value))
-        dist_number.clear_updaters()
-        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+        self.play(Indicate(qp_dist_arrow))
         self.wait()
+
+        self.next_section("Remove arrows from Q to P")
+        self.play(LaggedStart(*[Uncreate(a) for a in arrows_from_q_to_p]), run_time=1)
 
         self.next_section("Show formula for Hausdorff distance")
         hausdorff_dist_p_q_text_1 = MathTex(
@@ -253,23 +250,29 @@ class DistanceOfCurves(Scene):
         self.play(Write(hausdorff_dist_p_q_text_1))
         self.wait()
 
+        self.next_section("Show complete formula for Hausdorff distance")
         hausdorff_dist_p_q_text = MathTex(
             "\\delta_{hd}(P,Q)=","\\max \\left(","\\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)",",","\\sup_{q \\in Q} \\inf_{p \\in P} \\text{dist}(p,q)","\\right)", 
             color = BLACK, font_size=30).to_edge(LEFT).shift(3*DOWN)
         self.play(TransformMatchingTex(hausdorff_dist_p_q_text_1, hausdorff_dist_p_q_text))
         self.wait()
 
-        # TODO: compute with concrete values
-
-            
+def min_dist_arrows(p_points, q_points, color=GRAY):
+    distances = cdist(p_points, q_points,'sqeuclidean') # pairwise distances
+    min_distances = np.min(distances, axis=1) # minimal distance for each point on p to a point on q
+    min_distance = np.min(min_distances) # global minimal distance
+    max_distance = np.max(min_distances) # global maximal distance
+    closest_points_on_q = np.argmin(distances,axis=1) # index of closest point on q for each point of p
+    arrows_from_p_to_q = []
+    for ip,iq in enumerate(closest_points_on_q):
+        pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=color, buff=0.05)
         
-        # square = Union(Square(), Square().rotate(PI/4), color=BLUE)
-        # point = Dot().move_to(square.point_from_proportion(0))
-        # alpha = ValueTracker(0)
-        # point.add_updater(lambda m: m.move_to(square.point_from_proportion(alpha.get_value())))
-        # self.add(square, point)
-        # self.play(alpha.animate.set_value(1), run_time=3)
-        self.wait()
+        opacity =  (min_distances[ip] - min_distance) / (max_distance - min_distance)
+        smoothing = lambda x: 1/(1+ np.power(np.e, -3*(x-0.4)))
+        pq_dist_arrow.set_opacity(smoothing(opacity))
+
+        arrows_from_p_to_q.append(pq_dist_arrow)
+    return arrows_from_p_to_q
 
 
 class ProblemsWithHausdorffDistance(Scene):
@@ -293,44 +296,6 @@ class ProblemsWithHausdorffDistance(Scene):
         q_label = Text("Q", color=GREEN).move_to([3.1, 2.6, 0])
         self.play(Write(q_label))
     
-
-        self.next_section("Distance line")
-        q_alpha = ValueTracker(0)
-        q_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
-        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
-        self.play(Create(q_dot))
-
-        p_alpha = ValueTracker(0)
-        p_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
-        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
-        self.play(Create(p_dot))
-
-        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
-        self.play(Create(line))
-        
-        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
-            p = c1.point_from_proportion(alphas[0])
-            q = c2.point_from_proportion(alphas[1])
-            d = np.linalg.norm(p-q, ord=2)
-            return d
-
-        def dist(alphas: np.ndarray):
-            return dist_full(alphas, p_curve, q_curve)
-
-        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
-        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
-        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
-        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
-        self.play(Write(dist_text), Write(dist_number))
-        self.wait()
-        
-        self.next_section("Animate distance around curves")
-        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
-        p_alpha.set_value(0)
-        q_alpha.set_value(0)
-        self.wait()
-
         # we need to provide the directed_hausdorff function with some sample points
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=256)
@@ -350,25 +315,39 @@ class ProblemsWithHausdorffDistance(Scene):
         print("Calculating directed Hausdorff distance")
         dh, ip, iq =  directed_hausdorff(p_points, q_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
-        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
+
+        self.next_section("Show all distance arrows from P to Q")
+        arrows_from_p_to_q = min_dist_arrows(p_points, q_points, color=RED)
+        self.play(LaggedStart(*[Create(a) for a in arrows_from_p_to_q]), run_time=2)
+        self.wait()
 
         self.next_section("Mark directed distance with arrow")
         pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
         pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow)
         self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.play(Indicate(pq_dist_arrow))
         self.wait()
 
-        self.next_section("Go to direct Hausdorff distance from Q to P")
+        self.next_section("Remove arrows from P to Q")
+        self.play(LaggedStart(*[Uncreate(a) for a in arrows_from_p_to_q]), run_time=1)
+
+        self.next_section("Show all distance arrows from Q to P")
+        arrows_from_q_to_p = min_dist_arrows(q_points, p_points, color=GREEN)
+        self.play(LaggedStart(*[Create(a) for a in arrows_from_q_to_p]), run_time=2)
+        self.wait()
+
         dh, iq, ip =  directed_hausdorff(q_points, p_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
-        self.play(p_alpha.animate.set_value(alphas[ip]), q_alpha.animate.set_value(alphas[iq]), run_time=1)
         
         self.next_section("Mark directed distance with arrow")
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow, direction=LEFT)
         self.play(Create(qp_dist_arrow), Write(qp_dist_value))
-        dist_number.clear_updaters()
-        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+        self.play(Indicate(qp_dist_arrow))
+        self.wait()
+
+        self.next_section("Remove arrows from Q to P")
+        self.play(LaggedStart(*[Uncreate(a) for a in arrows_from_q_to_p]), run_time=1)
         self.wait()
 
         if "debug_dots" in locals():
