@@ -676,19 +676,355 @@
         "sections": [
             {
                 "id": 0,
-                "name": "autocreated",
+                "name": "Q line segment",
                 "type": "normal",
                 "is_sub_section": false,
                 "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0000.mp4",
                 "width": 1920,
                 "height": 1080,
                 "fps": "60",
-                "duration": 1.0,
+                "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
                 "in_project_video": "video_0032.mp4",
                 "in_project_thumbnail": "thumb_0032.jpg",
                 "in_project_id": 32,
                 "parent_id": 32
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 1,
+                "name": "Add moving points",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0001.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0033.mp4",
+                "in_project_thumbnail": "thumb_0033.jpg",
+                "in_project_id": 33,
+                "parent_id": 33
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 2,
+                "name": "Add criteria text",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0002.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0034.mp4",
+                "in_project_thumbnail": "thumb_0034.jpg",
+                "in_project_id": 34,
+                "parent_id": 34
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 3,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0003.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0035.mp4",
+                "in_project_thumbnail": "thumb_0035.jpg",
+                "in_project_id": 35,
+                "parent_id": 35
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 4,
+                "name": "Add criteria text",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0004.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0036.mp4",
+                "in_project_thumbnail": "thumb_0036.jpg",
+                "in_project_id": 36,
+                "parent_id": 36
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 5,
+                "name": "Move both frogs",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0005.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0037.mp4",
+                "in_project_thumbnail": "thumb_0037.jpg",
+                "in_project_id": 37,
+                "parent_id": 37
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 6,
+                "name": "Add criteria text",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0006.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0038.mp4",
+                "in_project_thumbnail": "thumb_0038.jpg",
+                "in_project_id": 38,
+                "parent_id": 38
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 7,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0007.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0039.mp4",
+                "in_project_thumbnail": "thumb_0039.jpg",
+                "in_project_id": 39,
+                "parent_id": 39
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 8,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0008.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0040.mp4",
+                "in_project_thumbnail": "thumb_0040.jpg",
+                "in_project_id": 40,
+                "parent_id": 40
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 9,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0009.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0041.mp4",
+                "in_project_thumbnail": "thumb_0041.jpg",
+                "in_project_id": 41,
+                "parent_id": 41
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 10,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0010.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0042.mp4",
+                "in_project_thumbnail": "thumb_0042.jpg",
+                "in_project_id": 42,
+                "parent_id": 42
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 11,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0011.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0043.mp4",
+                "in_project_thumbnail": "thumb_0043.jpg",
+                "in_project_id": 43,
+                "parent_id": 43
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 12,
+                "name": "Move both frogs",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0012.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0044.mp4",
+                "in_project_thumbnail": "thumb_0044.jpg",
+                "in_project_id": 44,
+                "parent_id": 44
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 13,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0013.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0045.mp4",
+                "in_project_thumbnail": "thumb_0045.jpg",
+                "in_project_id": 45,
+                "parent_id": 45
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 14,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0014.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0046.mp4",
+                "in_project_thumbnail": "thumb_0046.jpg",
+                "in_project_id": 46,
+                "parent_id": 46
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 15,
+                "name": "Move one frog",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0015.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0047.mp4",
+                "in_project_thumbnail": "thumb_0047.jpg",
+                "in_project_id": 47,
+                "parent_id": 47
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 16,
+                "name": "Frogs to endpoint",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/DiscreteFrechetDistanceIntro_0016.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0048.mp4",
+                "in_project_thumbnail": "thumb_0048.jpg",
+                "in_project_id": 48,
+                "parent_id": 48
             }
         ]
     },
@@ -706,10 +1042,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0033.mp4",
-                "in_project_thumbnail": "thumb_0033.jpg",
-                "in_project_id": 33,
-                "parent_id": 33
+                "in_project_video": "video_0049.mp4",
+                "in_project_thumbnail": "thumb_0049.jpg",
+                "in_project_id": 49,
+                "parent_id": 49
             }
         ]
     },
@@ -727,10 +1063,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0034.mp4",
-                "in_project_thumbnail": "thumb_0034.jpg",
-                "in_project_id": 34,
-                "parent_id": 34
+                "in_project_video": "video_0050.mp4",
+                "in_project_thumbnail": "thumb_0050.jpg",
+                "in_project_id": 50,
+                "parent_id": 50
             }
         ]
     },
@@ -748,10 +1084,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0035.mp4",
-                "in_project_thumbnail": "thumb_0035.jpg",
-                "in_project_id": 35,
-                "parent_id": 35
+                "in_project_video": "video_0051.mp4",
+                "in_project_thumbnail": "thumb_0051.jpg",
+                "in_project_id": 51,
+                "parent_id": 51
             }
         ]
     },
@@ -769,10 +1105,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0036.mp4",
-                "in_project_thumbnail": "thumb_0036.jpg",
-                "in_project_id": 36,
-                "parent_id": 36
+                "in_project_video": "video_0052.mp4",
+                "in_project_thumbnail": "thumb_0052.jpg",
+                "in_project_id": 52,
+                "parent_id": 52
             }
         ]
     },
@@ -790,10 +1126,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0037.mp4",
-                "in_project_thumbnail": "thumb_0037.jpg",
-                "in_project_id": 37,
-                "parent_id": 37
+                "in_project_video": "video_0053.mp4",
+                "in_project_thumbnail": "thumb_0053.jpg",
+                "in_project_id": 53,
+                "parent_id": 53
             }
         ]
     },
@@ -811,10 +1147,10 @@
                 "fps": "60",
                 "duration": 4.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0038.mp4",
-                "in_project_thumbnail": "thumb_0038.jpg",
-                "in_project_id": 38,
-                "parent_id": 38
+                "in_project_video": "video_0054.mp4",
+                "in_project_thumbnail": "thumb_0054.jpg",
+                "in_project_id": 54,
+                "parent_id": 54
             }
         ]
     },
@@ -832,10 +1168,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0039.mp4",
-                "in_project_thumbnail": "thumb_0039.jpg",
-                "in_project_id": 39,
-                "parent_id": 39
+                "in_project_video": "video_0055.mp4",
+                "in_project_thumbnail": "thumb_0055.jpg",
+                "in_project_id": 55,
+                "parent_id": 55
             }
         ]
     },
@@ -853,10 +1189,10 @@
                 "fps": "60",
                 "duration": 4.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0040.mp4",
-                "in_project_thumbnail": "thumb_0040.jpg",
-                "in_project_id": 40,
-                "parent_id": 40
+                "in_project_video": "video_0056.mp4",
+                "in_project_thumbnail": "thumb_0056.jpg",
+                "in_project_id": 56,
+                "parent_id": 56
             }
         ]
     },
@@ -874,10 +1210,10 @@
                 "fps": "60",
                 "duration": 4.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0041.mp4",
-                "in_project_thumbnail": "thumb_0041.jpg",
-                "in_project_id": 41,
-                "parent_id": 41
+                "in_project_video": "video_0057.mp4",
+                "in_project_thumbnail": "thumb_0057.jpg",
+                "in_project_id": 57,
+                "parent_id": 57
             }
         ]
     },
@@ -895,10 +1231,10 @@
                 "fps": "60",
                 "duration": 3.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0042.mp4",
-                "in_project_thumbnail": "thumb_0042.jpg",
-                "in_project_id": 42,
-                "parent_id": 42
+                "in_project_video": "video_0058.mp4",
+                "in_project_thumbnail": "thumb_0058.jpg",
+                "in_project_id": 58,
+                "parent_id": 58
             }
         ]
     },
@@ -916,10 +1252,10 @@
                 "fps": "60",
                 "duration": 3.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0043.mp4",
-                "in_project_thumbnail": "thumb_0043.jpg",
-                "in_project_id": 43,
-                "parent_id": 43
+                "in_project_video": "video_0059.mp4",
+                "in_project_thumbnail": "thumb_0059.jpg",
+                "in_project_id": 59,
+                "parent_id": 59
             }
         ]
     },
@@ -937,10 +1273,10 @@
                 "fps": "60",
                 "duration": 3.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0044.mp4",
-                "in_project_thumbnail": "thumb_0044.jpg",
-                "in_project_id": 44,
-                "parent_id": 44
+                "in_project_video": "video_0060.mp4",
+                "in_project_thumbnail": "thumb_0060.jpg",
+                "in_project_id": 60,
+                "parent_id": 60
             }
         ]
     },
@@ -958,10 +1294,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0045.mp4",
-                "in_project_thumbnail": "thumb_0045.jpg",
-                "in_project_id": 45,
-                "parent_id": 45
+                "in_project_video": "video_0061.mp4",
+                "in_project_thumbnail": "thumb_0061.jpg",
+                "in_project_id": 61,
+                "parent_id": 61
             }
         ]
     },
@@ -979,10 +1315,10 @@
                 "fps": "60",
                 "duration": 6.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0046.mp4",
-                "in_project_thumbnail": "thumb_0046.jpg",
-                "in_project_id": 46,
-                "parent_id": 46
+                "in_project_video": "video_0062.mp4",
+                "in_project_thumbnail": "thumb_0062.jpg",
+                "in_project_id": 62,
+                "parent_id": 62
             }
         ]
     },
@@ -1000,10 +1336,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0047.mp4",
-                "in_project_thumbnail": "thumb_0047.jpg",
-                "in_project_id": 47,
-                "parent_id": 47
+                "in_project_video": "video_0063.mp4",
+                "in_project_thumbnail": "thumb_0063.jpg",
+                "in_project_id": 63,
+                "parent_id": 63
             }
         ]
     },
@@ -1021,10 +1357,10 @@
                 "fps": "60",
                 "duration": 2.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0048.mp4",
-                "in_project_thumbnail": "thumb_0048.jpg",
-                "in_project_id": 48,
-                "parent_id": 48
+                "in_project_video": "video_0064.mp4",
+                "in_project_thumbnail": "thumb_0064.jpg",
+                "in_project_id": 64,
+                "parent_id": 64
             }
         ]
     },
@@ -1042,10 +1378,10 @@
                 "fps": "60",
                 "duration": 5.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0049.mp4",
-                "in_project_thumbnail": "thumb_0049.jpg",
-                "in_project_id": 49,
-                "parent_id": 49
+                "in_project_video": "video_0065.mp4",
+                "in_project_thumbnail": "thumb_0065.jpg",
+                "in_project_id": 65,
+                "parent_id": 65
             }
         ]
     },
@@ -1063,10 +1399,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0050.mp4",
-                "in_project_thumbnail": "thumb_0050.jpg",
-                "in_project_id": 50,
-                "parent_id": 50
+                "in_project_video": "video_0066.mp4",
+                "in_project_thumbnail": "thumb_0066.jpg",
+                "in_project_id": 66,
+                "parent_id": 66
             }
         ]
     },
@@ -1084,10 +1420,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0051.mp4",
-                "in_project_thumbnail": "thumb_0051.jpg",
-                "in_project_id": 51,
-                "parent_id": 51
+                "in_project_video": "video_0067.mp4",
+                "in_project_thumbnail": "thumb_0067.jpg",
+                "in_project_id": 67,
+                "parent_id": 67
             }
         ]
     },
@@ -1105,10 +1441,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0052.mp4",
-                "in_project_thumbnail": "thumb_0052.jpg",
-                "in_project_id": 52,
-                "parent_id": 52
+                "in_project_video": "video_0068.mp4",
+                "in_project_thumbnail": "thumb_0068.jpg",
+                "in_project_id": 68,
+                "parent_id": 68
             }
         ]
     },
@@ -1126,10 +1462,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0053.mp4",
-                "in_project_thumbnail": "thumb_0053.jpg",
-                "in_project_id": 53,
-                "parent_id": 53
+                "in_project_video": "video_0069.mp4",
+                "in_project_thumbnail": "thumb_0069.jpg",
+                "in_project_id": 69,
+                "parent_id": 69
             }
         ]
     }
