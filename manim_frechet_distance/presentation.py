@@ -440,6 +440,13 @@ class FrechetDistanceIntro(Scene):
         owner_alpha.set_value(0)
         self.wait()
 
+        self.next_section("Show formula for Fréchet distance")
+        frechet_dist_text = MathTex(
+            r"\delta_{F}(P,Q) = \inf_{\substack{\alpha: [0,1] \mapsto [a, a'] \\ \beta: [0,1] \mapsto [b, b']}} \max_{t \in [0,1]} \text{dist}(P(\alpha(t)), Q(\beta(t)))",
+            color = BLACK, font_size=30).to_edge(DOWN)
+        self.play(Write(frechet_dist_text))
+        self.wait()
+
 class DiscreteFrechetDistanceIntro(Scene):
     def construct(self):
         title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
@@ -590,9 +597,6 @@ class DiscreteFrechetDistanceIntro(Scene):
         frog_p_alpha.set_value(8)
         frog_q_alpha.set_value(7)
         self.wait()
-
-
-
 
 class ComputingTheFrechetDistance(Scene):
     def construct(self):
