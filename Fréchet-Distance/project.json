@@ -662,7 +662,7 @@
                 "width": 1920,
                 "height": 1080,
                 "fps": "60",
-                "duration": 7.0,
+                "duration": 3.0,
                 "project_name": "Fr\u00e9chet-Distance",
                 "in_project_video": "video_0031.mp4",
                 "in_project_thumbnail": "thumb_0031.jpg",
@@ -676,19 +676,229 @@
         "sections": [
             {
                 "id": 3,
-                "name": "Dot in free space cell",
+                "name": "Draw free space cell diagram",
                 "type": "normal",
                 "is_sub_section": false,
                 "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0003.mp4",
                 "width": 1920,
                 "height": 1080,
                 "fps": "60",
-                "duration": 23.0,
+                "duration": 4.0,
                 "project_name": "Fr\u00e9chet-Distance",
                 "in_project_video": "video_0032.mp4",
                 "in_project_thumbnail": "thumb_0032.jpg",
                 "in_project_id": 32,
                 "parent_id": 32
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 4,
+                "name": "Dot in free space cell",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0004.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0033.mp4",
+                "in_project_thumbnail": "thumb_0033.jpg",
+                "in_project_id": 33,
+                "parent_id": 33
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 5,
+                "name": "Diagonal move in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0005.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 4.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0034.mp4",
+                "in_project_thumbnail": "thumb_0034.jpg",
+                "in_project_id": 34,
+                "parent_id": 34
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 6,
+                "name": "Back to point in middle of free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0006.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0035.mp4",
+                "in_project_thumbnail": "thumb_0035.jpg",
+                "in_project_id": 35,
+                "parent_id": 35
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 7,
+                "name": "Show distance and line",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0007.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0036.mp4",
+                "in_project_thumbnail": "thumb_0036.jpg",
+                "in_project_id": 36,
+                "parent_id": 36
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 8,
+                "name": "Move over border",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0008.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0037.mp4",
+                "in_project_thumbnail": "thumb_0037.jpg",
+                "in_project_id": 37,
+                "parent_id": 37
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 9,
+                "name": "Show epsilon value",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0009.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0038.mp4",
+                "in_project_thumbnail": "thumb_0038.jpg",
+                "in_project_id": 38,
+                "parent_id": 38
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 10,
+                "name": "Move over border",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0010.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 6.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0039.mp4",
+                "in_project_thumbnail": "thumb_0039.jpg",
+                "in_project_id": 39,
+                "parent_id": 39
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 11,
+                "name": "Show epsilon border",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0011.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0040.mp4",
+                "in_project_thumbnail": "thumb_0040.jpg",
+                "in_project_id": 40,
+                "parent_id": 40
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 12,
+                "name": "Move to epsilon border",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0012.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0041.mp4",
+                "in_project_thumbnail": "thumb_0041.jpg",
+                "in_project_id": 41,
+                "parent_id": 41
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 13,
+                "name": "Animate along epsilon border",
+                "type": "loop",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceCell_0013.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 5.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0042.mp4",
+                "in_project_thumbnail": "thumb_0042.jpg",
+                "in_project_id": 42,
+                "parent_id": 42
             }
         ]
     },
@@ -706,10 +916,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0033.mp4",
-                "in_project_thumbnail": "thumb_0033.jpg",
-                "in_project_id": 33,
-                "parent_id": 33
+                "in_project_video": "video_0043.mp4",
+                "in_project_thumbnail": "thumb_0043.jpg",
+                "in_project_id": 43,
+                "parent_id": 43
             }
         ]
     },
@@ -727,10 +937,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0034.mp4",
-                "in_project_thumbnail": "thumb_0034.jpg",
-                "in_project_id": 34,
-                "parent_id": 34
+                "in_project_video": "video_0044.mp4",
+                "in_project_thumbnail": "thumb_0044.jpg",
+                "in_project_id": 44,
+                "parent_id": 44
             }
         ]
     },
@@ -748,10 +958,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0035.mp4",
-                "in_project_thumbnail": "thumb_0035.jpg",
-                "in_project_id": 35,
-                "parent_id": 35
+                "in_project_video": "video_0045.mp4",
+                "in_project_thumbnail": "thumb_0045.jpg",
+                "in_project_id": 45,
+                "parent_id": 45
             }
         ]
     },
@@ -769,10 +979,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0036.mp4",
-                "in_project_thumbnail": "thumb_0036.jpg",
-                "in_project_id": 36,
-                "parent_id": 36
+                "in_project_video": "video_0046.mp4",
+                "in_project_thumbnail": "thumb_0046.jpg",
+                "in_project_id": 46,
+                "parent_id": 46
             }
         ]
     }
