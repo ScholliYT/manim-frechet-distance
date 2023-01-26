@@ -168,6 +168,11 @@ class DistanceOfCurves(Scene):
         self.play(p_alpha.animate.set_value(minimum_alphas[0]), q_alpha.animate.set_value(minimum_alphas[1]), run_time=1)
         self.wait()
 
+        self.next_section("Hausdorff distance")
+        self.play(title.animate.become(Text("Hausdorff distance", color=BLUE).to_edge(UP)))
+        dist_number.clear_updaters()
+        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+
         # we need to provide the directed_hausdorff function with some sample points
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=64)
@@ -180,9 +185,8 @@ class DistanceOfCurves(Scene):
             q_points.append(q_pos[:2])
             debug_dots.append(Dot(p_pos).set_fill(GRAY, opacity=0.5))
             debug_dots.append(Dot(q_pos).set_fill(GRAY, opacity=0.5))
-        self.add(Group(*debug_dots))
-
-        
+        self.play(LaggedStart(*[Create(p) for p in debug_dots]))
+        debug_dots = Group(*debug_dots)
 
         self.next_section("Show formula for direct Hausdorff distance from P to Q")
         directed_hausdorff_dist_p_q_text = MathTex(
@@ -192,8 +196,6 @@ class DistanceOfCurves(Scene):
         self.wait()
 
         self.next_section("Show all distance arrows from P to Q")
-        dist_number.clear_updaters()
-        self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
         arrows_from_p_to_q = min_dist_arrows(p_points, q_points, color=RED)
         self.play(LaggedStart(*[Create(a) for a in arrows_from_p_to_q]), run_time=2)
         self.wait()
@@ -207,8 +209,9 @@ class DistanceOfCurves(Scene):
         self.next_section("Mark directed distance with arrow")
         pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
         pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow).shift(UP + 0.1*RIGHT)
-        self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.play(Create(pq_dist_arrow))
         self.play(Indicate(pq_dist_arrow))
+        self.play(Write(pq_dist_value))
         self.wait()
 
         self.next_section("Remove arrows from P to Q")
@@ -236,8 +239,9 @@ class DistanceOfCurves(Scene):
         self.next_section("Mark directed distance with arrow")
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow).shift(UP + 0.1*RIGHT)
-        self.play(Create(qp_dist_arrow), Write(qp_dist_value))
+        self.play(Create(qp_dist_arrow))
         self.play(Indicate(qp_dist_arrow))
+        self.play(Write(qp_dist_value))
         self.wait()
 
         self.next_section("Remove arrows from Q to P")
@@ -295,7 +299,8 @@ class ProblemsWithHausdorffDistance(Scene):
         self.play(Create(q_curve))
         q_label = Text("Q", color=GREEN).move_to([3.1, 2.6, 0])
         self.play(Write(q_label))
-    
+
+        self.next_section("Sample points on curves")
         # we need to provide the directed_hausdorff function with some sample points
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=256)
@@ -308,10 +313,9 @@ class ProblemsWithHausdorffDistance(Scene):
             q_points.append(q_pos[:2])
             debug_dots.append(Dot(p_pos).set_fill(GRAY, opacity=0.5))
             debug_dots.append(Dot(q_pos).set_fill(GRAY, opacity=0.5))
+        self.play(LaggedStart(*[Create(p) for p in debug_dots]), run_time=1)
         debug_dots = Group(*debug_dots)
-        self.add(debug_dots)
 
-        self.next_section("Go to direct Hausdorff distance from P to Q")
         print("Calculating directed Hausdorff distance")
         dh, ip, iq =  directed_hausdorff(p_points, q_points)
         print("Hausdorff distance:", dh, "Found on idxs:", ip, iq, "With alphas:", alphas[ip], alphas[iq])
@@ -324,8 +328,9 @@ class ProblemsWithHausdorffDistance(Scene):
         self.next_section("Mark directed distance with arrow")
         pq_dist_arrow = Arrow(start=[*p_points[ip], 0], end=[*q_points[iq], 0], color=RED, buff=0.05)
         pq_dist_value = DecimalNumber(dh, color=RED).next_to(pq_dist_arrow)
-        self.play(Create(pq_dist_arrow), Write(pq_dist_value))
+        self.play(Create(pq_dist_arrow))
         self.play(Indicate(pq_dist_arrow))
+        self.play(Write(pq_dist_value))
         self.wait()
 
         self.next_section("Remove arrows from P to Q")
@@ -342,17 +347,18 @@ class ProblemsWithHausdorffDistance(Scene):
         self.next_section("Mark directed distance with arrow")
         qp_dist_arrow = Arrow(start=[*q_points[iq], 0], end=[*p_points[ip], 0], color=GREEN, buff=0.05)
         qp_dist_value = DecimalNumber(dh, color=GREEN).next_to(qp_dist_arrow, direction=LEFT)
-        self.play(Create(qp_dist_arrow), Write(qp_dist_value))
+        self.play(Create(qp_dist_arrow))
         self.play(Indicate(qp_dist_arrow))
+        self.play(Write(qp_dist_value))
         self.wait()
 
         self.next_section("Remove arrows from Q to P")
         self.play(LaggedStart(*[Uncreate(a) for a in arrows_from_q_to_p]), run_time=1)
         self.wait()
 
-        if "debug_dots" in locals():
-            self.remove(debug_dots)
-            self.wait()
+        # if "debug_dots" in locals():
+        #     self.remove(debug_dots)
+        #     self.wait()
 
 class FrechetDistanceIntro(Scene):
     def construct(self):
@@ -496,6 +502,7 @@ class FreeSpaceCell(Scene):
         q_dot = Dot(q_curve.point_from_proportion(0), color=BLACK)
         self.play(Create(p_dot), Create(q_dot))
 
+        self.next_section("Shift graph to left side")
         graph = VGroup(ax, p_curve, p_label, q_curve, q_label, p_dot, q_dot)
         self.play(graph.animate.shift(4*LEFT))
         self.wait()
@@ -507,12 +514,13 @@ class FreeSpaceCell(Scene):
         # Draw plot of cell
         image = ImageMobject("manim_frechet_distance/assets/free_space_cell_points.png")
         image.height = 5
+        image.width = 5
 
         axes_free_space = Axes(
             x_range=[0,1,0.25],
             y_range=[0,1,0.25],
-            x_length=image.width,
-            y_length=image.height,
+            x_length=5,
+            y_length=5,
             tips=False,
             axis_config={"include_numbers": True}
         ).set_color(BLACK)
@@ -533,13 +541,17 @@ class FreeSpaceCell(Scene):
         self.play(Create(dot))
         self.wait()
 
-        self.next_section("Diagonal move in free space")
+        self.next_section("Move to (1,0) in free space")
         p_alpha = ValueTracker(0)
         q_alpha = ValueTracker(0)
         p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
         q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
         dot.add_updater(lambda m: m.move_to(axes_free_space.c2p(p_alpha.get_value(), q_alpha.get_value())))
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(0), run_time=3, rate_func=linear)
+        self.wait()
 
+
+        self.next_section("Move to (1,1) in free space")
         self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
         self.wait()
 
