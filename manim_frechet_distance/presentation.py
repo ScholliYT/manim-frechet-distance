@@ -1,5 +1,6 @@
 from functools import partial
 import hashlib
+from typing import Tuple
 from manim import *
 from manim_editor import PresentationSectionType
 from cachier import cachier
@@ -469,8 +470,7 @@ class ComputingTheFrechetDistance(Scene):
         title = Text("Computing the Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Free Space Diagram", "Monotone Path", "Critical values")
-        blist.set_color(BLACK)
+        blist = BulletedList("Free Space Diagram", "Monotone Path", "Critical values").set_color(BLACK)
         self.play(Write(blist))
 
 class FreeSpaceCell(Scene):
@@ -478,22 +478,38 @@ class FreeSpaceCell(Scene):
         title = Text("Free Space Cell", color=BLUE).to_edge(UP)
         self.add(title)
 
+        ax = Axes(x_range=[-2,2], y_range=[-2,2], x_length=5, y_length=5, tips=False).set_color(BLACK)
+        ax.shift(0.5*DOWN)
+        self.add(ax)
+
         self.next_section("P line segment")
-        p_curve = Line(
-            [-2,0,0],
-            [2,0,0],
-            color=RED)
+        p_points = np.array([
+            [-2, 0, 0],
+            [2, 0, 0]])
+        alpha_p_range = [0, p_points.shape[0]-1]
+        p_curve_func = partial(polygonal_curve, p_points)
+        p_curve = ax.plot_parametric_curve(
+            p_curve_func,
+            t_range=alpha_p_range,
+            color=RED,
+        )
         self.play(Create(p_curve))
-        p_label = Text("P", color=RED).move_to([2.5, 0, 0])
+        p_label = Text("P", color=RED).move_to(ax.c2p(2.5, 0))
         self.play(Write(p_label))
 
         self.next_section("Q line segment")
-        q_curve = Line(
+        q_points = np.array([
             [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
-            [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0],
-            color=GREEN)
+            [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0]])
+        alpha_q_range = [0, q_points.shape[0]-1]
+        q_curve_func = partial(polygonal_curve, q_points)
+        q_curve = ax.plot_parametric_curve(
+            q_curve_func,
+            t_range=alpha_q_range,
+            color=GREEN,
+        )
         self.play(Create(q_curve))
-        q_label = Text("Q", color=GREEN).move_to([2.5*np.cos(np.pi/4), 2.5*np.sin(np.pi/4), 0])
+        q_label = Text("Q", color=GREEN).move_to(ax.c2p(2.5*np.cos(np.pi/4), 2.5*np.sin(np.pi/4)))
         self.play(Write(q_label))
 
         self.next_section("Add moving points")
@@ -501,19 +517,19 @@ class FreeSpaceCell(Scene):
         q_dot = Dot(q_curve.point_from_proportion(0), color=BLACK)
         self.play(Create(p_dot), Create(q_dot))
 
-        graph = VGroup(p_curve, p_label, q_curve, q_label, p_dot, q_dot)
+        graph = VGroup(ax, p_curve, p_label, q_curve, q_label, p_dot, q_dot)
         self.play(graph.animate.shift(4*LEFT))
         self.wait()
         
         
+        self.next_section("Draw free space cell diagram")
         epsilon = ValueTracker(0.73)
 
         # Draw plot of cell
         image = ImageMobject("manim_frechet_distance/assets/free_space_cell_points.png")
         image.height = 5
 
-
-        axes = Axes(
+        axes_free_space = Axes(
             x_range=[0,1,0.25],
             y_range=[0,1,0.25],
             x_length=image.width,
@@ -524,124 +540,259 @@ class FreeSpaceCell(Scene):
 
         ax_p_label = MathTex("\\alpha_P", color=BLACK).next_to(image, RIGHT).align_to(image, DOWN)
         ax_q_label = MathTex("\\alpha_Q", color=BLACK).next_to(image, UP).align_to(image, LEFT)
-        diagram = Group(image, axes, ax_p_label, ax_q_label)
+        diagram = Group(image, axes_free_space, ax_p_label, ax_q_label)
         diagram.shift(3.5*RIGHT + 0.5*DOWN)
 
         self.add(image)
-        self.play(Create(axes), run_time=2)
+        self.play(Create(axes_free_space), run_time=2)
         self.play(Write(ax_p_label), Write(ax_q_label))
         self.wait()
 
         
-
         self.next_section("Dot in free space cell")
-        dot = Dot(axes.c2p(0,0), color=BLACK)
+        dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
         self.play(Create(dot))
         self.wait()
 
-
+        self.next_section("Diagonal move in free space")
         p_alpha = ValueTracker(0)
         q_alpha = ValueTracker(0)
         p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
         q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
-        dot.add_updater(lambda m: m.move_to(axes.c2p(p_alpha.get_value(), q_alpha.get_value())))
+        dot.add_updater(lambda m: m.move_to(axes_free_space.c2p(p_alpha.get_value(), q_alpha.get_value())))
 
         self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
         self.wait()
 
+        self.next_section("Back to point in middle of free space")
         self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
 
-
-        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
+        self.next_section("Show distance and line")
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=BLACK)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=BLACK)))
         self.play(Create(line))
         
-        def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
-            p = c1.point_from_proportion(alphas[0])
-            q = c2.point_from_proportion(alphas[1])
+        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
+            p = p_point_from_proportion(alphas[0])
+            q = q_point_from_proportion(alphas[1])
             d = np.linalg.norm(p-q, ord=2)
-            d /= 2 # adjust for figure scaling
             return d
 
         def dist(alphas: np.ndarray):
-            return dist_full(alphas, p_curve, q_curve)
+            return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
 
         dist_text = Text("d=", color=BLACK)
         dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
         dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         dist_group = VGroup(dist_text, dist_number)
-        dist_group.next_to(graph, DOWN).shift(0.5*DOWN)
+        dist_group.next_to(graph, DOWN)
         self.play(Write(dist_text), Write(dist_number))
         self.wait()
 
+        self.next_section("Move over border")
         self.play(p_alpha.animate.set_value(0.8), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
 
-
+        self.next_section("Show epsilon value")
         epsilon_text = MathTex("\\varepsilon=", color=BLACK)
         epsilon_number =  DecimalNumber(epsilon.get_value(), color=BLACK).next_to(epsilon_text, RIGHT)
         epslion_group = VGroup(epsilon_text, epsilon_number)
         epslion_group.next_to(image, UP)
         epsilon_number.add_updater(lambda t: t.set_value(epsilon.get_value()))
         self.play(Write(epsilon_text), Write(epsilon_number))
-        line.clear_updaters()
-        self.play(Indicate(line))
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY if dist([p_alpha.get_value(), q_alpha.get_value()]) <= epsilon.get_value() else RED)))
-        
+        # line.clear_updaters()
+        # self.play(Indicate(line))
+        # line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY if dist([p_alpha.get_value(), q_alpha.get_value()]) <= epsilon.get_value() else RED)))
+        self.wait()
 
-
+        self.next_section("Move over border")
         self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
         self.play(p_alpha.animate.set_value(0.8), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
 
+        # animate walking around on the epsilon edge of the free space diagram
+        self.next_section("Show epsilon border")
+        free_space_graph = axes_free_space.plot_implicit_curve(
+            lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+            color=BLUE_E,
+            max_quads = 2000
+        )
+        self.add(free_space_graph)
+        self.wait()
+
+        self.next_section("Move to epsilon border")
+        free_space_alpha = ValueTracker(0.1)
+        free_space_coords = lambda : axes_free_space.p2c(free_space_graph.point_from_proportion(free_space_alpha.get_value()))
+        self.play(p_alpha.animate.set_value(free_space_coords()[0]), q_alpha.animate.set_value(free_space_coords()[1]), run_time=1, rate_func=linear)
+        self.wait()
+
+        self.next_section("Animate along epsilon border", PresentationSectionType.LOOP)
+        p_alpha.add_updater(lambda x: x.set_value(free_space_coords()[0]))
+        q_alpha.add_updater(lambda x: x.set_value(free_space_coords()[1]))
+        self.play(free_space_alpha.animate.set_value(0.5), run_time=5, rate_func=there_and_back_with_pause)
+
+
+        
+class FreeSpaceDiagramPlot(Scene):
+    def construct(self):
+        ax = Axes(x_range=[-3,3], y_range=[-2,2], x_length=5, y_length=5).set_color(BLACK).shift(3*LEFT)
+        self.add(ax)
+
+
+        p_points = np.array([
+            # [-3, 1, 0],
+            [-2, 0, 0],
+            [2, 0, 0]])
+        alpha_p_range = [0, p_points.shape[0]-1]
+        p_curve_func = partial(polygonal_curve, p_points)
+        p_curve = ax.plot_parametric_curve(
+            p_curve_func,
+            t_range=alpha_p_range,
+            color=RED,
+        )
+
+        q_points = np.array([
+            # [-3, -1, 0],
+            [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
+            [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0]])
+        alpha_q_range = [0, q_points.shape[0]-1]
+        q_curve_func = partial(polygonal_curve, q_points)
+        q_curve = ax.plot_parametric_curve(
+            q_curve_func,
+            t_range=alpha_q_range,
+            color=GREEN,
+        )
+
+        self.play(Create(p_curve))
+        self.play(Create(q_curve))
+
+
+
+        ax_free_space: Axes = Axes(x_range=alpha_p_range, y_range=alpha_q_range, x_length=5, y_length=5).set_color(BLACK).shift(3*RIGHT)
+        self.add(ax_free_space)
+
+        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
+            p = p_point_from_proportion(alphas[0])
+            q = q_point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
+
+        epsilon = ValueTracker(0.5)
+        free_space_graph = ax_free_space.plot_implicit_curve(
+            lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+            color=BLUE_E,
+            max_quads = 2000
+        )
+        self.play(Create(free_space_graph))
+        self.wait()
+
+
+        free_space_graph.add_updater(
+            lambda x: x.become(
+                ax_free_space.plot_implicit_curve(
+                    lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+                    color=BLUE_E,
+                    max_quads = 2000
+        )))
+        self.play(epsilon.animate.set_value(0.73))
+
+        # find intersection points of elliplse with unit cell
+        # def find_intersection_points(eps: float, side: str):
+            
+        #     if side == "bottom":
+        #         scalar_func = lambda alpha_p: abs(dist((alpha_p, 0)) - eps)
+        #     elif side == "top":
+        #         scalar_func = lambda alpha_p: abs(dist((alpha_p, 1)) - eps)
+        #     elif side == "left":
+        #         scalar_func = lambda alpha_q: abs(dist((0, alpha_q)) - eps)
+        #     elif side == "right":
+        #         scalar_func = lambda alpha_q: abs(dist((1, alpha_q)) - eps)
+        #     else:
+        #         raise ValueError(side)
+        #     root: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,1], options={"xatol": 1e-3})
+
+        #     if root and not root["success"]:
+        #         return RuntimeError("Optimizer was not sucessful", root)
+
+        #     # search again because we don't know which minimum / root we found so far
+        #     root1: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,root.x], options={"xatol": 1e-3})
+        #     root2: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[root.x,1], options={"xatol": 1e-3})
+
+
+        #     if side == "bottom":
+        #         root1_coords = [root1.x, root1.fun]
+        #         root2_coords = [root2.x, root2.fun]
+        #     elif side == "top":
+        #         root1_coords = [root1.x, 1-root1.fun]
+        #         root2_coords = [root2.x, 1-root2.fun]
+        #     elif side == "left":
+        #         root1_coords = [root1.fun, root1.x]
+        #         root2_coords = [root2.fun, root2.x]
+        #     elif side == "right":
+        #         root1_coords = [1-root1.fun, root1.x]
+        #         root2_coords = [1-root2.fun, root2.x]
+
+        #     return root1_coords, root2_coords
+
+        # intersection_coords = {}
+        # for side in ["top", "bottom", "left", "right"]:
+        #     coords1, coords2 = find_intersection_points(eps=epsilon.get_value(), side=side)
+        #     intersection_coords[side] = [coords1, coords2]
+
+        #     d1 = Dot(ax_free_space.c2p(*coords1), color=BLACK)
+        #     self.play(Create(d1))
+        #     d2 = Dot(ax_free_space.c2p(*coords2), color=BLACK)
+        #     self.play(Create(d2))
+
+        # self.wait()
+
+        # bottom_min2: optimize.OptimizeResult = optimize.minimize_scalar(lambda alpha_p: abs(dist((alpha_p, 0)) - epsilon), bounds=[0,alpha_p_bottom_min], options={"xatol": 1e-7})
+        # print("Bottom min2", bottom_min2)
+        # if bottom_min2 and not bottom_min2["success"]:
+        #     return RuntimeError("Optimizer was not sucessful", bottom_min)
+
+
+
+        # ellipse_1 = Ellipse(width=2.0, height=4.0, color=ORANGE).rotate(45)
+        # self.add(ellipse_1)
+        # self.wait()
+
         
 
 
 
+def polygonal_curve(points: np.ndarray, t: float|np.ndarray) -> float|np.ndarray:       
+    """Generates a linearly interpolated polygonal curve through points
 
+    Args:
+        points (np.ndarray): corner points of the polygonal curve
+        t (float | np.ndarray): value of point(s) to be interpolated. Choose 0 for the first corner point, 1 for the second... All values in between, like 0.5, are interpolated between corner points.
 
-        # ax = Axes(fill_color=BLACK, color=BLACK)
-        # ax.set_color(BLACK)
+    Raises:
+        ValueError: The value of t is out of the definition range
 
-        # def polygonal_curve(points: np.ndarray, t: float):
-        #     if t < 0 or t > len(points) -1:
-        #         raise ValueError()
-            
-        #     x,y = points[np.floor(t).astype(np.int64)], points[np.ceil(t).astype(np.int64)]
+    Returns:
+        float|np.ndarray: the interpolated point(s)
+    """
+    if (np.min(t) < 0 or np.max(t) > len(points) -1):
+        raise ValueError(f"t ({t}) is not in bounds of [{0}|{len(points) -1}]")
+    
+    x = points[np.floor(t).astype(np.int64)]
+    y = points[np.ceil(t).astype(np.int64)]
 
-        #     point = x + (y-x) * (t%1)
+    length_factors = np.mod(t,1)
+    if isinstance(t, np.ndarray):
+        length_factors = length_factors.reshape((len(t),1))
+    partial_line_segment = (y-x) * length_factors
+    point = x + partial_line_segment
 
-        #     return point
-        # points = np.array([[-5.25,  0.25,  0.  ],
-        #     [-2.25,  0.25,  0.  ],
-        #     [-1.5 ,  1.75,  0.  ],
-        #     [-0.9 ,  1.75,  0.  ],
-        #     [-0.6 ,  0.4 ,  0.  ],
-        #     [ 0.75,  1.75,  0.  ],
-        #     [ 1.5 ,  1.  ,  0.  ],
-        #     [ 3.  ,  0.25,  0.  ],
-        #     [ 3.9 ,  0.7 ,  0.  ],
-        #     [ 3.  , -1.4 ,  0.  ],
-        #     [-4.8 , -1.4 ,  0.  ],])
-        # cardioid = ax.plot_parametric_curve(
-        #     partial(polygonal_curve, points),
-        #     t_range=[0, points.shape[0]-1],
-        #     color="#0FF1CE",
-        # )
-
-        # d = Dot(cardioid.point_from_proportion(0), color=RED)
-        # alpha = ValueTracker(0)
-        # d.add_updater(lambda m: m.move_to(cardioid.point_from_proportion(alpha.get_value())))
-        # self.add(ax)
-        # self.play(Create(cardioid))
-        # # self.play(Create(d))
-        # # self.play(alpha.animate.set_value(1), run_time=5)
-        # self.wait()
-
-
+    return point
 
 class FreeSpaceDiagram(Scene):
     def construct(self):
