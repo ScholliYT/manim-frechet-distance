@@ -603,8 +603,27 @@ class ComputingTheFrechetDistance(Scene):
         title = Text("Computing the Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Free Space Diagram", "Monotone Path", "Critical values").set_color(BLACK)
-        self.play(Write(blist))
+        self.next_section("Decision Problem")
+        decision_problem_text = Text("Decision Problem:", font_size=30).shift(3*LEFT + UP).set_color(BLACK)
+        self.add(decision_problem_text)
+        self.wait()
+
+        self.next_section("Decision Problem formula")
+        decision_problem = MathTex(r"\delta_{F}(P,Q) \leq \varepsilon").set_color(BLACK).next_to(decision_problem_text, DOWN).align_to(decision_problem_text, LEFT).shift(0.5*RIGHT)
+        self.play(Write(decision_problem))
+        self.wait()
+        
+        self.next_section("Binary search")
+        binary_search_text = Text("Binary search over ", font_size=30).next_to(decision_problem_text, DOWN).align_to(decision_problem_text, LEFT).shift(2*DOWN).set_color(BLACK)
+        varepsilon_text = MathTex(r"\varepsilon").set_color(BLACK).next_to(binary_search_text, RIGHT)
+        # self.play(LaggedStart(Write(binary_search_text), Write(varepsilon_text), lag_ratio=1.0))
+        self.add(binary_search_text, varepsilon_text)
+        self.wait()
+
+        self.next_section("Solving the decision problem")
+        blist_decision_problem = BulletedList("Free Space Diagram", "Monotone Path", "Critical values").set_color(BLACK).shift(3*RIGHT).align_to(decision_problem_text, UP)
+        self.play(Transform(decision_problem.copy(), blist_decision_problem))
+        self.wait()
 
 class FreeSpaceCell(Scene):
     def construct(self):
