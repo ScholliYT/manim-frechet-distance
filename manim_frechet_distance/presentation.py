@@ -676,12 +676,11 @@ class FreeSpaceCell(Scene):
         
         
         self.next_section("Draw free space cell diagram")
-        epsilon = ValueTracker(0.73)
 
         # Draw plot of cell
-        image = ImageMobject("manim_frechet_distance/assets/free_space_cell_points.png")
-        image.height = 5
-        image.width = 5
+        free_space_cell_image = ImageMobject("manim_frechet_distance/assets/free_space_cell_points.png")
+        free_space_cell_image.height = 5
+        free_space_cell_image.width = 5
 
         axes_free_space = Axes(
             x_range=[0,1,0.25],
@@ -692,19 +691,18 @@ class FreeSpaceCell(Scene):
             axis_config={"include_numbers": True}
         ).set_color(BLACK)
 
-        ax_p_label = MathTex("\\alpha_P", color=BLACK).next_to(image, RIGHT).align_to(image, DOWN)
-        ax_q_label = MathTex("\\alpha_Q", color=BLACK).next_to(image, UP).align_to(image, LEFT)
-        diagram = Group(image, axes_free_space, ax_p_label, ax_q_label)
+        ax_p_label = MathTex("\\alpha_P", color=BLACK).next_to(free_space_cell_image, RIGHT).align_to(free_space_cell_image, DOWN)
+        ax_q_label = MathTex("\\alpha_Q", color=BLACK).next_to(free_space_cell_image, UP).align_to(free_space_cell_image, LEFT)
+        diagram = Group(free_space_cell_image, axes_free_space, ax_p_label, ax_q_label)
         diagram.shift(3.5*RIGHT + 0.5*DOWN)
 
-        self.add(image)
         self.play(Create(axes_free_space), run_time=2)
         self.play(Write(ax_p_label), Write(ax_q_label))
         self.wait()
 
         
         self.next_section("Dot in free space cell")
-        dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
+        dot: Dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
         self.play(Create(dot))
         self.wait()
 
@@ -754,21 +752,16 @@ class FreeSpaceCell(Scene):
         self.wait()
 
         self.next_section("Show epsilon value")
+        epsilon = ValueTracker(0.4)
         epsilon_text = MathTex("\\varepsilon=", color=BLACK)
         epsilon_number =  DecimalNumber(epsilon.get_value(), color=BLACK).next_to(epsilon_text, RIGHT)
         epslion_group = VGroup(epsilon_text, epsilon_number)
-        epslion_group.next_to(image, UP)
+        epslion_group.next_to(free_space_cell_image, UP)
         epsilon_number.add_updater(lambda t: t.set_value(epsilon.get_value()))
         self.play(Write(epsilon_text), Write(epsilon_number))
         # line.clear_updaters()
         # self.play(Indicate(line))
         # line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY if dist([p_alpha.get_value(), q_alpha.get_value()]) <= epsilon.get_value() else RED)))
-        self.wait()
-
-        self.next_section("Move over border")
-        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
-        self.wait()
-        self.play(p_alpha.animate.set_value(0.8), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
 
         # animate walking around on the epsilon edge of the free space diagram
@@ -781,8 +774,16 @@ class FreeSpaceCell(Scene):
         self.add(free_space_graph)
         self.wait()
 
+        self.next_section("Move over border")
+        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.5), run_time=2, rate_func=linear)
+        self.wait()
+        self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
+        self.wait()
+
+
+        # animate walking around on the epsilon edge of the free space diagram
         self.next_section("Move to epsilon border")
-        free_space_alpha = ValueTracker(0.1)
+        free_space_alpha = ValueTracker(0.0)
         free_space_coords = lambda : axes_free_space.p2c(free_space_graph.point_from_proportion(free_space_alpha.get_value()))
         self.play(p_alpha.animate.set_value(free_space_coords()[0]), q_alpha.animate.set_value(free_space_coords()[1]), run_time=1, rate_func=linear)
         self.wait()
@@ -790,7 +791,76 @@ class FreeSpaceCell(Scene):
         self.next_section("Animate along epsilon border", PresentationSectionType.LOOP)
         p_alpha.add_updater(lambda x: x.set_value(free_space_coords()[0]))
         q_alpha.add_updater(lambda x: x.set_value(free_space_coords()[1]))
-        self.play(free_space_alpha.animate.set_value(0.5), run_time=5, rate_func=there_and_back_with_pause)
+        self.play(free_space_alpha.animate.set_value(1), run_time=3)
+
+
+        self.next_section("Increase epsilon value")
+        p_alpha.clear_updaters()
+        q_alpha.clear_updaters()
+        free_space_graph.add_updater(lambda g: g.become(
+            axes_free_space.plot_implicit_curve(
+                lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+                color=BLUE_E,
+                max_quads = 2000
+            )
+        ))
+        self.play(epsilon.animate.set_value(0.73))
+        self.wait()
+
+        self.next_section("Add gray free space region")
+        self.add(free_space_cell_image)
+        self.wait()
+
+        self.next_section("Move to (0,0)")
+        self.play(p_alpha.animate.set_value(0), q_alpha.animate.set_value(0))
+        self.wait()
+
+        self.next_section("Increase epsilon value")
+        self.remove(free_space_cell_image)
+        self.play(epsilon.animate.set_value(0.8))
+        free_space_graph.clear_updaters()
+        self.wait()
+
+        self.next_section("Move to (1,1) diagonal")
+        trace = TracedPath(dot.get_center, stroke_color=BLUE)
+        self.add(trace)
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3)
+        self.wait()
+
+
+        self.next_section("Move to (0,0)")
+        self.play(Uncreate(trace))
+        self.play(p_alpha.animate.set_value(0), q_alpha.animate.set_value(0))
+        self.wait()
+
+        self.next_section("Move to (1,1)")
+        trace = TracedPath(dot.get_center, stroke_color=BLUE)
+        self.add(trace)
+        self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25))
+        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25))
+        self.play(p_alpha.animate.set_value(0.7), q_alpha.animate.set_value(0.8))
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1))
+        self.wait()
+
+        self.next_section("Move to (0,0)")
+        self.play(Uncreate(trace))
+        self.play(p_alpha.animate.set_value(0), q_alpha.animate.set_value(0))
+        self.wait()
+
+        self.next_section("Move to (1,1)")
+        trace = TracedPath(dot.get_center, stroke_color=RED)
+        self.add(trace)
+        self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25))
+        self.play(p_alpha.animate.set_value(0.2), q_alpha.animate.set_value(0.25))
+        self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(0.9))
+        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1))
+        self.wait()
+
+        self.next_section("Move to out of range point")
+        self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(0.9))
+        self.wait()
+
+
 
 
         
