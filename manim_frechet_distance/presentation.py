@@ -777,6 +777,8 @@ class FreeSpaceCell(Scene):
         self.next_section("Move over border")
         self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.5), run_time=2, rate_func=linear)
         self.wait()
+
+        self.next_section("Move outside of border")
         self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25), run_time=2, rate_func=linear)
         self.wait()
 
