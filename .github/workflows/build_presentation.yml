@@ -2,7 +2,7 @@ name: build presentation
 
 concurrency:
   group: ${{ github.ref }}-presentation
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 on:
   push:

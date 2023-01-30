@@ -1281,7 +1281,7 @@ class DiscreteFrechetDistanceAlgorithm(Scene):
         title = Text("Computing Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
+        blist = BulletedList("Partial Curves", "Recursive Formula", "Dynamic Programming")
         blist.set_color(BLACK)
         self.play(Write(blist))
 
@@ -1290,7 +1290,7 @@ class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
+        blist = BulletedList("O(pq) time", "O(min(p,q)) space")
         blist.set_color(BLACK)
         self.play(Write(blist))
 
