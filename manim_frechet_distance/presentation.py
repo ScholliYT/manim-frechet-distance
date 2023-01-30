@@ -913,11 +913,7 @@ class FreeSpaceCell(Scene):
         self.next_section("Move to out of range point")
         self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(0.9))
         self.wait()
-
-
-
-
-        
+      
 class FreeSpaceDiagramPlot(Scene):
     def construct(self):
         ax: Axes = Axes(x_range=[-3,3], y_range=[-2,2], x_length=5, y_length=5)
@@ -1082,9 +1078,122 @@ class FreeSpaceDiagram(Scene):
         title = Text("Free Space Diagram", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        self.next_section("Add Axes Diagrams")
+        ax: Axes = Axes(x_range=[-1,1], y_range=[-1,1], x_length=5, y_length=5, tips=False)
+        ax.set_color(BLACK).shift(3*LEFT)
+        self.add(ax)
+
+        # Draw plot of cell
+        free_space_diagram_image = ImageMobject("manim_frechet_distance/assets/free_space_diagram_points.png")
+        free_space_diagram_image.height = 5
+        free_space_diagram_image.width = 5
+
+        axes_free_space = Axes(
+            x_range=[0,5,1],
+            y_range=[0,5,1],
+            x_length=5,
+            y_length=5,
+            tips=False,
+            axis_config={"include_numbers": True}
+        ).set_color(BLACK)
+
+        ax_p_label = MathTex("\\alpha_P", color=BLACK).next_to(free_space_diagram_image, RIGHT).align_to(free_space_diagram_image, DOWN)
+        ax_q_label = MathTex("\\alpha_Q", color=BLACK).next_to(free_space_diagram_image, UP).align_to(free_space_diagram_image, LEFT)
+        diagram = Group(free_space_diagram_image, axes_free_space, ax_p_label, ax_q_label)
+        diagram.shift(3.5*RIGHT + 0.5*DOWN)
+
+        self.add(axes_free_space, ax_p_label, ax_q_label)
+        self.wait()
+
+        self.next_section("Add Curves")
+        p_points = np.array([
+            [-1, -0.5,0], [0.5, 0.5,0], [-0.5,1,0], [-0.5,-0.5,0], [0.4, -0.15,0], [0.6, -0.3, 0]
+        ])
+        alpha_p_range = [0, p_points.shape[0]-1]
+        p_curve_func = partial(polygonal_curve, p_points)
+        p_curve = ax.plot_parametric_curve(
+            p_curve_func,
+            t_range=alpha_p_range,
+            color=RED,
+        )
+
+        q_points = np.array([
+            [-0.5, -1,0], [-1,0,0], [0,0,0], [0,1,0], [-1,0.5,0], [0.5,-0.5,0]
+        ])
+        alpha_q_range = [0, q_points.shape[0]-1]
+        q_curve_func = partial(polygonal_curve, q_points)
+        q_curve = ax.plot_parametric_curve(
+            q_curve_func,
+            t_range=alpha_q_range,
+            color=GREEN,
+        )
+
+        self.play(Create(p_curve))
+        self.play(Create(q_curve))
+
+        self.next_section("Add Free space diagram image")
+        self.add(free_space_diagram_image)
+        self.wait()
+
+        self.next_section("Add moving points")
+        p_dot = Dot(p_curve.point_from_proportion(0), color=BLACK)
+        q_dot = Dot(q_curve.point_from_proportion(0), color=BLACK)
+        dot: Dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
+        self.play(Create(p_dot), Create(q_dot), Create(dot))
+        self.wait()
+        
+        p_alpha = ValueTracker(0)
+        q_alpha = ValueTracker(0)
+        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value()/5.0)))
+        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value()/5.0)))
+        dot.add_updater(lambda m: m.move_to(axes_free_space.c2p(p_alpha.get_value(), q_alpha.get_value())))
+
+
+        self.next_section("Show distance and line")
+        line = Line(p_dot.get_center(), q_dot.get_center(), color=BLACK)
+        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=BLACK)))
+        self.play(Create(line))
+        
+        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
+            p = p_point_from_proportion(alphas[0])
+            q = q_point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve_func, q_curve_func)
+
+        dist_text = Text("d=", color=BLACK)
+        dist_number = DecimalNumber(dist([p_alpha.get_value(), q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([p_alpha.get_value(), q_alpha.get_value()])))
+        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
+        dist_group = VGroup(dist_text, dist_number)
+        dist_group.next_to(ax, DOWN)
+        self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+
+        trace = TracedPath(dot.get_center, stroke_color=BLUE)
+        self.add(trace)
+
+        self.next_section("Move to (0.4,1.0) in free space")
+        self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(1))
+        self.wait()
+
+        self.next_section("Move to (1.0,2.0) in free space")
+        self.play(p_alpha.animate.set_value(1.0), q_alpha.animate.set_value(2.0))
+        self.wait()
+
+        self.next_section("Move to (2.5,4.0) in free space")
+        self.play(p_alpha.animate.set_value(2.5), q_alpha.animate.set_value(4.0))
+        self.wait()
+
+        self.next_section("Move to (3.0, 4.5) in free space")
+        self.play(p_alpha.animate.set_value(3.0), q_alpha.animate.set_value(4.5))
+        self.wait()
+
+        self.next_section("Move to (5.0, 5.0) in free space")
+        self.play(p_alpha.animate.set_value(5.0), q_alpha.animate.set_value(5.0))
+        self.wait()
 
 class FrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
