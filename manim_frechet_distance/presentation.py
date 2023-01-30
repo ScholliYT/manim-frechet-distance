@@ -35,6 +35,39 @@ class Titlepage(Scene):
         self.play(Write(subtitle))
 
 
+class Motivation(Scene):
+    def construct(self):
+        title = Text("Motivation", color=BLUE).to_edge(UP)
+        self.add(title)
+
+        self.next_section("World map")
+        world_map = SVGMobject("manim_frechet_distance/assets/BlankMap_World_simple.svg", height=6).shift(0.5*DOWN)
+        self.add(world_map)
+        self.wait()
+
+        self.next_section("Zoom World map")
+        self.play(world_map.animate.scale(1.5), world_map.animate.shift(DOWN))
+        self.wait()
+
+
+        self.next_section("Add Bird")
+        bird_image = ImageMobject("manim_frechet_distance/assets/icons8-crane-bird-100.png")
+        bird_image.move_to([-1,1,0])
+        self.add(bird_image)
+
+        trace = TracedPath(bird_image.get_center, stroke_color=BLUE)
+        self.add(trace)
+
+        self.next_section("Move to Spain")
+        self.play(bird_image.animate.move_to([-2,-0.5,0]))
+
+        self.next_section("Move to north west Africa")
+        self.play(bird_image.animate.move_to([-2,-1.5,0]))
+
+        self.next_section("Move to middle Africa")
+        self.play(bird_image.animate.move_to([0,-2,0]))
+
+
 
 class DistanceOfCurves(Scene):
     def construct(self):

@@ -30,6 +30,7 @@ poetry run manim -qm -a --save_sections manim_frechet_distance/presentation.py
 ```sh
 poetry run manedit --project_name Fréchet-Distance \
     --quick_present_export ./media/videos/presentation/720p30/sections/Titlepage.json \
+    --quick_present_export ./media/videos/presentation/720p30/sections/Motivation.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/DistanceOfCurves.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/ProblemsWithHausdorffDistance.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceIntro.json \
@@ -53,6 +54,7 @@ Then open [localhost:8000](http://localhost:8000)
 
 # Credits
 Some images used in the presentation are from external sources as noted below.
+- [Crane Bird](https://icons8.com/icon/mgTrUgOfGUva/crane-bird) icon by [Icons8](https://icons8.com)
 - [Person Pointing](https://icons8.com/icon/HHppGuDxwFp0/person-pointing) icon by [Icons8](https://icons8.com)
 - [Dog Jump](https://icons8.com/icon/GZSZiebXkvbw/dog-jump) icon by [Icons8](https://icons8.com)
 - [Frog](https://icons8.com/icon/103359/frog) icon by [Icons8](https://icons8.com)
