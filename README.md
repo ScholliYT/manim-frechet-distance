@@ -41,6 +41,7 @@ poetry run manedit --project_name Fréchet-Distance \
     --quick_present_export ./media/videos/presentation/720p30/sections/FrechetDistanceAlgorithmicComplexity.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/DiscreteFrechetDistanceAlgorithm.json \
     --quick_present_export ./media/videos/presentation/720p30/sections/DiscreteFrechetDistanceAlgorithmicComplexity.json
+    --quick_present_export ./media/videos/presentation/720p30/sections/RecentDevelopments.json
 ```
 
 ### 3. Viewing the presentation

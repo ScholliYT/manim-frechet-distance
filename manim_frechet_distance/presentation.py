@@ -427,13 +427,13 @@ class FrechetDistanceIntro(Scene):
         # dog and owner at home
         self.next_section("Show Owner")
         owner = ImageMobject("manim_frechet_distance/assets/icons8-person-pointing-90.png").scale(1.2)
-        owner = owner.move_to([-6, -0.5, 0])
+        owner = owner.move_to([-6, -0.5, 0]).set_z_index(3)
         self.add(owner)
         self.wait()
 
         self.next_section("Show Dog")
         dog = ImageMobject("manim_frechet_distance/assets/icons8-dog-jump-90.png")
-        dog = dog.move_to([-6, 1, 0])
+        dog = dog.move_to([-6, 1, 0]).set_z_index(3)
         self.add(dog)
         self.wait()
 
@@ -1284,6 +1284,7 @@ class DiscreteFrechetDistanceAlgorithm(Scene):
         blist = BulletedList("Partial Curves", "Recursive Formula", "Dynamic Programming")
         blist.set_color(BLACK)
         self.play(Write(blist))
+        self.wait()
 
 class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
@@ -1293,7 +1294,45 @@ class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
         blist = BulletedList("O(pq) time", "O(min(p,q)) space")
         blist.set_color(BLACK)
         self.play(Write(blist))
+        self.wait()
 
+class RecentDevelopments(Scene):
+    def construct(self):
+        title = Text("Recent Developments", color=BLUE).to_edge(UP)
+        self.add(title)
+
+
+        # for just a single cell
+        self.next_section("Alt and Godau, 92/95")
+        alt_and_godau_text = Text("Alt and Godau, 92/95:", font_size=30).shift(3*LEFT + UP).set_color(BLACK)
+        self.add(alt_and_godau_text)
+        self.wait()
+
+        self.next_section("Alt and Godau 92/95 time complexity")
+        alt_and_godau_time_complexity = MathTex(r"\mathcal{O}(n^2 \log n)").set_color(BLACK).next_to(alt_and_godau_text, RIGHT)
+        self.play(Write(alt_and_godau_time_complexity))
+        self.wait()
+
+
+        self.next_section("Buchin et al 2014")
+        buchin_text = Text("Buchin et al., 2014:", font_size=30).set_color(BLACK).next_to(alt_and_godau_text, DOWN).align_to(alt_and_godau_text, LEFT)
+        self.add(buchin_text)
+        self.wait()
+
+        self.next_section("Buchin et al 2014 time complexity")
+        buchin_text_time = MathTex(r"\mathcal{O}(n^2 \log^{0.5} n (\log \log n)^{1.5}").set_color(BLACK).next_to(buchin_text, RIGHT)
+        self.play(Write(buchin_text_time))
+        self.wait()
+
+        
+
+        blist = BulletedList(
+            "No subquadratic Algorithm", 
+            "Approximation Algorithms"
+        )
+        blist.set_color(BLACK).shift(2*DOWN)
+        self.add(blist)
+        self.wait()
 
 
 
