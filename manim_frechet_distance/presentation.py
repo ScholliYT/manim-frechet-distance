@@ -1200,13 +1200,85 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Placeholder")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        # for just a single cell
+        self.next_section("Single cell")
+        single_cell_text = Text("Single cell:", font_size=30).shift(5*LEFT + UP).set_color(BLACK)
+        self.add(single_cell_text)
+        self.wait()
+
+        self.next_section("Single cell time complexity")
+        single_cell_time_complexity = MathTex(r"\mathcal{O}(1)").set_color(BLACK).next_to(single_cell_text, RIGHT)
+        self.play(Write(single_cell_time_complexity))
+        self.wait()
+
+        # The decision probelm
+        self.next_section("Decision Problem")
+        decision_problem_text = Text("Decision Problem:", font_size=30).next_to(single_cell_text, DOWN).align_to(single_cell_text, LEFT).shift(DOWN).set_color(BLACK)
+        self.add(decision_problem_text)
+        self.wait()
+
+        self.next_section("Decision Problem formula")
+        decision_problem = MathTex(r"\delta_{F}(P,Q) \leq \varepsilon").set_color(BLACK).next_to(decision_problem_text, DOWN).align_to(decision_problem_text, LEFT).shift(0.5*RIGHT)
+        self.play(Write(decision_problem))
+        self.wait()
+
+        self.next_section("Decision Problem p by q")
+        decision_problem_p_by_q = Text("p by q cells", font_size=30).next_to(decision_problem, DOWN).align_to(decision_problem, LEFT).set_color(BLACK)
+        self.add(decision_problem_p_by_q)
+        self.wait()
+
+        self.next_section("Decision Problem time complexity")
+        decision_problem_time_complexity = MathTex(r"\mathcal{O}(pq)").set_color(BLACK).next_to(decision_problem_text, RIGHT)
+        self.play(Write(decision_problem_time_complexity))
+        self.wait()
+        
+        # Complete Solution: binary search bits
+        self.next_section("Binary search the bits")
+        binary_search_bits_text = Text("Binary search bits", font_size=30).shift(2*RIGHT + UP).set_color(BLACK)
+        self.add(binary_search_bits_text)
+        self.wait()
+
+        self.next_section("Binary search the bits time complexity")
+        binary_search_bits_complexity = MathTex(r"\mathcal{O}(","x",r"\cdot \log(\text{``accuracy bits''}))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
+        self.play(Write(binary_search_bits_complexity))
+        self.wait()
+
+        self.next_section("Binary search the bits time complexity full")
+        binary_search_bits_complexity_with_pq = MathTex(r"\mathcal{O}(","pq",r"\cdot \log(\text{``accuracy bits''}))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
+        self.play(Indicate(decision_problem_time_complexity))
+        self.play(TransformMatchingTex(binary_search_bits_complexity, binary_search_bits_complexity_with_pq))
+        self.wait()
+
+        self.next_section("Binary search the bits time complexity full")
+        binary_search_bits_complexity_full = MathTex(r"\mathcal{O}(","pq",r"\cdot \log(32))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
+        self.play(TransformMatchingTex(binary_search_bits_complexity_with_pq, binary_search_bits_complexity_full))
+        self.wait()
+
+        # Complete solution: using critical values
+        self.next_section("Critical values")
+        critical_values_text = Text("Critical values", font_size=30).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(DOWN).set_color(BLACK)
+        self.add(critical_values_text)
+        self.wait()
+
+        self.next_section("Critical values time complexity")
+        critical_values_time_complexity = MathTex(r"\mathcal{O}((p^2q + pq^2) \log (pq))").set_color(BLACK).next_to(critical_values_text, DOWN).align_to(critical_values_text, LEFT).shift(0.5*RIGHT)
+        self.play(Write(critical_values_time_complexity))
+        self.wait()
+
+        self.next_section("Parametric search time complexity")
+        parametric_search_time_complexity = MathTex(r"\mathcal{O}(",r"pq \log (pq)",r")").set_color(BLACK).next_to(critical_values_time_complexity, DOWN).align_to(critical_values_time_complexity, LEFT)
+        self.play(critical_values_time_complexity.animate.set_color(GRAY_B), Write(parametric_search_time_complexity))
+        self.wait()
+
+        self.next_section("Parametric search time complexity with n")
+        parametric_search_time_complexity_with_n = MathTex(r"\mathcal{O}(",r"n^2 \log (n)",r")").set_color(BLACK).next_to(critical_values_time_complexity, DOWN).align_to(critical_values_time_complexity, LEFT)
+        self.play(TransformMatchingTex(parametric_search_time_complexity, parametric_search_time_complexity_with_n))
+        self.wait()
+
 
 class DiscreteFrechetDistanceAlgorithm(Scene):
     def construct(self):
-        title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
+        title = Text("Computing Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
         blist = BulletedList("Placeholder")
