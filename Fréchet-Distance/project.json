@@ -1768,7 +1768,7 @@
         "sections": [
             {
                 "id": 0,
-                "name": "autocreated",
+                "name": "Add Axes Diagrams",
                 "type": "normal",
                 "is_sub_section": false,
                 "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0000.mp4",
@@ -1788,8 +1788,197 @@
         "sections_len": 1,
         "sections": [
             {
+                "id": 1,
+                "name": "Add Curves",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0001.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0085.mp4",
+                "in_project_thumbnail": "thumb_0085.jpg",
+                "in_project_id": 85,
+                "parent_id": 85
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 2,
+                "name": "Add Free space diagram image",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0002.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0086.mp4",
+                "in_project_thumbnail": "thumb_0086.jpg",
+                "in_project_id": 86,
+                "parent_id": 86
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 3,
+                "name": "Add moving points",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0003.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0087.mp4",
+                "in_project_thumbnail": "thumb_0087.jpg",
+                "in_project_id": 87,
+                "parent_id": 87
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 4,
+                "name": "Show distance and line",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0004.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0088.mp4",
+                "in_project_thumbnail": "thumb_0088.jpg",
+                "in_project_id": 88,
+                "parent_id": 88
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 5,
+                "name": "Move to (0.4,1.0) in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0005.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0089.mp4",
+                "in_project_thumbnail": "thumb_0089.jpg",
+                "in_project_id": 89,
+                "parent_id": 89
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 6,
+                "name": "Move to (1.0,2.0) in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0006.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0090.mp4",
+                "in_project_thumbnail": "thumb_0090.jpg",
+                "in_project_id": 90,
+                "parent_id": 90
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 7,
+                "name": "Move to (2.5,4.0) in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0007.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0091.mp4",
+                "in_project_thumbnail": "thumb_0091.jpg",
+                "in_project_id": 91,
+                "parent_id": 91
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 8,
+                "name": "Move to (3.0, 4.5) in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0008.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0092.mp4",
+                "in_project_thumbnail": "thumb_0092.jpg",
+                "in_project_id": 92,
+                "parent_id": 92
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 9,
+                "name": "Move to (5.0, 5.0) in free space",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FreeSpaceDiagram_0009.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0093.mp4",
+                "in_project_thumbnail": "thumb_0093.jpg",
+                "in_project_id": 93,
+                "parent_id": 93
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
                 "id": 0,
-                "name": "autocreated",
+                "name": "Single cell",
                 "type": "normal",
                 "is_sub_section": false,
                 "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0000.mp4",
@@ -1798,10 +1987,283 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0085.mp4",
-                "in_project_thumbnail": "thumb_0085.jpg",
-                "in_project_id": 85,
-                "parent_id": 85
+                "in_project_video": "video_0094.mp4",
+                "in_project_thumbnail": "thumb_0094.jpg",
+                "in_project_id": 94,
+                "parent_id": 94
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 1,
+                "name": "Single cell time complexity",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0001.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0095.mp4",
+                "in_project_thumbnail": "thumb_0095.jpg",
+                "in_project_id": 95,
+                "parent_id": 95
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 2,
+                "name": "Decision Problem",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0002.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0096.mp4",
+                "in_project_thumbnail": "thumb_0096.jpg",
+                "in_project_id": 96,
+                "parent_id": 96
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 3,
+                "name": "Decision Problem formula",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0003.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0097.mp4",
+                "in_project_thumbnail": "thumb_0097.jpg",
+                "in_project_id": 97,
+                "parent_id": 97
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 4,
+                "name": "Decision Problem p by q",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0004.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0098.mp4",
+                "in_project_thumbnail": "thumb_0098.jpg",
+                "in_project_id": 98,
+                "parent_id": 98
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 5,
+                "name": "Decision Problem time complexity",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0005.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0099.mp4",
+                "in_project_thumbnail": "thumb_0099.jpg",
+                "in_project_id": 99,
+                "parent_id": 99
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 6,
+                "name": "Binary search the bits",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0006.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0100.mp4",
+                "in_project_thumbnail": "thumb_0100.jpg",
+                "in_project_id": 100,
+                "parent_id": 100
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 7,
+                "name": "Binary search the bits time complexity",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0007.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0101.mp4",
+                "in_project_thumbnail": "thumb_0101.jpg",
+                "in_project_id": 101,
+                "parent_id": 101
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 8,
+                "name": "Binary search the bits time complexity full",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0008.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0102.mp4",
+                "in_project_thumbnail": "thumb_0102.jpg",
+                "in_project_id": 102,
+                "parent_id": 102
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 9,
+                "name": "Binary search the bits time complexity full",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0009.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0103.mp4",
+                "in_project_thumbnail": "thumb_0103.jpg",
+                "in_project_id": 103,
+                "parent_id": 103
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 10,
+                "name": "Critical values",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0010.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 1.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0104.mp4",
+                "in_project_thumbnail": "thumb_0104.jpg",
+                "in_project_id": 104,
+                "parent_id": 104
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 11,
+                "name": "Critical values time complexity",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0011.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 3.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0105.mp4",
+                "in_project_thumbnail": "thumb_0105.jpg",
+                "in_project_id": 105,
+                "parent_id": 105
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 12,
+                "name": "Parametric search time complexity",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0012.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0106.mp4",
+                "in_project_thumbnail": "thumb_0106.jpg",
+                "in_project_id": 106,
+                "parent_id": 106
+            }
+        ]
+    },
+    {
+        "sections_len": 1,
+        "sections": [
+            {
+                "id": 13,
+                "name": "Parametric search time complexity with n",
+                "type": "normal",
+                "is_sub_section": false,
+                "original_video": "/home/runner/work/manim-frechet-distance/manim-frechet-distance/pages/../media/videos/presentation/1080p60/sections/FrechetDistanceAlgorithmicComplexity_0013.mp4",
+                "width": 1920,
+                "height": 1080,
+                "fps": "60",
+                "duration": 2.0,
+                "project_name": "Fr\u00e9chet-Distance",
+                "in_project_video": "video_0107.mp4",
+                "in_project_thumbnail": "thumb_0107.jpg",
+                "in_project_id": 107,
+                "parent_id": 107
             }
         ]
     },
@@ -1819,10 +2281,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0086.mp4",
-                "in_project_thumbnail": "thumb_0086.jpg",
-                "in_project_id": 86,
-                "parent_id": 86
+                "in_project_video": "video_0108.mp4",
+                "in_project_thumbnail": "thumb_0108.jpg",
+                "in_project_id": 108,
+                "parent_id": 108
             }
         ]
     },
@@ -1840,10 +2302,10 @@
                 "fps": "60",
                 "duration": 1.0,
                 "project_name": "Fr\u00e9chet-Distance",
-                "in_project_video": "video_0087.mp4",
-                "in_project_thumbnail": "thumb_0087.jpg",
-                "in_project_id": 87,
-                "parent_id": 87
+                "in_project_video": "video_0109.mp4",
+                "in_project_thumbnail": "thumb_0109.jpg",
+                "in_project_id": 109,
+                "parent_id": 109
             }
         ]
     }
