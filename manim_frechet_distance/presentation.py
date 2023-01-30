@@ -365,7 +365,6 @@ class FrechetDistanceIntro(Scene):
         title = Text("Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        self.next_section("Dog")
         p_curve = Polygon(
             [-5.25,  0.25,  0.  ],
             [-2.25,  0.25,  0.  ],
@@ -379,11 +378,6 @@ class FrechetDistanceIntro(Scene):
             [ 3.  , -1.4 ,  0.  ],
             [-4.8 , -1.4 ,  0.  ],
             color=RED)
-        self.play(Create(p_curve))
-        p_label = Text("Dog", color=RED).move_to([-4, 0.8, 0])
-        self.play(Write(p_label))
-
-        self.next_section("Owner")
         q_curve = Polygon(
             [-5.25,  0.25,  0.  ],
             [-4.5 , -0.5 ,  0.  ],
@@ -396,27 +390,50 @@ class FrechetDistanceIntro(Scene):
             [ 3.3 , -1.7 ,  0.  ],
             [-5.1 , -1.7 ,  0.  ],
             color=GREEN)
-        self.play(Create(q_curve))
-        q_label = Text("Owner", color=GREEN).move_to([-4, -2.1, 0])
-        self.play(Write(q_label))
-    
 
-        self.next_section("Distance line")
-        dog = ImageMobject("manim_frechet_distance/assets/icons8-dog-jump-90.png")
-        dog_alpha = ValueTracker(0)
-        dog = dog.move_to(p_curve.point_from_proportion(0))
-        dog.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(dog_alpha.get_value())))
-        self.add(dog)
-
+        # dog and owner at home
+        self.next_section("Show Owner")
         owner = ImageMobject("manim_frechet_distance/assets/icons8-person-pointing-90.png").scale(1.2)
-        owner_alpha = ValueTracker(0)
-        owner = owner.move_to(p_curve.point_from_proportion(0))
-        owner.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(owner_alpha.get_value())))
+        owner = owner.move_to([-6, -0.5, 0])
         self.add(owner)
+        self.wait()
 
+        self.next_section("Show Dog")
+        dog = ImageMobject("manim_frechet_distance/assets/icons8-dog-jump-90.png")
+        dog = dog.move_to([-6, 1, 0])
+        self.add(dog)
+        self.wait()
+
+        # show leash
+        self.next_section("Distance line")
         line = Line(dog.get_center(), owner.get_center(), color=DARK_GRAY)
         line.add_updater(lambda z: z.become(Line(dog.get_center(), owner.get_center()  + [-0.22, -0.06, 0], color=DARK_GRAY)))
         self.play(Create(line))
+        self.wait()
+
+        # show paths
+        self.next_section("Owner Curve")
+        self.play(Create(q_curve))
+        q_label = Text("Owner", color=GREEN).move_to([-4, -2.1, 0])
+        self.play(Write(q_label))
+        
+        self.next_section("Dog Curve")
+        self.play(Create(p_curve))
+        p_label = Text("Dog", color=RED).move_to([-4, 0.8, 0])
+        self.play(Write(p_label))
+        self.wait()
+
+        # move dog and owner to starting position
+        self.next_section("Move to starting position")
+        dog_alpha = ValueTracker(0)
+        owner_alpha = ValueTracker(0)
+        self.play(
+            dog.animate.move_to(p_curve.point_from_proportion(dog_alpha.get_value())),
+            owner.animate.move_to(q_curve.point_from_proportion(owner_alpha.get_value()))
+        )
+        dog.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(dog_alpha.get_value())))
+        owner.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(owner_alpha.get_value())))
+        self.wait()
         
         def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
             p = c1.point_from_proportion(alphas[0])
@@ -433,6 +450,8 @@ class FrechetDistanceIntro(Scene):
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         self.play(Write(dist_text), Write(dist_number))
         self.wait()
+
+        
         
         self.next_section("Animate distance around curves")
         self.play(dog_alpha.animate.set_value(1), owner_alpha.animate.set_value(1), run_time=10)
