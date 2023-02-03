@@ -21,6 +21,11 @@ def make_elements():  # only setting up the mobjects
     path.add_updater(lambda x: x.become(Line(dots[0], moving_dot, stroke_width=10, z_index=1, color=ORANGE)))
     return dots, moving_dot, path
 
+def add_slide_number(scene: Scene, slide_number: int):
+    slide_number_text = Text(str(slide_number), font_size=15, color=BLACK)
+    slide_number_text.to_corner(RIGHT+DOWN)
+    scene.add(slide_number_text)
+
 
 class Titlepage(Scene):
     def construct(self):
@@ -37,6 +42,7 @@ class Titlepage(Scene):
 
 class Motivation(Scene):
     def construct(self):
+        add_slide_number(self, 1)
         title = Text("Motivation", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -71,6 +77,7 @@ class Motivation(Scene):
 
 class DistanceOfCurves(Scene):
     def construct(self):
+        add_slide_number(self, 2)
         title = Text("Distance of Curves", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -314,6 +321,7 @@ def min_dist_arrows(p_points, q_points, color=GRAY):
 
 class ProblemsWithHausdorffDistance(Scene):
     def construct(self):
+        add_slide_number(self, 3)
         title = Text("Problems with Hausdorff Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -395,6 +403,7 @@ class ProblemsWithHausdorffDistance(Scene):
 
 class FrechetDistanceIntro(Scene):
     def construct(self):
+        add_slide_number(self, 4)
         title = Text("Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -499,9 +508,9 @@ class FrechetDistanceIntro(Scene):
         self.play(Write(frechet_dist_text))
         self.wait()
 
-
 class ComputingTheFrechetDistance(Scene):
     def construct(self):
+        add_slide_number(self, 5)
         title = Text("Computing the Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -529,6 +538,7 @@ class ComputingTheFrechetDistance(Scene):
 
 class FreeSpaceCell(Scene):
     def construct(self):
+        add_slide_number(self, 6)
         title = Text("Free Space Cell", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -764,72 +774,73 @@ class FreeSpaceCell(Scene):
         self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(0.9))
         self.wait()
       
-class FreeSpaceDiagramPlot(Scene):
-    def construct(self):
-        ax: Axes = Axes(x_range=[-3,3], y_range=[-2,2], x_length=5, y_length=5)
-        ax.set_color(BLACK).shift(3*LEFT)
-        self.add(ax)
+# class FreeSpaceDiagramPlot(Scene):
+#     def construct(self):
+#         add_page_number(self, 7)
+#         ax: Axes = Axes(x_range=[-3,3], y_range=[-2,2], x_length=5, y_length=5)
+#         ax.set_color(BLACK).shift(3*LEFT)
+#         self.add(ax)
 
 
-        p_points = np.array([
-            # [-3, 1, 0],
-            [-2, 0, 0],
-            [2, 0, 0]])
-        alpha_p_range = [0, p_points.shape[0]-1]
-        p_curve_func = partial(polygonal_curve, p_points)
-        p_curve = ax.plot_parametric_curve(
-            p_curve_func,
-            t_range=alpha_p_range,
-            color=RED,
-        )
+#         p_points = np.array([
+#             # [-3, 1, 0],
+#             [-2, 0, 0],
+#             [2, 0, 0]])
+#         alpha_p_range = [0, p_points.shape[0]-1]
+#         p_curve_func = partial(polygonal_curve, p_points)
+#         p_curve = ax.plot_parametric_curve(
+#             p_curve_func,
+#             t_range=alpha_p_range,
+#             color=RED,
+#         )
 
-        q_points = np.array([
-            # [-3, -1, 0],
-            [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
-            [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0]])
-        alpha_q_range = [0, q_points.shape[0]-1]
-        q_curve_func = partial(polygonal_curve, q_points)
-        q_curve = ax.plot_parametric_curve(
-            q_curve_func,
-            t_range=alpha_q_range,
-            color=GREEN,
-        )
+#         q_points = np.array([
+#             # [-3, -1, 0],
+#             [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
+#             [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0]])
+#         alpha_q_range = [0, q_points.shape[0]-1]
+#         q_curve_func = partial(polygonal_curve, q_points)
+#         q_curve = ax.plot_parametric_curve(
+#             q_curve_func,
+#             t_range=alpha_q_range,
+#             color=GREEN,
+#         )
 
-        self.play(Create(p_curve))
-        self.play(Create(q_curve))
-
-
-
-        ax_free_space: Axes = Axes(x_range=alpha_p_range, y_range=alpha_q_range, x_length=5, y_length=5).set_color(BLACK).shift(3*RIGHT)
-        self.add(ax_free_space)
-
-        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
-            p = p_point_from_proportion(alphas[0])
-            q = q_point_from_proportion(alphas[1])
-            d = np.linalg.norm(p-q, ord=2)
-            return d
-
-        def dist(alphas: np.ndarray):
-            return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
-
-        epsilon = ValueTracker(0.5)
-        free_space_graph = ax_free_space.plot_implicit_curve(
-            lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
-            color=BLUE_E,
-            max_quads = 2000
-        )
-        self.play(Create(free_space_graph))
-        self.wait()
+#         self.play(Create(p_curve))
+#         self.play(Create(q_curve))
 
 
-        free_space_graph.add_updater(
-            lambda x: x.become(
-                ax_free_space.plot_implicit_curve(
-                    lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
-                    color=BLUE_E,
-                    max_quads = 2000
-        )))
-        self.play(epsilon.animate.set_value(0.73))
+
+#         ax_free_space: Axes = Axes(x_range=alpha_p_range, y_range=alpha_q_range, x_length=5, y_length=5).set_color(BLACK).shift(3*RIGHT)
+#         self.add(ax_free_space)
+
+#         def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
+#             p = p_point_from_proportion(alphas[0])
+#             q = q_point_from_proportion(alphas[1])
+#             d = np.linalg.norm(p-q, ord=2)
+#             return d
+
+#         def dist(alphas: np.ndarray):
+#             return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
+
+#         epsilon = ValueTracker(0.5)
+#         free_space_graph = ax_free_space.plot_implicit_curve(
+#             lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+#             color=BLUE_E,
+#             max_quads = 2000
+#         )
+#         self.play(Create(free_space_graph))
+#         self.wait()
+
+
+#         free_space_graph.add_updater(
+#             lambda x: x.become(
+#                 ax_free_space.plot_implicit_curve(
+#                     lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+#                     color=BLUE_E,
+#                     max_quads = 2000
+#         )))
+#         self.play(epsilon.animate.set_value(0.73))
 
         # find intersection points of elliplse with unit cell
         # def find_intersection_points(eps: float, side: str):
@@ -925,6 +936,7 @@ def polygonal_curve(points: np.ndarray, t: float|np.ndarray) -> float|np.ndarray
 
 class FreeSpaceDiagram(Scene):
     def construct(self):
+        add_slide_number(self, 7)
         title = Text("Free Space Diagram", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -1047,6 +1059,7 @@ class FreeSpaceDiagram(Scene):
 
 class FrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
+        add_slide_number(self, 8)
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -1128,6 +1141,7 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
 
 class DiscreteFrechetDistanceIntro(Scene):
     def construct(self):
+        add_slide_number(self, 9)
         title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -1279,6 +1293,7 @@ class DiscreteFrechetDistanceIntro(Scene):
 
 class DiscreteFrechetDistanceAlgorithm(Scene):
     def construct(self):
+        add_slide_number(self, 10)
         title = Text("Computing Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -1289,6 +1304,7 @@ class DiscreteFrechetDistanceAlgorithm(Scene):
 
 class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
+        add_slide_number(self, 11)
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
@@ -1299,6 +1315,7 @@ class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
 
 class RecentDevelopments(Scene):
     def construct(self):
+        add_slide_number(self, 12)
         title = Text("Recent Developments", color=BLUE).to_edge(UP)
         self.add(title)
 
