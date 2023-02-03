@@ -91,8 +91,8 @@ jobs:
           cd pages
           poetry run manedit --project_name Fréchet-Distance \
             --quick_present_export ../media/videos/presentation/1080p60/sections/Titlepage.json \
-            --quick_present_export ../media/videos/presentation/1080p60/sections/DistanceOfCurves.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/Motivation.json \
+            --quick_present_export ../media/videos/presentation/1080p60/sections/DistanceOfCurves.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/ProblemsWithHausdorffDistance.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/FrechetDistanceIntro.json \
             --quick_present_export ../media/videos/presentation/1080p60/sections/ComputingTheFrechetDistance.json \

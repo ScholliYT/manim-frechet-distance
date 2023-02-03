@@ -73,8 +73,6 @@ class Motivation(Scene):
         self.next_section("Move to middle Africa")
         self.play(bird_image.animate.move_to([0,-2,0]))
 
-
-
 class DistanceOfCurves(Scene):
     def construct(self):
         add_slide_number(self, 2)
