@@ -499,156 +499,6 @@ class FrechetDistanceIntro(Scene):
         self.play(Write(frechet_dist_text))
         self.wait()
 
-class DiscreteFrechetDistanceIntro(Scene):
-    def construct(self):
-        title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
-        self.add(title)
-
-        self.next_section("P line segment")
-        p_points = np.array([
-            [-5.25,  0.25,  0.  ],
-            [-2.25,  0.25,  0.  ],
-            [-1.5 ,  1.75,  0.  ],
-            [-0.9 ,  1.75,  0.  ],
-            [-0.6 ,  0.4 ,  0.  ],
-            [ 0.75,  1.75,  0.  ],
-            [ 1.5 ,  1.  ,  0.  ],
-            [ 3.  ,  0.25,  0.  ],
-            [ 3.9 ,  0.7 ,  0.  ],
-        ])
-        alpha_p_range = [0, p_points.shape[0]-1]
-        p_curve_func = partial(polygonal_curve, p_points)
-        p_curve = ParametricFunction(
-            p_curve_func,
-            t_range=alpha_p_range,
-            color=RED,
-        )
-
-        self.next_section("Q line segment")
-        q_points = np.array([
-            [-5.25,  0.25,  0.  ],
-            [-4.5 , -0.5 ,  0.  ],
-            [-2.25, -0.5 ,  0.  ],
-            [-1.2 ,  0.4 ,  0.  ],
-            [-0.75, -0.5 ,  0.  ],
-            [ 2.25,  1.  ,  0.  ],
-            [ 3.  ,  1.  ,  0.  ],
-            [ 3.9 , -0.2 ,  0.  ],
-        ])
-        alpha_q_range = [0, q_points.shape[0]-1]
-        q_curve_func = partial(polygonal_curve, q_points)
-        q_curve = ParametricFunction(
-            q_curve_func,
-            t_range=alpha_q_range,
-            color=GREEN,
-        )
-
-        self.play(Create(p_curve))
-        self.play(Create(q_curve))
-
-
-        self.next_section("Distance line")
-        frog_p = ImageMobject("manim_frechet_distance/assets/icons8-frog-90.png")
-        frog_p_alpha = ValueTracker(0)
-        frog_p = frog_p.move_to(p_curve_func(0))
-        frog_p.add_updater(lambda m: m.move_to(p_curve_func(frog_p_alpha.get_value())))
-        self.add(frog_p)
-
-        frog_q = ImageMobject("manim_frechet_distance/assets/icons8-frog-90.png")
-        frog_q_alpha = ValueTracker(0)
-        frog_q = frog_q.move_to(p_curve_func(0))
-        frog_q.add_updater(lambda m: m.move_to(q_curve_func(frog_q_alpha.get_value())))
-        self.add(frog_q)
-
-
-        self.next_section("Add moving points")
-
-        line = Line(frog_p.get_center(), frog_q.get_center(), color=BLACK)
-        line.add_updater(lambda z: z.become(Line(frog_p.get_center(), frog_q.get_center(), color=z.get_color())))
-        self.play(Create(line))
-        
-        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
-            p = p_point_from_proportion(alphas[0])
-            q = q_point_from_proportion(alphas[1])
-            d = np.linalg.norm(p-q, ord=2)
-            return d
-
-        def dist(alphas: np.ndarray):
-            return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
-
-
-        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
-        dist_number = DecimalNumber(dist([frog_p_alpha.get_value(), frog_q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
-        dist_number.add_updater(lambda t: t.set_value(dist([frog_p_alpha.get_value(), frog_q_alpha.get_value()])))
-        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
-        self.play(Write(dist_text), Write(dist_number))
-        self.wait()
-
-        self.next_section("Add criteria text")
-        t1 = Text("Jump up to next vertex", color=BLACK, font_size=35).shift(2*DOWN)
-        self.add(t1)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_q_alpha.set_value(1)
-        self.wait()
-
-        self.next_section("Add criteria text")
-        t2 = Text("Jump simultaneously", color=BLACK, font_size=35).next_to(t1, DOWN).align_to(t1, LEFT)
-        self.add(t2)
-        self.wait()
-        
-        self.next_section("Move both frogs")
-        frog_p_alpha.set_value(1)
-        frog_q_alpha.set_value(2)
-        self.wait()
-
-        self.next_section("Add criteria text")
-        t3 = Text("Can't skip verticies", color=BLACK, font_size=35).next_to(t2, DOWN).align_to(t1, LEFT)
-        self.add(t3)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_q_alpha.set_value(3)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_p_alpha.set_value(2)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_p_alpha.set_value(3)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_p_alpha.set_value(4)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_q_alpha.set_value(4)
-        self.wait()
-
-        self.next_section("Move both frogs")
-        frog_p_alpha.set_value(5)
-        frog_q_alpha.set_value(5)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_p_alpha.set_value(6)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_p_alpha.set_value(7)
-        self.wait()
-
-        self.next_section("Move one frog")
-        frog_q_alpha.set_value(6)
-        self.wait()
-
-        self.next_section("Frogs to endpoint")
-        frog_p_alpha.set_value(8)
-        frog_q_alpha.set_value(7)
-        self.wait()
 
 class ComputingTheFrechetDistance(Scene):
     def construct(self):
@@ -1276,6 +1126,157 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         self.wait()
 
 
+class DiscreteFrechetDistanceIntro(Scene):
+    def construct(self):
+        title = Text("Discrete Fréchet Distance", color=BLUE).to_edge(UP)
+        self.add(title)
+
+        self.next_section("P line segment")
+        p_points = np.array([
+            [-5.25,  0.25,  0.  ],
+            [-2.25,  0.25,  0.  ],
+            [-1.5 ,  1.75,  0.  ],
+            [-0.9 ,  1.75,  0.  ],
+            [-0.6 ,  0.4 ,  0.  ],
+            [ 0.75,  1.75,  0.  ],
+            [ 1.5 ,  1.  ,  0.  ],
+            [ 3.  ,  0.25,  0.  ],
+            [ 3.9 ,  0.7 ,  0.  ],
+        ])
+        alpha_p_range = [0, p_points.shape[0]-1]
+        p_curve_func = partial(polygonal_curve, p_points)
+        p_curve = ParametricFunction(
+            p_curve_func,
+            t_range=alpha_p_range,
+            color=RED,
+        )
+
+        self.next_section("Q line segment")
+        q_points = np.array([
+            [-5.25,  0.25,  0.  ],
+            [-4.5 , -0.5 ,  0.  ],
+            [-2.25, -0.5 ,  0.  ],
+            [-1.2 ,  0.4 ,  0.  ],
+            [-0.75, -0.5 ,  0.  ],
+            [ 2.25,  1.  ,  0.  ],
+            [ 3.  ,  1.  ,  0.  ],
+            [ 3.9 , -0.2 ,  0.  ],
+        ])
+        alpha_q_range = [0, q_points.shape[0]-1]
+        q_curve_func = partial(polygonal_curve, q_points)
+        q_curve = ParametricFunction(
+            q_curve_func,
+            t_range=alpha_q_range,
+            color=GREEN,
+        )
+
+        self.play(Create(p_curve))
+        self.play(Create(q_curve))
+
+
+        self.next_section("Distance line")
+        frog_p = ImageMobject("manim_frechet_distance/assets/icons8-frog-90.png")
+        frog_p_alpha = ValueTracker(0)
+        frog_p = frog_p.move_to(p_curve_func(0))
+        frog_p.add_updater(lambda m: m.move_to(p_curve_func(frog_p_alpha.get_value())))
+        self.add(frog_p)
+
+        frog_q = ImageMobject("manim_frechet_distance/assets/icons8-frog-90.png")
+        frog_q_alpha = ValueTracker(0)
+        frog_q = frog_q.move_to(p_curve_func(0))
+        frog_q.add_updater(lambda m: m.move_to(q_curve_func(frog_q_alpha.get_value())))
+        self.add(frog_q)
+
+
+        self.next_section("Add moving points")
+
+        line = Line(frog_p.get_center(), frog_q.get_center(), color=BLACK)
+        line.add_updater(lambda z: z.become(Line(frog_p.get_center(), frog_q.get_center(), color=z.get_color())))
+        self.play(Create(line))
+        
+        def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
+            p = p_point_from_proportion(alphas[0])
+            q = q_point_from_proportion(alphas[1])
+            d = np.linalg.norm(p-q, ord=2)
+            return d
+
+        def dist(alphas: np.ndarray):
+            return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
+
+
+        dist_text = Text("d=", color=BLACK).to_edge(RIGHT).shift(LEFT)
+        dist_number = DecimalNumber(dist([frog_p_alpha.get_value(), frog_q_alpha.get_value()]), color=BLACK).next_to(dist_text, RIGHT)
+        dist_number.add_updater(lambda t: t.set_value(dist([frog_p_alpha.get_value(), frog_q_alpha.get_value()])))
+        dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
+        self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+
+        self.next_section("Add criteria text")
+        t1 = Text("Jump up to next vertex", color=BLACK, font_size=35).shift(2*DOWN)
+        self.add(t1)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_q_alpha.set_value(1)
+        self.wait()
+
+        self.next_section("Add criteria text")
+        t2 = Text("Jump simultaneously", color=BLACK, font_size=35).next_to(t1, DOWN).align_to(t1, LEFT)
+        self.add(t2)
+        self.wait()
+        
+        self.next_section("Move both frogs")
+        frog_p_alpha.set_value(1)
+        frog_q_alpha.set_value(2)
+        self.wait()
+
+        self.next_section("Add criteria text")
+        t3 = Text("Can't skip verticies", color=BLACK, font_size=35).next_to(t2, DOWN).align_to(t1, LEFT)
+        self.add(t3)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_q_alpha.set_value(3)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_p_alpha.set_value(2)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_p_alpha.set_value(3)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_p_alpha.set_value(4)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_q_alpha.set_value(4)
+        self.wait()
+
+        self.next_section("Move both frogs")
+        frog_p_alpha.set_value(5)
+        frog_q_alpha.set_value(5)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_p_alpha.set_value(6)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_p_alpha.set_value(7)
+        self.wait()
+
+        self.next_section("Move one frog")
+        frog_q_alpha.set_value(6)
+        self.wait()
+
+        self.next_section("Frogs to endpoint")
+        frog_p_alpha.set_value(8)
+        frog_q_alpha.set_value(7)
+        self.wait()
+
 class DiscreteFrechetDistanceAlgorithm(Scene):
     def construct(self):
         title = Text("Computing Discrete Fréchet Distance", color=BLUE).to_edge(UP)
@@ -1325,7 +1326,7 @@ class RecentDevelopments(Scene):
         self.wait()
 
         
-
+        self.next_section("Next talks")
         blist = BulletedList(
             "No subquadratic Algorithm", 
             "Approximation Algorithms"
