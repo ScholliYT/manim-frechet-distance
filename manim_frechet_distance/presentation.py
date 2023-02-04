@@ -1056,6 +1056,16 @@ class FreeSpaceDiagram(Scene):
         self.add(free_space_diagram_image)
         self.wait()
 
+        self.next_section("Show epsilon value")
+        epsilon = ValueTracker(0.73)
+        epsilon_text = MathTex("\\varepsilon=", color=BLACK)
+        epsilon_number =  DecimalNumber(epsilon.get_value(), color=BLACK).next_to(epsilon_text, RIGHT)
+        epslion_group = VGroup(epsilon_text, epsilon_number)
+        epslion_group.next_to(free_space_diagram_image, UP)
+        epsilon_number.add_updater(lambda t: t.set_value(epsilon.get_value()))
+        self.play(Write(epsilon_text), Write(epsilon_number))
+        self.wait()
+
         self.next_section("Add moving points")
         p_dot = Dot(p_curve.point_from_proportion(0), color=BLACK)
         q_dot = Dot(q_curve.point_from_proportion(0), color=BLACK)
@@ -1397,7 +1407,7 @@ class RecentDevelopments(Scene):
         self.wait()
 
         self.next_section("Buchin et al 2014 time complexity")
-        buchin_text_time = MathTex(r"\mathcal{O}(n^2 \log^{0.5} n (\log \log n)^{1.5}").set_color(BLACK).next_to(buchin_text, RIGHT)
+        buchin_text_time = MathTex(r"\mathcal{O}(n^2 \sqrt{\log n} (\log \log n)^{1.5})").set_color(BLACK).next_to(buchin_text, RIGHT)
         self.play(Write(buchin_text_time))
         self.wait()
 
