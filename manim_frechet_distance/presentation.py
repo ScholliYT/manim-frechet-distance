@@ -47,31 +47,92 @@ class Motivation(Scene):
         self.add(title)
 
         self.next_section("World map")
-        world_map = SVGMobject("manim_frechet_distance/assets/BlankMap_World_simple.svg", height=6).shift(0.5*DOWN)
+        world_map = ImageMobject("manim_frechet_distance/assets/BlankMap_Europe_Africa.png").shift(0.5*DOWN)
+        world_map.height = 6
         self.add(world_map)
         self.wait()
 
-        self.next_section("Zoom World map")
-        self.play(world_map.animate.scale(1.5), world_map.animate.shift(DOWN))
+        birds = [
+            {
+                "bird_path": [
+                    [-0.5,1,0],
+                    [-1,0.5,0],
+                    [-1.3,-0.9,0],
+                    [-0.3,-1.1,0],
+                ],
+                "color": BLUE,
+            },
+            {
+                "bird_path": [
+                    [-0.4,1.1,0],
+                    [-0.1,0.55,0],
+                    [-0.3,0.2,0],
+                    [0.2,-1.2,0],
+                ],
+                "color": RED,
+            },
+            {
+                "bird_path": [
+                    [-0.2,1.0,0],
+                    [0.5,0.55,0],
+                    [0.8,0.5,0],
+                    [0.9,0.2,0],
+                    [0.6,0,0],
+                    [0.5,-1.5,0],
+                ],
+                "color": GREEN,
+            },
+        ]
+
+
+        for bird in birds:
+            bird_path = bird["bird_path"]
+
+            self.next_section("Add Bird")
+            bird_image = ImageMobject("manim_frechet_distance/assets/icons8-crane-bird-100.png")
+            bird_image.set_z_index(3)
+            bird_image.scale(0.8)
+            bird_image.move_to(bird_path[0])
+
+            trace = TracedPath(bird_image.get_center, stroke_color=GRAY_D)
+            bird["traces"] = [trace]
+            self.add(trace, bird_image)
+            self.wait()
+
+            for pos in bird_path[1:]:
+                self.next_section("Move bird to next position")
+                self.play(bird_image.animate.move_to(pos))
+            self.wait()
+
+        self.next_section("Multiple birds per route")
+        np.random.seed(42)
+        additional_birds_per_route = 3
+        trace_creations = []
+        for bird in birds:
+            for _ in range(additional_birds_per_route):
+                bird_path = np.array(bird["bird_path"])
+                noise = (np.random.rand(bird_path.shape[0], 2) - 0.5)/8.0
+                noise = np.pad(noise, ((0,0), (0,1)))
+
+                trace_func = partial(polygonal_curve, bird_path+noise)
+                trace = ParametricFunction(
+                    trace_func,
+                    t_range=[0, len(bird_path)-1],
+                    color=GRAY_D,
+                )
+                bird["traces"].append(trace)
+
+                trace_creations.append(Create(trace))
+        self.play(LaggedStart(*trace_creations))
         self.wait()
 
 
-        self.next_section("Add Bird")
-        bird_image = ImageMobject("manim_frechet_distance/assets/icons8-crane-bird-100.png")
-        bird_image.move_to([-1,1,0])
-        self.add(bird_image)
+        self.next_section("Cluster routes")
+        for bird in birds:
+            self.play(*[trace.animate.set_stroke(color=bird["color"]) for trace in bird["traces"]], run_time=2.0/len(birds))
+        self.wait()
 
-        trace = TracedPath(bird_image.get_center, stroke_color=BLUE)
-        self.add(trace)
 
-        self.next_section("Move to Spain")
-        self.play(bird_image.animate.move_to([-2,-0.5,0]))
-
-        self.next_section("Move to north west Africa")
-        self.play(bird_image.animate.move_to([-2,-1.5,0]))
-
-        self.next_section("Move to middle Africa")
-        self.play(bird_image.animate.move_to([0,-2,0]))
 
 class DistanceOfCurves(Scene):
     def construct(self):
