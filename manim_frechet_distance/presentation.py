@@ -443,7 +443,7 @@ class ProblemsWithHausdorffDistance(Scene):
             q_points.append(q_pos[:2])
             debug_dots.append(Dot(p_pos).set_fill(GRAY, opacity=0.5))
             debug_dots.append(Dot(q_pos).set_fill(GRAY, opacity=0.5))
-        self.play(LaggedStart(*[Create(p) for p in debug_dots]), run_time=1)
+        self.play(*[Create(p) for p in debug_dots], run_time=2)
         debug_dots = Group(*debug_dots)
 
         print("Calculating directed Hausdorff distance")
