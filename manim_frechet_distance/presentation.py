@@ -189,7 +189,7 @@ class DistanceOfCurves(Scene):
         q_curve = Polygon([0, 2.5, 0], [2.5,0,0], [0,-3,0], [-0.0, -0.5, 0], [-2.5,0,0], color=GREEN)
         q_curve = q_curve.round_corners(radius=0.5)
         self.play(Create(q_curve))
-        q_label = Text("Q", color=GREEN).move_to([1, 0.9, 0])
+        q_label = Text("Q", color=GREEN).move_to([0.3, -0.5, 0])
         self.play(Write(q_label))
 
 
@@ -201,20 +201,23 @@ class DistanceOfCurves(Scene):
         self.play(Write(p_label))
 
         self.next_section("Distance line")
-        q_alpha = ValueTracker(0)
-        q_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
-        q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
-        self.play(Create(q_dot))
+        def get_dist_line(pa: float, qa: float):
+            p_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(pa))
+            q_dot = Dot(color=DARK_GRAY).move_to(q_curve.point_from_proportion(qa))
+            line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
+            return p_dot, q_dot, line
+
 
         p_alpha = ValueTracker(0)
-        p_dot = Dot(color=DARK_GRAY).move_to(p_curve.point_from_proportion(0))
-        p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
-        self.play(Create(p_dot))
-
-        line = Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)
-        line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
-        self.play(Create(line))
+        q_alpha = ValueTracker(0)
+        p_dot, q_dot, line = get_dist_line(0,0)
         
+        # q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
+        # p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
+        self.play(Create(p_dot), Create(q_dot))
+        # line.add_updater(lambda z: z.become(Line(p_dot.get_center(), q_dot.get_center(), color=DARK_GRAY)))
+        self.play(Create(line))
+
         def dist_full(alphas: np.ndarray, c1: Polygon, c2: Polygon):
             p = c1.point_from_proportion(alphas[0])
             q = c2.point_from_proportion(alphas[1])
@@ -231,10 +234,28 @@ class DistanceOfCurves(Scene):
         self.play(Write(dist_text), Write(dist_number))
         self.wait()
         
-        self.next_section("Animate distance around curves")
-        self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3, rate_func=linear)
-        p_alpha.set_value(0)
-        q_alpha.set_value(0)
+        self.next_section("Animate distance at differnt point on curve curves")
+        new_point_alphas = (0.3, 0.1)
+        new_p_dot, new_q_dot, new_line = get_dist_line(new_point_alphas[0], new_point_alphas[1])
+        self.play(
+            Transform(p_dot, new_p_dot),
+            Transform(q_dot, new_q_dot),
+            Transform(line, new_line),
+            p_alpha.animate.set_value(new_point_alphas[0]),
+            q_alpha.animate.set_value(new_point_alphas[1])
+        )
+        self.wait()
+
+        self.next_section("Animate distance at differnt point on curve curves")
+        new_point_alphas = (0.8, 0.6)
+        new_p_dot, new_q_dot, new_line = get_dist_line(new_point_alphas[0], new_point_alphas[1])
+        self.play(
+            Transform(p_dot, new_p_dot),
+            Transform(q_dot, new_q_dot),
+            Transform(line, new_line),
+            p_alpha.animate.set_value(new_point_alphas[0]),
+            q_alpha.animate.set_value(new_point_alphas[1])
+        )
         self.wait()
         
         self.next_section("Show maximum distance formula")
@@ -264,15 +285,31 @@ class DistanceOfCurves(Scene):
             print(minimum)
             return minimum[0]
         minimum_alphas = argmin_max_distance(dist_full)
-        self.play(p_alpha.animate.set_value(minimum_alphas[0]), q_alpha.animate.set_value(minimum_alphas[1]), run_time=1)
+
+        new_point_alphas = minimum_alphas
+        new_p_dot, new_q_dot, new_line = get_dist_line(new_point_alphas[0], new_point_alphas[1])
+        self.play(
+            Transform(p_dot, new_p_dot),
+            Transform(q_dot, new_q_dot),
+            Transform(line, new_line),
+            p_alpha.animate.set_value(new_point_alphas[0]),
+            q_alpha.animate.set_value(new_point_alphas[1])
+        )
         self.wait()
 
         self.next_section("Hausdorff distance")
-        self.play(title.animate.become(Text("Hausdorff distance", color=BLUE).to_edge(UP)))
         dist_number.clear_updaters()
         self.play(Uncreate(line), Uncreate(p_dot), Uncreate(q_dot), Unwrite(dist_text), Unwrite(dist_number))
+        self.play(title.animate.become(Text("Hausdorff distance", color=BLUE).to_edge(UP)))
 
-        # we need to provide the directed_hausdorff function with some sample points
+        # self.next_section("Show formula for direct Hausdorff distance from P to Q")
+        directed_hausdorff_dist_p_q_text = MathTex(
+            "\\delta_{dhd}(P,Q) = \\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)", 
+            color = BLACK, font_size=30).to_edge(LEFT)
+        self.play(ReplacementTransform(max_distance_text, directed_hausdorff_dist_p_q_text))
+        self.wait()
+
+         # we need to provide the directed_hausdorff function with some sample points
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=64)
         p_points, q_points = [], []
@@ -284,15 +321,8 @@ class DistanceOfCurves(Scene):
             q_points.append(q_pos[:2])
             debug_dots.append(Dot(p_pos).set_fill(GRAY, opacity=0.5))
             debug_dots.append(Dot(q_pos).set_fill(GRAY, opacity=0.5))
-        self.play(LaggedStart(*[Create(p) for p in debug_dots]))
+        self.play(LaggedStart(*[Create(p) for p in debug_dots]), run_time=2)
         debug_dots = Group(*debug_dots)
-
-        self.next_section("Show formula for direct Hausdorff distance from P to Q")
-        directed_hausdorff_dist_p_q_text = MathTex(
-            "\\delta_{dhd}(P,Q) = \\sup_{p \\in P} \\inf_{q \\in Q} \\text{dist}(p,q)", 
-            color = BLACK, font_size=30).to_edge(LEFT)
-        self.play(ReplacementTransform(max_distance_text, directed_hausdorff_dist_p_q_text))
-        self.wait()
 
         self.next_section("Show all distance arrows from P to Q")
         arrows_from_p_to_q = min_dist_arrows(p_points, q_points, color=RED)
