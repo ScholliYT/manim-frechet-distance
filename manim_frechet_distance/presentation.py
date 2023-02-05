@@ -100,8 +100,8 @@ class Motivation(Scene):
             self.wait()
 
             for pos in bird_path[1:]:
-                self.next_section("Move bird to next position")
-                self.play(bird_image.animate.move_to(pos))
+                self.play(bird_image.animate.move_to(pos), run_time=0.75)
+                self.wait(0.25)
             self.wait()
 
         self.next_section("Multiple birds per route")
