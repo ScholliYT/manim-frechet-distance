@@ -1285,7 +1285,7 @@ class DiscreteFrechetDistanceIntro(Scene):
 
         self.next_section("Q line segment")
         q_points = np.array([
-            [-5.25,  0.25,  0.  ],
+            [-5.25,  -1.25,  0.  ],
             [-4.5 , -0.5 ,  0.  ],
             [-2.25, -0.5 ,  0.  ],
             [-1.2 ,  0.4 ,  0.  ],
@@ -1415,10 +1415,48 @@ class DiscreteFrechetDistanceAlgorithm(Scene):
         title = Text("Computing Discrete Fréchet Distance", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("Partial Curves", "Recursive Formula", "Dynamic Programming")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        self.next_section("Steps")
+        blist = BulletedList("Partial Curves", "Dynamic Programming", "Recursive Formula")
+        blist.set_color(BLACK).shift(3*LEFT+UP)
+        self.add(blist)
         self.wait()
+
+        self.next_section("Recursive formula")
+        recursive_formula = Tex(r"""
+            \begin{align*}
+                c(i,j) &= \begin{cases}
+                dist(u_1, v_1), &\text{if } i=1 \text{and } j=1 \\
+                \max \{c(i-1,1), dist(u_i, v_1)\}, &\text{if } i>1 \text{and } j=1 \\
+                \max \{c(1,j-1), dist(u_1, v_j)\}, &\text{if } i=1 \text{and } j>1 \\
+                \max \{c(i-1,j), c(i,j-1), c(i-1,j-1), dist(u_i, v_j)\}, &\text{if } i>1 \text{and } j>1
+                \end{cases} \\
+                &= \delta_{dF}(P',Q')
+            \end{align*}
+        """).shift(2*DOWN).set_color(BLACK).scale(0.7)
+        self.add(recursive_formula)
+        self.wait()
+
+        self.next_section("Computation table")
+        computation_table: Table = Table(
+            [["c(i-1,j)", "c(i,j)"],
+            ["c(i-1,j-1)", "c(i,j-1)"]],
+            include_outer_lines=True).set_color(BLACK).shift(UP+3*RIGHT).scale(0.6)
+        self.add(computation_table)
+        self.wait()
+
+        self.next_section("Computation step")
+        
+        arrows = [
+            Arrow(start=computation_table.get_entries((1,1)).get_center(), end=computation_table.get_entries((1,2)).get_center(), buff=SMALL_BUFF, color=RED),
+            Arrow(start=computation_table.get_entries((2,2)).get_center(), end=computation_table.get_entries((1,2)).get_center(), buff=SMALL_BUFF, color=RED, stroke_width=10, max_stroke_width_to_length_ratio=20),
+            Arrow(start=computation_table.get_entries((2,1)).get_center(), end=computation_table.get_entries((1,2)).get_center(), buff=SMALL_BUFF, color=RED),
+        ]
+        self.play(*[Create(a) for a in arrows])
+        self.wait()
+        
+
+
+
 
 class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
     def construct(self):
@@ -1426,9 +1464,12 @@ class DiscreteFrechetDistanceAlgorithmicComplexity(Scene):
         title = Text("Algorithmic Complexity", color=BLUE).to_edge(UP)
         self.add(title)
 
-        blist = BulletedList("O(pq) time", "O(min(p,q)) space")
-        blist.set_color(BLACK)
-        self.play(Write(blist))
+        time_text = Text("Time: ", font_size=30).set_color(BLACK).shift(3*LEFT)
+        time_formula = MathTex(r"\mathcal{O}(pq)").next_to(time_text, RIGHT).set_color(BLACK)
+        space_text = Text("Space: ", font_size=30).next_to(time_text, DOWN).align_to(time_text, LEFT).set_color(BLACK)
+        space_formula = MathTex(r"\mathcal{O}(min(p,q))").next_to(space_text, RIGHT).set_color(BLACK)
+
+        self.add(time_text, time_formula, space_text, space_formula)
         self.wait()
 
 class RecentDevelopments(Scene):
