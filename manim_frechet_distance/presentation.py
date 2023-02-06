@@ -99,6 +99,7 @@ class Motivation(Scene):
             self.add(trace, bird_image)
             self.wait()
 
+            self.next_section("Move bird along path")
             for pos in bird_path[1:]:
                 self.play(bird_image.animate.move_to(pos), run_time=0.75)
                 self.wait(0.25)
@@ -189,7 +190,7 @@ class DistanceOfCurves(Scene):
         q_curve = Polygon([0, 2.5, 0], [2.5,0,0], [0,-3,0], [-0.0, -0.5, 0], [-2.5,0,0], color=GREEN)
         q_curve = q_curve.round_corners(radius=0.5)
         self.play(Create(q_curve))
-        q_label = Text("Q", color=GREEN).move_to([0.3, -0.5, 0])
+        q_label = Text("Q", color=GREEN).move_to([-1.5, 0.2, 0])
         self.play(Write(q_label))
 
 
@@ -309,7 +310,8 @@ class DistanceOfCurves(Scene):
         self.play(ReplacementTransform(max_distance_text, directed_hausdorff_dist_p_q_text))
         self.wait()
 
-         # we need to provide the directed_hausdorff function with some sample points
+        # we need to provide the directed_hausdorff function with some sample points
+        self.next_section("Show sampling points")
         print("Sampling points on curves")
         alphas = np.linspace(0, 1, num=64)
         p_points, q_points = [], []
@@ -621,7 +623,7 @@ class ComputingTheFrechetDistance(Scene):
         self.wait()
 
         self.next_section("Solving the decision problem")
-        blist_decision_problem = BulletedList("Free Space Diagram", "Monotone Path", "Critical values").set_color(BLACK).shift(3*RIGHT).align_to(decision_problem_text, UP)
+        blist_decision_problem = BulletedList("Free Space Cell", "Free Space Diagram", "Monotone Path").set_color(BLACK).shift(3*RIGHT).align_to(decision_problem_text, UP)
         self.play(Transform(decision_problem.copy(), blist_decision_problem))
         self.wait()
 
@@ -776,7 +778,7 @@ class FreeSpaceCell(Scene):
         self.wait()
 
         self.next_section("Move over border")
-        self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.5), run_time=2, rate_func=linear)
+        self.play(p_alpha.animate.set_value(0.45), q_alpha.animate.set_value(0.55), run_time=2, rate_func=linear)
         self.wait()
 
         self.next_section("Move outside of border")
@@ -812,6 +814,10 @@ class FreeSpaceCell(Scene):
 
         self.next_section("Add gray free space region")
         self.add(free_space_cell_image)
+        self.wait()
+
+        self.next_section("Move to (0.05,0)")
+        self.play(p_alpha.animate.set_value(0.05), q_alpha.animate.set_value(0))
         self.wait()
 
         self.next_section("Move to (0,0)")
@@ -1035,7 +1041,7 @@ class FreeSpaceDiagram(Scene):
         self.add(ax)
 
         # Draw plot of cell
-        free_space_diagram_image = ImageMobject("manim_frechet_distance/assets/free_space_diagram_points.png")
+        free_space_diagram_image = ImageMobject("manim_frechet_distance/assets/free_space_diagram_points_0_4.png")
         free_space_diagram_image.height = 5
         free_space_diagram_image.width = 5
 
@@ -1087,7 +1093,7 @@ class FreeSpaceDiagram(Scene):
         self.wait()
 
         self.next_section("Show epsilon value")
-        epsilon = ValueTracker(0.73)
+        epsilon = ValueTracker(0.4)
         epsilon_text = MathTex("\\varepsilon=", color=BLACK)
         epsilon_number =  DecimalNumber(epsilon.get_value(), color=BLACK).next_to(epsilon_text, RIGHT)
         epslion_group = VGroup(epsilon_text, epsilon_number)
@@ -1131,6 +1137,14 @@ class FreeSpaceDiagram(Scene):
         dist_group = VGroup(dist_text, dist_number)
         dist_group.next_to(ax, DOWN)
         self.play(Write(dist_text), Write(dist_number))
+        self.wait()
+
+        self.next_section("Increase epsilon value")
+        free_space_diagram_image_bigger = ImageMobject("manim_frechet_distance/assets/free_space_diagram_points_0_71.png")
+        free_space_diagram_image_bigger.height = free_space_diagram_image.height
+        free_space_diagram_image_bigger.width = free_space_diagram_image.width
+        free_space_diagram_image_bigger.move_to(free_space_diagram_image.get_center())
+        self.play(epsilon.animate.set_value(0.71), Transform(free_space_diagram_image, free_space_diagram_image_bigger))
         self.wait()
 
         trace = TracedPath(dot.get_center, stroke_color=BLUE)
@@ -1201,7 +1215,7 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         self.wait()
 
         self.next_section("Binary search the bits time complexity")
-        binary_search_bits_complexity = MathTex(r"\mathcal{O}(","x",r"\cdot \log(\text{``accuracy bits''}))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
+        binary_search_bits_complexity = MathTex(r"\mathcal{O}(","T_{dec}",r"\cdot \log(\text{``accuracy bits''}))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
         self.play(Write(binary_search_bits_complexity))
         self.wait()
 
@@ -1212,7 +1226,7 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         self.wait()
 
         self.next_section("Binary search the bits time complexity full")
-        binary_search_bits_complexity_full = MathTex(r"\mathcal{O}(","pq",r"\cdot \log(32))").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
+        binary_search_bits_complexity_full = MathTex(r"\mathcal{O}(","pq",r"\cdot 32)").set_color(BLACK).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(0.5*RIGHT)
         self.play(TransformMatchingTex(binary_search_bits_complexity_with_pq, binary_search_bits_complexity_full))
         self.wait()
 
@@ -1222,8 +1236,13 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         self.add(critical_values_text)
         self.wait()
 
+        self.next_section("Number of Critical values")
+        number_of_critical_values = MathTex(r"\text{\#} \mathcal{O}(p^2q + pq^2)").set_color(BLACK).next_to(critical_values_text, DOWN).align_to(critical_values_text, LEFT).shift(0.5*RIGHT)
+        self.play(Write(number_of_critical_values))
+        self.wait()
+
         self.next_section("Critical values time complexity")
-        critical_values_time_complexity = MathTex(r"\mathcal{O}((p^2q + pq^2) \log (pq))").set_color(BLACK).next_to(critical_values_text, DOWN).align_to(critical_values_text, LEFT).shift(0.5*RIGHT)
+        critical_values_time_complexity = MathTex(r"\mathcal{O}((p^2q + pq^2) \log (pq))").set_color(BLACK).next_to(number_of_critical_values, DOWN).align_to(number_of_critical_values, LEFT)
         self.play(Write(critical_values_time_complexity))
         self.wait()
 
@@ -1419,9 +1438,9 @@ class RecentDevelopments(Scene):
         self.add(title)
 
 
-        # for just a single cell
+        # Cointinous Fréchet distance
         self.next_section("Alt and Godau, 92/95")
-        alt_and_godau_text = Text("Alt and Godau, 92/95:", font_size=30).shift(3*LEFT + UP).set_color(BLACK)
+        alt_and_godau_text = Text("Alt and Godau, 92/95:", font_size=30).shift(3*LEFT + 2*UP).set_color(BLACK)
         self.add(alt_and_godau_text)
         self.wait()
 
@@ -1440,15 +1459,39 @@ class RecentDevelopments(Scene):
         buchin_text_time = MathTex(r"\mathcal{O}(n^2 \sqrt{\log n} (\log \log n)^{1.5})").set_color(BLACK).next_to(buchin_text, RIGHT)
         self.play(Write(buchin_text_time))
         self.wait()
+        
+        self.next_section("Bringmann 2014")
+        bringmann_text = Text("Bringmann, 2014: No strongly subquadratic algorithm", font_size=30).set_color(BLACK).next_to(buchin_text, DOWN).align_to(buchin_text, LEFT)
+        self.add(bringmann_text)
+        self.wait()
+
+        # Discrete Fréchet distance
+        self.next_section("Eiter and Mannila 94")
+        eiter_and_mannila_text = Text("Eiter and Mannila, 94:", font_size=30).set_color(BLACK).next_to(bringmann_text, DOWN).align_to(bringmann_text, LEFT).shift(0.7*DOWN)
+        self.add(eiter_and_mannila_text)
+        self.wait()
+
+        self.next_section("Eiter and Mannila 94")
+        eiter_and_mannila_time = MathTex(r"\mathcal{O}(n^2)").set_color(BLACK).next_to(eiter_and_mannila_text, RIGHT)
+        self.play(Write(eiter_and_mannila_time))
+        self.wait()
+
+        self.next_section("Agarwal et al.")
+        agarwal_text = Text("Agarwal et al., 2018:", font_size=30).set_color(BLACK).next_to(eiter_and_mannila_text, DOWN).align_to(eiter_and_mannila_text, LEFT).shift(0.3*DOWN)
+        self.add(agarwal_text)
+        self.wait()
+
+        self.next_section("Agarwal et al.")
+        eiter_and_mannila_time = MathTex(r"\mathcal{O}\left(\frac{n^2 \log \log n}{\log n}\right)").set_color(BLACK).next_to(agarwal_text, RIGHT)
+        self.play(Write(eiter_and_mannila_time))
+        self.wait()
 
         
-        self.next_section("Next talks")
-        blist = BulletedList(
-            "No subquadratic Algorithm", 
-            "Approximation Algorithms"
-        )
-        blist.set_color(BLACK).shift(2*DOWN)
-        self.add(blist)
+        self.next_section("Current research")
+        current_research_text = Paragraph(
+            "Approximation algorithms", "Uncertain curves", "Efficient implementation",
+            font_size=30, color=BLACK).shift(3*DOWN).align_to(agarwal_text, LEFT)
+        self.add(current_research_text)
         self.wait()
 
 
