@@ -585,6 +585,16 @@ class FrechetDistanceIntro(Scene):
         self.wait()
 
         
+        self.next_section("Animate distance around curves")
+        self.play(dog_alpha.animate.set_value(0), owner_alpha.animate.set_value(0.1), run_time=2)
+        self.play(dog_alpha.animate.set_value(0.3), owner_alpha.animate.set_value(0.3), run_time=2)
+        self.play(dog_alpha.animate.set_value(0.5), owner_alpha.animate.set_value(0.6), run_time=2)
+        self.play(dog_alpha.animate.set_value(0.75), owner_alpha.animate.set_value(0.65), run_time=2)
+        self.play(dog_alpha.animate.set_value(1), owner_alpha.animate.set_value(1), run_time=2)
+        dog_alpha.set_value(0)
+        owner_alpha.set_value(0)
+        self.wait()
+
         
         self.next_section("Animate distance around curves")
         self.play(dog_alpha.animate.set_value(1), owner_alpha.animate.set_value(1), run_time=10)
