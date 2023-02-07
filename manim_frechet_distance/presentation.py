@@ -705,8 +705,8 @@ class FreeSpaceCell(Scene):
 
         
         self.next_section("Dot in free space cell")
-        dot: Dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
-        self.play(Create(dot))
+        free_space_dot: Dot = Dot(axes_free_space.c2p(0,0), color=BLACK).set_z_index(5)
+        self.play(Create(free_space_dot))
         self.wait()
 
         self.next_section("Move to (1,0) in free space")
@@ -714,7 +714,7 @@ class FreeSpaceCell(Scene):
         q_alpha = ValueTracker(0)
         p_dot.add_updater(lambda m: m.move_to(p_curve.point_from_proportion(p_alpha.get_value())))
         q_dot.add_updater(lambda m: m.move_to(q_curve.point_from_proportion(q_alpha.get_value())))
-        dot.add_updater(lambda m: m.move_to(axes_free_space.c2p(p_alpha.get_value(), q_alpha.get_value())))
+        free_space_dot.add_updater(lambda m: m.move_to(axes_free_space.c2p(p_alpha.get_value(), q_alpha.get_value())))
         self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(0), run_time=3, rate_func=linear)
         self.wait()
 
@@ -747,6 +747,8 @@ class FreeSpaceCell(Scene):
         dist_number.add_updater(lambda t: t.next_to(dist_text, RIGHT))
         dist_group = VGroup(dist_text, dist_number)
         dist_group.next_to(graph, DOWN)
+
+        dist_line_components = (dist_text, dist_number, line, p_dot, q_dot, free_space_dot)
         self.play(Write(dist_text), Write(dist_number))
         self.wait()
 
@@ -810,10 +812,96 @@ class FreeSpaceCell(Scene):
             )
         ))
         self.play(epsilon.animate.set_value(0.73))
+        free_space_graph.clear_updaters()
         self.wait()
 
         self.next_section("Add gray free space region")
         self.add(free_space_cell_image)
+        self.wait()
+
+        self.next_section("Remove dist line")
+        line_updaters = line.get_updaters()
+        line.clear_updaters()
+        self.play(*[c.animate.set_opacity(0) for c in dist_line_components])
+        self.wait()
+
+
+        # find intersection points of elliplse with unit cell
+        def find_intersection_points(eps: float, side: str):
+            
+            if side == "bottom":
+                scalar_func = lambda alpha_p: abs(dist((alpha_p, 0)) - eps)
+            elif side == "top":
+                scalar_func = lambda alpha_p: abs(dist((alpha_p, 1)) - eps)
+            elif side == "left":
+                scalar_func = lambda alpha_q: abs(dist((0, alpha_q)) - eps)
+            elif side == "right":
+                scalar_func = lambda alpha_q: abs(dist((1, alpha_q)) - eps)
+            else:
+                raise ValueError(side)
+            root: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,1], options={"xatol": 1e-3})
+
+            if root and not root["success"]:
+                return RuntimeError("Optimizer was not sucessful", root)
+
+            # search again because we don't know which minimum / root we found so far
+            root1: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,root.x], options={"xatol": 1e-3})
+            root2: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[root.x,1], options={"xatol": 1e-3})
+
+
+            if side == "bottom":
+                root1_coords = [root1.x, root1.fun]
+                root2_coords = [root2.x, root2.fun]
+            elif side == "top":
+                root1_coords = [root1.x, 1-root1.fun]
+                root2_coords = [root2.x, 1-root2.fun]
+            elif side == "left":
+                root1_coords = [root1.fun, root1.x]
+                root2_coords = [root2.fun, root2.x]
+            elif side == "right":
+                root1_coords = [1-root1.fun, root1.x]
+                root2_coords = [1-root2.fun, root2.x]
+
+            return root1_coords, root2_coords
+
+        self.next_section("Draw intersection points")
+        intersection_point_dots: List[Tuple[Any, Dot]] = []
+        for side in ["bottom", "top", "left", "right"]:
+            coords1, coords2 = find_intersection_points(eps=epsilon.get_value(), side=side)
+            
+            for coords in (coords1, coords2):
+                d = Dot(axes_free_space.c2p(*coords), color=DARK_BLUE)
+                intersection_point_dots.append((coords, d))
+                self.play(Create(d), run_time=0.5)
+        self.wait()
+
+        self.next_section("Intersection point calculation")
+        self.play(intersection_point_dots[0][1].animate.set_color(ORANGE))
+        self.play(intersection_point_dots[1][1].animate.set_color(ORANGE))
+        self.wait()
+
+        self.next_section("Intersection point calculation")
+        point_on_circle_coords = np.add(q_points[0], [epsilon.get_value() * 2, 0 ,0])
+        point_on_circle = ax.c2p(*point_on_circle_coords[:2])  # adjust for scale factor
+        radius = np.linalg.norm(np.subtract(point_on_circle, q_curve.point_from_proportion(0)), ord=2)
+        intersection_circle = Circle(radius=radius).move_to(q_curve.point_from_proportion(0)).set_color(GRAY_D)
+        self.play(Create(intersection_circle))
+        
+        intersection_point_dot_1 = Dot(p_curve.point_from_proportion(intersection_point_dots[0][0][0]), color=ORANGE)
+        intersection_point_dot_2 = Dot(p_curve.point_from_proportion(intersection_point_dots[1][0][0]), color=ORANGE)
+        self.play(Create(intersection_point_dot_1), Create(intersection_point_dot_2))
+        self.wait()
+
+        self.next_section("Remove intersection points")
+        self.play(
+            *[Uncreate(d[1]) for d in intersection_point_dots],
+            Uncreate(intersection_point_dot_1),
+            Uncreate(intersection_point_dot_2),
+            Uncreate(intersection_circle)
+        )
+        self.play(*[c.animate.set_opacity(1) for c in dist_line_components])
+        for updater in line_updaters:
+            line.add_updater(updater)
         self.wait()
 
         self.next_section("Move to (0.05,0)")
@@ -826,12 +914,19 @@ class FreeSpaceCell(Scene):
 
         self.next_section("Increase epsilon value")
         self.remove(free_space_cell_image)
+        free_space_graph.add_updater(lambda g: g.become(
+            axes_free_space.plot_implicit_curve(
+                lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
+                color=BLUE_E,
+                max_quads = 2000
+            )
+        ))
         self.play(epsilon.animate.set_value(0.8))
         free_space_graph.clear_updaters()
         self.wait()
 
         self.next_section("Move to (1,1) diagonal")
-        trace = TracedPath(dot.get_center, stroke_color=BLUE)
+        trace = TracedPath(free_space_dot.get_center, stroke_color=BLUE)
         self.add(trace)
         self.play(p_alpha.animate.set_value(1), q_alpha.animate.set_value(1), run_time=3)
         self.wait()
@@ -843,7 +938,7 @@ class FreeSpaceCell(Scene):
         self.wait()
 
         self.next_section("Move to (1,1)")
-        trace = TracedPath(dot.get_center, stroke_color=BLUE)
+        trace = TracedPath(free_space_dot.get_center, stroke_color=BLUE)
         self.add(trace)
         self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25))
         self.play(p_alpha.animate.set_value(0.5), q_alpha.animate.set_value(0.25))
@@ -857,7 +952,7 @@ class FreeSpaceCell(Scene):
         self.wait()
 
         self.next_section("Move to (1,1)")
-        trace = TracedPath(dot.get_center, stroke_color=RED)
+        trace = TracedPath(free_space_dot.get_center, stroke_color=RED)
         self.add(trace)
         self.play(p_alpha.animate.set_value(0.1), q_alpha.animate.set_value(0.25))
         self.play(p_alpha.animate.set_value(0.2), q_alpha.animate.set_value(0.25))
@@ -868,138 +963,6 @@ class FreeSpaceCell(Scene):
         self.next_section("Move to out of range point")
         self.play(p_alpha.animate.set_value(0.4), q_alpha.animate.set_value(0.9))
         self.wait()
-      
-# class FreeSpaceDiagramPlot(Scene):
-#     def construct(self):
-#         add_page_number(self, 7)
-#         ax: Axes = Axes(x_range=[-3,3], y_range=[-2,2], x_length=5, y_length=5)
-#         ax.set_color(BLACK).shift(3*LEFT)
-#         self.add(ax)
-
-
-#         p_points = np.array([
-#             # [-3, 1, 0],
-#             [-2, 0, 0],
-#             [2, 0, 0]])
-#         alpha_p_range = [0, p_points.shape[0]-1]
-#         p_curve_func = partial(polygonal_curve, p_points)
-#         p_curve = ax.plot_parametric_curve(
-#             p_curve_func,
-#             t_range=alpha_p_range,
-#             color=RED,
-#         )
-
-#         q_points = np.array([
-#             # [-3, -1, 0],
-#             [2*np.cos(np.pi + np.pi/4), 2*np.sin(np.pi + np.pi/4), 0],
-#             [2*np.cos(np.pi/4), 2*np.sin(np.pi/4), 0]])
-#         alpha_q_range = [0, q_points.shape[0]-1]
-#         q_curve_func = partial(polygonal_curve, q_points)
-#         q_curve = ax.plot_parametric_curve(
-#             q_curve_func,
-#             t_range=alpha_q_range,
-#             color=GREEN,
-#         )
-
-#         self.play(Create(p_curve))
-#         self.play(Create(q_curve))
-
-
-
-#         ax_free_space: Axes = Axes(x_range=alpha_p_range, y_range=alpha_q_range, x_length=5, y_length=5).set_color(BLACK).shift(3*RIGHT)
-#         self.add(ax_free_space)
-
-#         def dist_full(alphas: Tuple[float,float], p_point_from_proportion, q_point_from_proportion):
-#             p = p_point_from_proportion(alphas[0])
-#             q = q_point_from_proportion(alphas[1])
-#             d = np.linalg.norm(p-q, ord=2)
-#             return d
-
-#         def dist(alphas: np.ndarray):
-#             return dist_full(alphas, p_curve_func, q_curve_func) / 2 # adjust for figure scaling
-
-#         epsilon = ValueTracker(0.5)
-#         free_space_graph = ax_free_space.plot_implicit_curve(
-#             lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
-#             color=BLUE_E,
-#             max_quads = 2000
-#         )
-#         self.play(Create(free_space_graph))
-#         self.wait()
-
-
-#         free_space_graph.add_updater(
-#             lambda x: x.become(
-#                 ax_free_space.plot_implicit_curve(
-#                     lambda alpha_p,alpha_q: dist((alpha_p,alpha_q)) - epsilon.get_value(),
-#                     color=BLUE_E,
-#                     max_quads = 2000
-#         )))
-#         self.play(epsilon.animate.set_value(0.73))
-
-        # find intersection points of elliplse with unit cell
-        # def find_intersection_points(eps: float, side: str):
-            
-        #     if side == "bottom":
-        #         scalar_func = lambda alpha_p: abs(dist((alpha_p, 0)) - eps)
-        #     elif side == "top":
-        #         scalar_func = lambda alpha_p: abs(dist((alpha_p, 1)) - eps)
-        #     elif side == "left":
-        #         scalar_func = lambda alpha_q: abs(dist((0, alpha_q)) - eps)
-        #     elif side == "right":
-        #         scalar_func = lambda alpha_q: abs(dist((1, alpha_q)) - eps)
-        #     else:
-        #         raise ValueError(side)
-        #     root: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,1], options={"xatol": 1e-3})
-
-        #     if root and not root["success"]:
-        #         return RuntimeError("Optimizer was not sucessful", root)
-
-        #     # search again because we don't know which minimum / root we found so far
-        #     root1: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[0,root.x], options={"xatol": 1e-3})
-        #     root2: optimize.OptimizeResult = optimize.minimize_scalar(scalar_func, bounds=[root.x,1], options={"xatol": 1e-3})
-
-
-        #     if side == "bottom":
-        #         root1_coords = [root1.x, root1.fun]
-        #         root2_coords = [root2.x, root2.fun]
-        #     elif side == "top":
-        #         root1_coords = [root1.x, 1-root1.fun]
-        #         root2_coords = [root2.x, 1-root2.fun]
-        #     elif side == "left":
-        #         root1_coords = [root1.fun, root1.x]
-        #         root2_coords = [root2.fun, root2.x]
-        #     elif side == "right":
-        #         root1_coords = [1-root1.fun, root1.x]
-        #         root2_coords = [1-root2.fun, root2.x]
-
-        #     return root1_coords, root2_coords
-
-        # intersection_coords = {}
-        # for side in ["top", "bottom", "left", "right"]:
-        #     coords1, coords2 = find_intersection_points(eps=epsilon.get_value(), side=side)
-        #     intersection_coords[side] = [coords1, coords2]
-
-        #     d1 = Dot(ax_free_space.c2p(*coords1), color=BLACK)
-        #     self.play(Create(d1))
-        #     d2 = Dot(ax_free_space.c2p(*coords2), color=BLACK)
-        #     self.play(Create(d2))
-
-        # self.wait()
-
-        # bottom_min2: optimize.OptimizeResult = optimize.minimize_scalar(lambda alpha_p: abs(dist((alpha_p, 0)) - epsilon), bounds=[0,alpha_p_bottom_min], options={"xatol": 1e-7})
-        # print("Bottom min2", bottom_min2)
-        # if bottom_min2 and not bottom_min2["success"]:
-        #     return RuntimeError("Optimizer was not sucessful", bottom_min)
-
-
-
-        # ellipse_1 = Ellipse(width=2.0, height=4.0, color=ORANGE).rotate(45)
-        # self.add(ellipse_1)
-        # self.wait()
-
-        
-
 
 
 def polygonal_curve(points: np.ndarray, t: float|np.ndarray) -> float|np.ndarray:       
@@ -1182,6 +1145,11 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
         self.add(single_cell_text)
         self.wait()
 
+        self.next_section("Up to 8 interscection points")
+        up_to_8_intersec_points_text = Text("max 8 intersec. points", font_size=30).next_to(single_cell_text, DOWN).align_to(single_cell_text, LEFT).set_color(BLACK).shift(0.5*RIGHT)
+        self.add(up_to_8_intersec_points_text)
+        self.wait()
+
         self.next_section("Single cell time complexity")
         single_cell_time_complexity = MathTex(r"\mathcal{O}(1)").set_color(BLACK).next_to(single_cell_text, RIGHT)
         self.play(Write(single_cell_time_complexity))
@@ -1189,7 +1157,7 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
 
         # The decision probelm
         self.next_section("Decision Problem")
-        decision_problem_text = Text("Decision Problem:", font_size=30).next_to(single_cell_text, DOWN).align_to(single_cell_text, LEFT).shift(DOWN).set_color(BLACK)
+        decision_problem_text = Text("Decision Problem:", font_size=30).next_to(single_cell_text, DOWN).align_to(single_cell_text, LEFT).shift(1.5*DOWN).set_color(BLACK)
         self.add(decision_problem_text)
         self.wait()
 
@@ -1232,7 +1200,7 @@ class FrechetDistanceAlgorithmicComplexity(Scene):
 
         # Complete solution: using critical values
         self.next_section("Critical values")
-        critical_values_text = Text("Critical values", font_size=30).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(DOWN).set_color(BLACK)
+        critical_values_text = Text("Critical values", font_size=30).next_to(binary_search_bits_text, DOWN).align_to(binary_search_bits_text, LEFT).shift(1.5*DOWN).set_color(BLACK)
         self.add(critical_values_text)
         self.wait()
 
