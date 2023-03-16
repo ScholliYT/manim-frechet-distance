@@ -1,7 +1,9 @@
 [![wakatime](https://wakatime.com/badge/user/13925bfd-efdd-4399-ae64-d0247d6b76cb/project/d0f656e0-a9b0-4e38-b646-03cf5851b931.svg)](https://wakatime.com/badge/user/13925bfd-efdd-4399-ae64-d0247d6b76cb/project/d0f656e0-a9b0-4e38-b646-03cf5851b931)
 
 # Manim Presentation on Fréchet Distance
-A [Manim](https://www.manim.community/) animated presentation of the [Fréchet distance](https://en.wikipedia.org/wiki/Fr%C3%A9chet_distance), it's use cases, variants and algorithms.
+A [Manim](https://www.manim.community/) animated presentation of the [Fréchet distance](https://en.wikipedia.org/wiki/Fr%C3%A9chet_distance), it's use cases, variants and algorithms. Find the full presentation [here](https://scholliyt.github.io/manim-frechet-distance/Fr%C3%A9chet-Distance/).
+
+https://user-images.githubusercontent.com/12571895/225498006-5202453d-81de-441d-8cc4-aacf3cc03104.mp4
 
 ## Docs
 
